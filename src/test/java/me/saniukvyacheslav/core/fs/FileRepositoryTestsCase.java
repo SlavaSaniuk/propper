@@ -14,13 +14,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@SuppressWarnings({"ResultOfMethodCallIgnored", "resource"})
+@SuppressWarnings({"ResultOfMethodCallIgnored"})
 public class FileRepositoryTestsCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepositoryTestsCase.class);
 
     private File propertyTestFile;
+    private File propertyTestFile2;
     private FileRepository testsFileRepository;
+    private FileRepository testsFileRepository2;
 
     @BeforeEach
     void beforeEach() {
@@ -29,7 +31,10 @@ public class FileRepositoryTestsCase {
             this.propertyTestFile.createNewFile();
             LOGGER.debug("Tests property file [C:\\propertyTestFile.properties] is created.");
 
+            this.propertyTestFile2 = new File("C:\\testsPropertiesFile2.properties");
+
             this.testsFileRepository = new FileRepository(this.propertyTestFile);
+            this.testsFileRepository2 = new FileRepository(this.propertyTestFile2);
         } catch (IOException e) {
             LOGGER.error("Tests property file [C:\\propertyTestFile.properties] CAN NOT be created.");
         }
@@ -40,12 +45,9 @@ public class FileRepositoryTestsCase {
 
     @AfterEach
     void afterEach() {
-        try {
-            this.testsFileRepository.close();
-            if(!this.propertyTestFile.delete()) LOGGER.error("Tests property file [C:\\propertyTestFile.properties] CAN NOT be deleted.");
-        } catch (IOException e) {
-            LOGGER.error("Tests file repository CAN NOt be closed.");
-        }
+
+        if(!this.propertyTestFile.delete()) LOGGER.error("Tests property file [C:\\propertyTestFile.properties] CAN NOT be deleted.");
+        LOGGER.error("Tests file repository CAN NOt be closed.");
 
         LOGGER.debug("AFTER_EACH_RESULT: Tests file repository is CLOSED.");
         LOGGER.debug("AFTER_EACH_RESULT: Tests property file is DELETED.");
@@ -175,4 +177,32 @@ public class FileRepositoryTestsCase {
             Assertions.fail();
         }
     }
+
+    @Test
+    void isWritable_fileIsWritable_shouldReturnTrue() {
+        Assertions.assertTrue(this.testsFileRepository.isWritable());
+    }
+
+    @Test
+    void create_newProperty_shouldCreateNewPropertyInFile() {
+        Property testProperty = new Property("my.position", "engineer");
+        try {
+            this.testsFileRepository2.create(testProperty);
+
+            Property readedProperty = this.testsFileRepository2.read(testProperty.getPropertyKey());
+            Assertions.assertNotNull(readedProperty);
+            Assertions.assertEquals(testProperty.getPropertyKey(), readedProperty.getPropertyKey());
+            Assertions.assertEquals(testProperty.getPropertyValue(), readedProperty.getPropertyValue());
+            LOGGER.debug(String.format("Readed property: %s;", readedProperty));
+
+        } catch (IOException e) {
+            LOGGER.error(" IO Exception throws, when program try to create property in file.");
+            LOGGER.error(e.getMessage());
+            Assertions.fail();
+        } catch (PropertyNotFoundException e) {
+            LOGGER.error(e.getMessage());
+            Assertions.fail();
+        }
+    }
+
 }

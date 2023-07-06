@@ -4,17 +4,14 @@ import me.saniukvyacheslav.core.prop.Property;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
 
 import java.io.*;
-import java.util.List;
 
 /**
  * FileRepository used for work with properties files.
  * FileRepository class implement {@link Repository} interface with CRUD methods.
- * NOTE: After work with property file, FileRepository must be CLOSED.
  */
-public class FileRepository implements Repository, Closeable {
+public class FileRepository implements Repository {
 
     private final File propertiesFile; // Property file;
-    private final BufferedReader bufferedReader; // File reader;
 
     /**
      * Construct new File repository based on properties file.
@@ -28,12 +25,6 @@ public class FileRepository implements Repository, Closeable {
         if(!aPropertiesFile.canRead()) throw new IllegalArgumentException(String.format("Property file [%s] cannot be read.", aPropertiesFile.getPath()));
         this.propertiesFile = aPropertiesFile;
 
-        // Open reader and writer:
-        try {
-            this.bufferedReader = new BufferedReader(new FileReader(this.propertiesFile));
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(String.format("Property file [%s] not found.", this.propertiesFile.getPath()));
-        }
     }
 
     /**
@@ -50,33 +41,43 @@ public class FileRepository implements Repository, Closeable {
     }
 
     /**
-     * Close inner buffered reader and writer.
-     * @throws IOException - If IO exception occurs.
+     * Check whether properties file is writable.
+     * @return - true, if properties file is writable.
      */
-    @Override
-    public void close() throws IOException {
-        if (this.bufferedReader != null) this.bufferedReader.close();
+    public boolean isWritable() {
+        return this.propertiesFile.canWrite();
     }
 
     @Override
-    public Property create(Property aProperty) {
-        return null;
+    public void create(Property aProperty) throws IOException {
+        // Read file content before:
+        StringBuilder sb = this.readFileContent();
+        sb.append(aProperty);
+
+        // Open writer:
+        try (BufferedWriter writer = this.openWriter()) {
+            writer.write(sb.toString());
+            writer.flush();
+        }
+
     }
 
     @Override
     public Property read(String aKey) throws PropertyNotFoundException, IOException {
         String readedStr;
 
-        while ((readedStr = this.bufferedReader.readLine()) != null) {
-            if (readedStr.startsWith(aKey)) {
-            String[] keyValuePair = readedStr.split("[=]");
+        try(BufferedReader reader = this.openReader()) {
+            while ((readedStr = reader.readLine()) != null) {
+                if (readedStr.startsWith(aKey)) {
+                    String[] keyValuePair = readedStr.split("=");
 
-            // Check if property value not empty:
-            if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
-
-            return new Property(keyValuePair[0], keyValuePair[1]);
+                    // Check if property value not empty:
+                    if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
+                    return new Property(keyValuePair[0], keyValuePair[1]);
+                }
             }
         }
+
         throw new PropertyNotFoundException(aKey);
     }
 
@@ -90,9 +91,28 @@ public class FileRepository implements Repository, Closeable {
         return null;
     }
 
-    @Override
-    public List<Property> list() {
-        return null;
+
+    private BufferedWriter openWriter() throws IOException {
+        // Check if properties file is writable before:
+        if (!this.isWritable()) throw new IOException(String.format("Properties file [%s] is not writable.", this.propertiesFile.getPath()));
+        return new BufferedWriter(new FileWriter(this.propertiesFile));
+    }
+
+    private BufferedReader openReader() throws IOException {
+        return new BufferedReader(new FileReader(this.propertiesFile));
+    }
+
+    private StringBuilder readFileContent() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String str;
+
+        try (BufferedReader reader = this.openReader()) {
+            while ((str = reader.readLine()) != null) {
+                sb.append(str).append("\n");
+            }
+        }
+
+        return sb;
     }
 
 
