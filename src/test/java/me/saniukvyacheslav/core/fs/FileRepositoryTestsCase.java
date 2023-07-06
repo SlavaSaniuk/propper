@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "resource"})
 public class FileRepositoryTestsCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepositoryTestsCase.class);
@@ -82,8 +83,8 @@ public class FileRepositoryTestsCase {
             BufferedWriter writer = new BufferedWriter(new FileWriter(this.propertyTestFile));
             String propKey = "test.property.key";
             String expectedValue = "test.property.value";
-            writer.write("test.property.key=test.property.value");
-            writer.write("hello=world");
+            writer.write("test.property.key=test.property.value\n");
+            writer.write("hello=world\n");
             writer.flush();
             writer.close();
 
@@ -100,6 +101,77 @@ public class FileRepositoryTestsCase {
 
         } catch (PropertyNotFoundException e) {
             LOGGER.error("Property not found.");
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void read_propertyWithoutValue_shouldReturnPropertyWithEmptyValue() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(this.propertyTestFile));
+            String propKey = "test.property.key";
+            String expectedValue = "";
+            writer.write("test.property.key=\n");
+            writer.write("hello=world\n");
+            writer.flush();
+            writer.close();
+
+            Property property = this.testsFileRepository.read(propKey);
+            Assertions.assertNotNull(property);
+            Assertions.assertEquals(propKey, property.getPropertyKey());
+            Assertions.assertEquals(expectedValue, property.getPropertyValue());
+
+            LOGGER.info(String.format("Property [%s];", property));
+
+        } catch (IOException e) {
+            LOGGER.error("Cannot open testsPropertyFile for writing.");
+            Assertions.fail();
+
+        } catch (PropertyNotFoundException e) {
+            LOGGER.error("Property not found.");
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void read_propertyValueIsNull_shouldReturnPropertyWithEmptyValue() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(this.propertyTestFile));
+            String propKey = "test.property.key";
+            writer.write("test.property.key=");
+            writer.flush();
+            writer.close();
+
+            Property property = this.testsFileRepository.read(propKey);
+            Assertions.assertNotNull(property);
+            Assertions.assertEquals(propKey, property.getPropertyKey());
+            Assertions.assertEquals("", property.getPropertyValue());
+
+            LOGGER.info(String.format("Property [%s];", property));
+
+        } catch (IOException e) {
+            LOGGER.error("Cannot open testsPropertyFile for writing.");
+            Assertions.fail();
+
+        } catch (PropertyNotFoundException e) {
+            LOGGER.error("Property not found.");
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void read_propertyIsNotExist_shouldThrowPropertyNotFoundException() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(this.propertyTestFile));
+            writer.write("test.property.key=\n");
+            writer.write("hello=world\n");
+            writer.flush();
+            writer.close();
+
+            Assertions.assertThrows(PropertyNotFoundException.class,() -> this.testsFileRepository.read("not-existed-key"));
+
+        } catch (IOException e) {
+            LOGGER.error("Cannot open testsPropertyFile for writing.");
             Assertions.fail();
         }
     }

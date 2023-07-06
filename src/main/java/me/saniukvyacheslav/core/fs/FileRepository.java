@@ -66,11 +66,14 @@ public class FileRepository implements Repository, Closeable {
     @Override
     public Property read(String aKey) throws PropertyNotFoundException, IOException {
         String readedStr;
-        Property resultProperty;
 
         while ((readedStr = this.bufferedReader.readLine()) != null) {
             if (readedStr.startsWith(aKey)) {
             String[] keyValuePair = readedStr.split("[=]");
+
+            // Check if property value not empty:
+            if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
+
             return new Property(keyValuePair[0], keyValuePair[1]);
             }
         }
