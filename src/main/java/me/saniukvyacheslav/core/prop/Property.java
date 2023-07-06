@@ -29,4 +29,8 @@ public class Property {
         else this.propertyValue = aValue;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s=%s", this.propertyKey, this.propertyValue);
+    }
 }
