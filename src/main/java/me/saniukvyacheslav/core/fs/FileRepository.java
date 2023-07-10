@@ -1,6 +1,7 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
+import me.saniukvyacheslav.core.prop.PropertyAlreadyExistException;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
 
 import java.io.*;
@@ -49,7 +50,13 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public void create(Property aProperty) throws IOException {
+    public void create(Property aProperty) throws IOException, PropertyAlreadyExistException {
+
+        // Check if property already exist in file:
+        Property readedProperty = this.read(aProperty.getPropertyKey());
+        if(readedProperty != null) throw new PropertyAlreadyExistException(aProperty.getPropertyKey());
+
+
         // Read file content before:
         StringBuilder sb = this.readFileContent();
         sb.append(aProperty);
@@ -63,26 +70,37 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public Property read(String aKey) throws PropertyNotFoundException, IOException {
-        String readedStr;
+    public Property read(String aKey) throws IOException {
+        Property resultProperty; // Result property (may be null);
 
+        String readedStr;
         try(BufferedReader reader = this.openReader()) {
             while ((readedStr = reader.readLine()) != null) {
                 if (readedStr.startsWith(aKey)) {
                     String[] keyValuePair = readedStr.split("=");
 
-                    // Check if property value not empty:
-                    if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
-                    return new Property(keyValuePair[0], keyValuePair[1]);
+                    // Set property key:
+                    resultProperty = new Property(keyValuePair[0], null);
+
+                    // Check if property value not empty, and set property value:
+                    if (keyValuePair.length == 1) resultProperty.setPropertyValue("");
+                    else resultProperty.setPropertyValue(keyValuePair[1]);
+
+                    // return founded property:
+                    return resultProperty;
                 }
             }
         }
 
-        throw new PropertyNotFoundException(aKey);
+        // If property not with specified key not found in file, then return null:
+        return null;
     }
 
     @Override
     public Property update(String aKey, String aNewValue) {
+
+
+
         return null;
     }
 

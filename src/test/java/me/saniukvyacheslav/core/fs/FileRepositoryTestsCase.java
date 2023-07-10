@@ -1,11 +1,9 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
+import me.saniukvyacheslav.core.prop.PropertyAlreadyExistException;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,9 +99,6 @@ public class FileRepositoryTestsCase {
             LOGGER.error("Cannot open testsPropertyFile for writing.");
             Assertions.fail();
 
-        } catch (PropertyNotFoundException e) {
-            LOGGER.error("Property not found.");
-            Assertions.fail();
         }
     }
 
@@ -129,9 +124,6 @@ public class FileRepositoryTestsCase {
             LOGGER.error("Cannot open testsPropertyFile for writing.");
             Assertions.fail();
 
-        } catch (PropertyNotFoundException e) {
-            LOGGER.error("Property not found.");
-            Assertions.fail();
         }
     }
 
@@ -155,9 +147,6 @@ public class FileRepositoryTestsCase {
             LOGGER.error("Cannot open testsPropertyFile for writing.");
             Assertions.fail();
 
-        } catch (PropertyNotFoundException e) {
-            LOGGER.error("Property not found.");
-            Assertions.fail();
         }
     }
 
@@ -199,10 +188,65 @@ public class FileRepositoryTestsCase {
             LOGGER.error(" IO Exception throws, when program try to create property in file.");
             LOGGER.error(e.getMessage());
             Assertions.fail();
-        } catch (PropertyNotFoundException e) {
-            LOGGER.error(e.getMessage());
-            Assertions.fail();
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.debug(e.getMessage());
         }
     }
 
+    @Test
+    void create_propertyAlreadyExistInFile_shouldThrowPropertyAlreadyExistException_2() {
+        String propertyKey = "test.create.2"; // Shared property key;
+
+        // Create property in file:
+        try {
+            Property propertyToCreate = new Property(propertyKey, "value_1");
+            this.testsFileRepository2.create(propertyToCreate);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.debug("Property already created.");
+        }
+
+        // Try to create property with key, which already exist in repo:
+        try {
+            this.testsFileRepository2.create(new Property(propertyKey, "value_2"));
+            Assertions.fail("Property with key, which already exist in repo, created again.");
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.info("Success. Exception [PropertyAlreadyExistException] caught.");
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+    }
+
+    @Test
+    @Disabled
+    void update_propertyIsExist_shouldUpdatePropertyValue_1() {
+
+        Property testProperty = new Property("test.update.1", "value_1");
+
+        try {
+            // Create property in file:
+            this.testsFileRepository2.create(testProperty);
+            Property readedProperty = this.testsFileRepository2.read("test.update.1");
+            Assertions.assertEquals(testProperty, readedProperty);
+        } catch (IOException e) {
+            LOGGER.error("IO exception occur!");
+            Assertions.fail();
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.debug("Property already exist in repo.");
+        }
+
+        // Update existing property:
+            String expectedVal = "value_2";
+            Property updatedProperty = this.testsFileRepository2.update(testProperty.getPropertyKey(), expectedVal);
+            Assertions.assertNotNull(updatedProperty);
+            Assertions.assertEquals(testProperty.getPropertyKey(), updatedProperty.getPropertyKey());
+            Assertions.assertEquals(expectedVal, updatedProperty.getPropertyValue());
+            LOGGER.info(String.format("update_1: Updated_property: [%s];", updatedProperty));
+
+
+
+
+    }
 }

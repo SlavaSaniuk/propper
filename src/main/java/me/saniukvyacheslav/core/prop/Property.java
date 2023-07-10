@@ -33,4 +33,15 @@ public class Property {
     public String toString() {
         return String.format("%s=%s", this.propertyKey, this.propertyValue);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == this) return true; // Check memory links;
+        if (!(obj instanceof Property)) return false; // Check obj class;
+
+        Property prop2 = (Property) obj;
+        if (!(this.propertyKey.equals(prop2.getPropertyKey()))) return false; // Check property key;
+        return this.propertyValue.equals(prop2.getPropertyValue()); // Check property value;
+    }
 }
