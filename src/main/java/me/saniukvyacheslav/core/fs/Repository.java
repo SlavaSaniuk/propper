@@ -7,16 +7,17 @@ import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
 import java.io.IOException;
 
 /**
- * Repository interface define common CRUd methods for working with properties.
+ * Repository interface define common CRUD methods for working with properties.
  */
 public interface Repository {
 
     /**
-     * Create property instance in repository.
-     * @param aProperty - property for creation.
-     * @throws IOException - if IO exception occurs.
+     * Create new property instance in database.
+     * @param aProperty - property to create.
+     * @return - created property instance.
+     * @throws IOException - If IO exceptions occurs.
      */
-    void create(Property aProperty) throws IOException, PropertyAlreadyExistException;
+    Property create(Property aProperty) throws IOException;
 
     /**
      * Read property from repository by property key.

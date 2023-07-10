@@ -1,8 +1,7 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.prop.PropertyAlreadyExistException;
-import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
+import me.saniukvyacheslav.core.prop.PropertyWrapper;
 
 import java.io.*;
 
@@ -50,12 +49,10 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public void create(Property aProperty) throws IOException, PropertyAlreadyExistException {
+    public Property create(Property aProperty) throws IOException {
 
-        // Check if property already exist in file:
-        Property readedProperty = this.read(aProperty.getPropertyKey());
-        if(readedProperty != null) throw new PropertyAlreadyExistException(aProperty.getPropertyKey());
-
+        // Check property
+        PropertyWrapper.checkProperty(aProperty);
 
         // Read file content before:
         StringBuilder sb = this.readFileContent();
@@ -66,6 +63,8 @@ public class FileRepository implements Repository {
             writer.write(sb.toString());
             writer.flush();
         }
+
+        return aProperty;
 
     }
 
