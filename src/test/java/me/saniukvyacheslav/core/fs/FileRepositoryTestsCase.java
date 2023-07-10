@@ -16,7 +16,6 @@ public class FileRepositoryTestsCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepositoryTestsCase.class);
 
     private File propertyTestFile;
-    private File propertyTestFile2;
     private FileRepository testsFileRepository;
     private FileRepository testsFileRepository2;
 
@@ -27,10 +26,10 @@ public class FileRepositoryTestsCase {
             this.propertyTestFile.createNewFile();
             LOGGER.debug("Tests property file [C:\\propertyTestFile.properties] is created.");
 
-            this.propertyTestFile2 = new File("C:\\testsPropertiesFile2.properties");
+            File propertyTestFile2 = new File("C:\\testsPropertiesFile2.properties");
 
             this.testsFileRepository = new FileRepository(this.propertyTestFile);
-            this.testsFileRepository2 = new FileRepository(this.propertyTestFile2);
+            this.testsFileRepository2 = new FileRepository(propertyTestFile2);
         } catch (IOException e) {
             LOGGER.error("Tests property file [C:\\propertyTestFile.properties] CAN NOT be created.");
         }
@@ -186,6 +185,17 @@ public class FileRepositoryTestsCase {
             LOGGER.error(" IO Exception throws, when program try to create property in file.");
             LOGGER.error(e.getMessage());
             Assertions.fail();
+        }
+    }
+
+
+
+    @Test
+    void update_propertyIsExist_shouldUpdatePropertyValue() {
+        try {
+            this.testsFileRepository2.update("repository.update.key1", "value_1");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

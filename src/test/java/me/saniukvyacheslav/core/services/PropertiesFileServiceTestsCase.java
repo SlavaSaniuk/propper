@@ -3,7 +3,7 @@ package me.saniukvyacheslav.core.services;
 import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
 import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
+import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,6 +229,44 @@ public class PropertiesFileServiceTestsCase {
             Assertions.assertEquals(propertyKey, createdProperty.getPropertyKey());
             Assertions.assertEquals(propertyValue, createdProperty.getPropertyValue());
             LOGGER.debug(String.format("Created property: [%s];", createdProperty));
+
+        } catch (PropertyNotFoundException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+    }
+
+    @Test
+    @Order(18)
+    void update_propertyIsExistInFile_shouldUpdateProperty() {
+
+        // Create test property:
+        String sharedPropertyKey = "service.update.property";
+        Property propertyToCreate = new Property(sharedPropertyKey, "value1");
+        // Create property in file:
+        try {
+
+            LOGGER.debug(String.format("Property to create: [%s];", propertyToCreate));
+            this.testServiceIml.create(propertyToCreate);
+        } catch (PropertyAlreadyExistException | IOException e) {
+            LOGGER.debug(e.getMessage());
+        }
+
+        // Update property in file:
+        String newPropertyValue = "value2";
+        Property propertyToUpdate = new Property(sharedPropertyKey, newPropertyValue);
+        try {
+            this.testServiceIml.update(propertyToUpdate);
+        } catch (PropertyNotFoundException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Find property in file:
+        try {
+            Property updatedProperty = this.testServiceIml.read(sharedPropertyKey);
+
+            Assertions.assertEquals(propertyToUpdate, updatedProperty);
+            LOGGER.debug(String.format("Updated property: [%s];", updatedProperty));
 
         } catch (PropertyNotFoundException | IOException e) {
             Assertions.fail(e.getMessage());

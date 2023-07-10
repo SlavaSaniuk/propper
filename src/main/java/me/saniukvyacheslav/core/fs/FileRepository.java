@@ -4,6 +4,8 @@ import me.saniukvyacheslav.core.prop.Property;
 import me.saniukvyacheslav.core.prop.PropertyWrapper;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * FileRepository used for work with properties files.
@@ -49,7 +51,7 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public Property create(Property aProperty) throws IOException {
+    public void create(Property aProperty) throws IOException {
 
         // Check property
         PropertyWrapper.checkProperty(aProperty);
@@ -64,7 +66,7 @@ public class FileRepository implements Repository {
             writer.flush();
         }
 
-        return this.read(aProperty.getPropertyKey());
+        this.read(aProperty.getPropertyKey());
 
     }
 
@@ -96,11 +98,37 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public Property update(String aKey, String aNewValue) {
+    public void update(String aKey, String aNewValue) throws IOException {
 
+        // Check property key:
+        PropertyWrapper.checkPropertyKey(aKey);
 
+        // Read file content:
+        StringBuilder fileContent = this.readFileContent();
 
-        return null;
+        // Convert string builder to list of strings:
+        String[] strings = fileContent.toString().split("\n");
+        List<String> strList = Arrays.asList(strings);
+
+        // Write file content and find property:
+        try(BufferedWriter writer = this.openWriter()) {
+            StringBuilder newFileContent = new StringBuilder();
+
+            // Iterate through list:
+            strList.forEach((str) -> {
+                // Find str which start with key:
+                // If string founded, then replace with new string: aKey=aNewValue
+                if (str.startsWith(aKey)) str = aKey +"=" +aNewValue;
+
+                // Add to sb:
+                newFileContent.append(str).append("\n");
+            });
+
+            writer.write(newFileContent.toString());
+            writer.flush();
+        }
+
+        this.read(aKey);
     }
 
     @Override

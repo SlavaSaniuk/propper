@@ -1,9 +1,10 @@
 package me.saniukvyacheslav.core.services;
 
+import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.core.fs.FileRepository;
 import me.saniukvyacheslav.core.prop.Property;
 import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
-import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
+import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
 import me.saniukvyacheslav.core.prop.PropertyWrapper;
 
 import java.io.IOException;
@@ -60,4 +61,27 @@ public class PropertiesFileService implements PropertiesService {
         // Create property in file:
         this.create(new Property(aPropertyKey, aPropertyValue));
     }
+
+    @Override
+    public void update(Property aProperty) throws PropertyNotFoundException, IOException {
+        // Check property:
+        if(aProperty == null) throw new PropertyIsInvalidException("Property must be not null.");
+
+        // Update property value:
+        this.update(aProperty.getPropertyKey(), aProperty.getPropertyValue());
+    }
+
+    @Override
+    public void update(String aPropertyKey, String aPropertyNewValue) throws PropertyNotFoundException, IOException {
+        // Check property key:
+        PropertyWrapper.checkPropertyKey(aPropertyKey);
+
+        // Check if property exist in file:
+        // If property is not exist, then throw PNFE:
+        this.read(aPropertyKey);
+
+        // Update property value:
+        this.fileRepository.update(aPropertyKey, aPropertyNewValue);
+    }
+
 }

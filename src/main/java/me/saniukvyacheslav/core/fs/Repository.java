@@ -1,7 +1,7 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
+import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
 
 import java.io.IOException;
 
@@ -13,10 +13,9 @@ public interface Repository {
     /**
      * Create new property instance in database.
      * @param aProperty - property to create.
-     * @return - created property instance.
      * @throws IOException - If IO exceptions occurs.
      */
-    Property create(Property aProperty) throws IOException;
+    void create(Property aProperty) throws IOException;
 
     /**
      * Read property from repository by property key.
@@ -27,7 +26,13 @@ public interface Repository {
      */
     Property read(String aKey) throws IOException;
 
-    Property update(String aKey, String aNewValue) throws PropertyNotFoundException, IOException;
+    /**
+     * Update property instance with new specified value by property key.
+     * @param aKey - property key.
+     * @param aNewValue - new property value.
+     * @throws IOException - If IO exceptions occurs.
+     */
+    void update(String aKey, String aNewValue) throws IOException;
 
     Property delete(String aKey) throws PropertyNotFoundException;
 
