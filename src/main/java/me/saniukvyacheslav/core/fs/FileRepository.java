@@ -64,7 +64,7 @@ public class FileRepository implements Repository {
             writer.flush();
         }
 
-        return aProperty;
+        return this.read(aProperty.getPropertyKey());
 
     }
 

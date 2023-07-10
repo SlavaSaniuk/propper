@@ -2,7 +2,9 @@ package me.saniukvyacheslav.core.services;
 
 import me.saniukvyacheslav.core.fs.FileRepository;
 import me.saniukvyacheslav.core.prop.Property;
+import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
+import me.saniukvyacheslav.core.prop.PropertyWrapper;
 
 import java.io.IOException;
 
@@ -35,5 +37,27 @@ public class PropertiesFileService implements PropertiesService {
     @Override
     public String readValue(String aPropertyKey) throws PropertyNotFoundException, IOException {
         return this.read(aPropertyKey).getPropertyValue();
+    }
+
+    @Override
+    public void create(Property property) throws PropertyAlreadyExistException, IOException {
+        // Check property instance:
+        PropertyWrapper.checkProperty(property);
+
+        // Check if property already exist in repo:
+        if(this.fileRepository.read(property.getPropertyKey()) != null)
+            throw new PropertyAlreadyExistException(property.getPropertyKey());
+
+        // try to create property in file:
+        this.fileRepository.create(property);
+    }
+
+    @Override
+    public void create(String aPropertyKey, String aPropertyValue) throws PropertyAlreadyExistException, IOException {
+        // Check property key:
+        PropertyWrapper.checkPropertyKey(aPropertyKey);
+
+        // Create property in file:
+        this.create(new Property(aPropertyKey, aPropertyValue));
     }
 }

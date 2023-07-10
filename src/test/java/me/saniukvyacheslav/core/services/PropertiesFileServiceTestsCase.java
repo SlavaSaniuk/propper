@@ -1,5 +1,7 @@
 package me.saniukvyacheslav.core.services;
 
+import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
+import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.core.prop.Property;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
 import org.junit.jupiter.api.*;
@@ -140,5 +142,97 @@ public class PropertiesFileServiceTestsCase {
         } catch (PropertyNotFoundException | IOException e) {
             Assertions.fail(e.getMessage());
         }
+    }
+
+    @Test
+    @Order(12)
+    void create_propertyIsNull_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, () -> this.testServiceIml.create(null));
+    }
+
+    @Test
+    @Order(13)
+    void create_propertyKeyIsNull_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, () -> this.testServiceIml.create(null, null));
+    }
+
+    @Test
+    @Order(14)
+    void create_propertyKeyIsEmpty_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, () -> this.testServiceIml.create("", null));
+    }
+
+    @Test
+    @Order(15)
+    void create_propertyAlreadyExistInFile_shouldThrowPAEE() {
+        // ********************************************************************
+        // In test properties file already exist property: "my.name=Vyacheslav"
+        LOGGER.debug("********************************************************************");
+        LOGGER.debug("In test properties file already exist property: \"my.name=Vyacheslav\"");
+        LOGGER.debug("********************************************************************");
+
+        Property propertyToCreate = new Property("my.name","Vyacheslav");
+        Assertions.assertThrows(PropertyAlreadyExistException.class, ()-> this.testServiceIml.create(propertyToCreate));
+    }
+
+    // Worked method:
+    @Test
+    @Order(16)
+    @Disabled
+    void create_validPropertyNotExistInFile_shouldCreateProperty() {
+
+        String propertyKey = "service.create.valid";
+        String propertyValue = "value_1";
+        Property propertyToCreate = new Property(propertyKey,propertyValue);
+
+        // Create property in file:
+        try {
+            LOGGER.debug(String.format("Property to create: [%s];", propertyToCreate));
+            this.testServiceIml.create(propertyToCreate);
+        } catch (PropertyAlreadyExistException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Find property in file:
+        try {
+            Property createdProperty = this.testServiceIml.read(propertyKey);
+
+            Assertions.assertEquals(propertyToCreate, createdProperty);
+            LOGGER.debug(String.format("Created property: [%s];", createdProperty));
+
+        } catch (PropertyNotFoundException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+    }
+
+    @Test
+    @Order(17)
+    @Disabled
+    void create_validPropertyKey_shouldCreateProperty() {
+
+        String propertyKey = "service.create_str_str.valid";
+        String propertyValue = "value_1";
+
+        // Create property in file:
+        try {
+            LOGGER.debug(String.format("Property to create: [%s = %s];", propertyKey, propertyValue));
+            this.testServiceIml.create(propertyKey, propertyValue);
+        } catch (PropertyAlreadyExistException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Find property in file:
+        try {
+            Property createdProperty = this.testServiceIml.read(propertyKey);
+
+            Assertions.assertEquals(propertyKey, createdProperty.getPropertyKey());
+            Assertions.assertEquals(propertyValue, createdProperty.getPropertyValue());
+            LOGGER.debug(String.format("Created property: [%s];", createdProperty));
+
+        } catch (PropertyNotFoundException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
     }
 }

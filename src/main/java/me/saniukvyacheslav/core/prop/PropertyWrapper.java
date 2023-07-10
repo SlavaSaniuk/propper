@@ -13,9 +13,9 @@ public class PropertyWrapper {
      * @param aPropertyKey - property key.
      * @throws RuntimeException - If property key is invalid (NPE ar IAE).
      */
-    public static void checkPropertyKey(String aPropertyKey) throws RuntimeException {
-        if (aPropertyKey == null) throw new NullPointerException("Property key must be not mull.");
-        if (aPropertyKey.isEmpty()) throw new IllegalArgumentException("Property ket must be not empty.");
+    public static void checkPropertyKey(String aPropertyKey) throws PropertyIsInvalidException {
+        if (aPropertyKey == null) throw new PropertyIsInvalidException("Property key must be not mull.");
+        if (aPropertyKey.isEmpty()) throw new PropertyIsInvalidException("Property ket must be not empty.");
     }
 
     /**

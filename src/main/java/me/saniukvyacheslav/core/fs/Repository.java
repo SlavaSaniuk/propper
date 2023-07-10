@@ -1,7 +1,6 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.prop.PropertyAlreadyExistException;
 import me.saniukvyacheslav.core.prop.PropertyNotFoundException;
 
 import java.io.IOException;
