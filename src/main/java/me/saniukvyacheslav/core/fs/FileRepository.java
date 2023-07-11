@@ -72,27 +72,12 @@ public class FileRepository implements Repository {
 
     @Override
     public Property read(String aKey) throws IOException {
-        Property resultProperty; // Result property (may be null);
-
         String readedStr;
         try(BufferedReader reader = this.openReader()) {
             while ((readedStr = reader.readLine()) != null) {
-                if (readedStr.startsWith(aKey)) {
-                    String[] keyValuePair = readedStr.split("=");
-
-                    // Set property key:
-                    resultProperty = new Property(keyValuePair[0], null);
-
-                    // Check if property value not empty, and set property value:
-                    if (keyValuePair.length == 1) resultProperty.setPropertyValue("");
-                    else resultProperty.setPropertyValue(keyValuePair[1]);
-
-                    // return founded property:
-                    return resultProperty;
-                }
+                if (readedStr.startsWith(aKey)) return this.parsePropertyString(readedStr);
             }
         }
-
         // If property not with specified key not found in file, then return null:
         return null;
     }
@@ -132,8 +117,31 @@ public class FileRepository implements Repository {
     }
 
     @Override
-    public Property delete(String aKey) {
-        return null;
+    public void delete(String aKey) throws IOException {
+        // Check property key:
+        PropertyWrapper.checkPropertyKey(aKey);
+
+        // Read file content:
+        StringBuilder fileContent = this.readFileContent();
+        // Convert string builder to list of strings:
+        String[] strings = fileContent.toString().split("\n");
+        List<String> strList = Arrays.asList(strings);
+
+
+        // Open file writer
+        try(BufferedWriter writer = this.openWriter()) {
+            StringBuilder newFileContent = new StringBuilder();
+            // Iterate through file content:
+            strList.forEach((str) -> {
+                // Find specified property key and not add it to result file content
+                if (!str.startsWith(aKey)) newFileContent.append(str).append("\n");
+                else newFileContent.append("\n");
+            });
+
+            // Write changes:
+            writer.write(newFileContent.toString());
+            writer.flush();
+        }
     }
 
 
@@ -160,5 +168,14 @@ public class FileRepository implements Repository {
         return sb;
     }
 
+    private Property parsePropertyString(String aStr) {
+        String[] keyValuePair = aStr.split("=");
+
+        // Create property object:
+        if (keyValuePair.length == 0) return null;
+        else if (keyValuePair.length == 1) return new Property(keyValuePair[0], null);
+        else return new Property(keyValuePair[0], keyValuePair[1]);
+
+    }
 
 }

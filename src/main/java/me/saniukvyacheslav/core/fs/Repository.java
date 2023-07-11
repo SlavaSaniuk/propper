@@ -1,7 +1,6 @@
 package me.saniukvyacheslav.core.fs;
 
 import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
 
 import java.io.IOException;
 
@@ -34,6 +33,11 @@ public interface Repository {
      */
     void update(String aKey, String aNewValue) throws IOException;
 
-    Property delete(String aKey) throws PropertyNotFoundException;
+    /**
+     * Delete property instance from repository bu property key.
+     * @param aKey - property key.
+     * @throws IOException - If IO exceptions occurs.
+     */
+    void delete(String aKey) throws IOException;
 
 }

@@ -1,5 +1,6 @@
 package me.saniukvyacheslav.core.fs;
 
+import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.core.prop.Property;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -188,8 +189,6 @@ public class FileRepositoryTestsCase {
         }
     }
 
-
-
     @Test
     void update_propertyIsExist_shouldUpdatePropertyValue() {
         try {
@@ -198,5 +197,62 @@ public class FileRepositoryTestsCase {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void delete_keyIsNull_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, ()-> this.testsFileRepository2.delete(null));
+    }
+
+    @Test
+    void delete_keyIsEmpty_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, ()-> this.testsFileRepository2.delete(""));
+    }
+
+
+    @Test
+    void delete_propertyIsNotExistInFile_shouldDoNothing() {
+        String propertyKey = "property-which-not-exist-in-file";
+
+        try {
+            this.testsFileRepository2.delete(propertyKey);
+            Property foundProperty = this.testsFileRepository.read(propertyKey);
+            Assertions.assertNull(foundProperty);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void delete_propertyExistInFile_shouldReturnPropertyValue() {
+        String propertyKey = "repository.delete.1";
+        String propertyValue = "value1";
+
+        // Create property in file:
+        try {
+        if (this.testsFileRepository2.read(propertyKey) == null)
+                this.testsFileRepository2.create(new Property(propertyKey, propertyValue));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Try to delete property:
+        try {
+            this.testsFileRepository2.delete(propertyKey);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Try to find deleted property:
+        try {
+            Property foundProperty = this.testsFileRepository.read(propertyKey);
+            Assertions.assertNull(foundProperty);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+    }
+
+
+
 
 }
