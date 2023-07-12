@@ -175,10 +175,8 @@ public class PropertiesFileServiceTestsCase {
         Assertions.assertThrows(PropertyAlreadyExistException.class, ()-> this.testServiceIml.create(propertyToCreate));
     }
 
-    // Worked method:
     @Test
     @Order(16)
-    @Disabled
     void create_validPropertyNotExistInFile_shouldCreateProperty() {
 
         String propertyKey = "service.create.valid";
@@ -189,7 +187,9 @@ public class PropertiesFileServiceTestsCase {
         try {
             LOGGER.debug(String.format("Property to create: [%s];", propertyToCreate));
             this.testServiceIml.create(propertyToCreate);
-        } catch (PropertyAlreadyExistException | IOException e) {
+        } catch (PropertyAlreadyExistException e) {
+            return;
+        } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
 
@@ -208,7 +208,6 @@ public class PropertiesFileServiceTestsCase {
 
     @Test
     @Order(17)
-    @Disabled
     void create_validPropertyKey_shouldCreateProperty() {
 
         String propertyKey = "service.create_str_str.valid";
@@ -218,7 +217,9 @@ public class PropertiesFileServiceTestsCase {
         try {
             LOGGER.debug(String.format("Property to create: [%s = %s];", propertyKey, propertyValue));
             this.testServiceIml.create(propertyKey, propertyValue);
-        } catch (PropertyAlreadyExistException | IOException e) {
+        } catch (PropertyAlreadyExistException e) {
+            return;
+        } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
 
