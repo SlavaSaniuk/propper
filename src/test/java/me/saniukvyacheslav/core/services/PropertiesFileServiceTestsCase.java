@@ -273,4 +273,43 @@ public class PropertiesFileServiceTestsCase {
         }
 
     }
+
+    @Test
+    @Order(19)
+    void delete_propertyIsNull_shouldThrowPIIE() {
+        Assertions.assertThrows(PropertyIsInvalidException.class, () -> this.testServiceIml.delete((Property) null));
+    }
+
+    @Test
+    @Order(20)
+    void delete_propertyIsExist_shouldDeleteProperty() {
+        String propertyKey = "service.delete.1";
+        // Create property, if property is not exist:
+        try {
+            this.testServiceIml.create(new Property(propertyKey, "value1"));
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.debug("Property already exist in properties file.");
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Delete property form file:
+        try {
+            this.testServiceIml.delete(propertyKey);
+        } catch (PropertyNotFoundException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Try to read property from file
+        Assertions.assertThrows(PropertyNotFoundException.class, () -> this.testServiceIml.read(propertyKey));
+
+
+    }
+
+    @Test
+    @Order(21)
+    void delete_propertyIsNotExistInFile_shouldThrowPNFE() {
+        // Try to read property from file
+        Assertions.assertThrows(PropertyNotFoundException.class, () -> this.testServiceIml.read("property-key-which-not-exist"));
+    }
 }

@@ -9,6 +9,10 @@ import me.saniukvyacheslav.core.prop.PropertyWrapper;
 
 import java.io.IOException;
 
+/**
+ * {@link PropertiesFileService} service is implementation of {@link PropertiesService} interface,
+ * and it used in cases when properties saved in properties file (properties repository = properties file).
+ */
 public class PropertiesFileService implements PropertiesService {
 
     private final FileRepository fileRepository; // File repository;
@@ -82,6 +86,27 @@ public class PropertiesFileService implements PropertiesService {
 
         // Update property value:
         this.fileRepository.update(aPropertyKey, aPropertyNewValue);
+    }
+
+    @Override
+    public void delete(Property aProperty) throws PropertyNotFoundException, IOException {
+        // Check specified property instance at null:
+        if (aProperty == null) throw new PropertyIsInvalidException("Property instance must be not null.");
+        // Delete property instance by key:
+        this.delete(aProperty.getPropertyKey());
+    }
+
+    @Override
+    public void delete(String aPropertyKey) throws PropertyNotFoundException, IOException {
+        // Check property key:
+        PropertyWrapper.checkPropertyKey(aPropertyKey);
+
+        // Check if property exist in database:
+        // If "read()" completed without exceptions, property exist in file:
+        this.fileRepository.read(aPropertyKey);
+
+        // Delete property from file:
+        this.fileRepository.delete(aPropertyKey);
     }
 
 }
