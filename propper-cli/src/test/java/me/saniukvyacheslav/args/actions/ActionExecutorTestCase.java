@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ActionExecutorTestCase {
@@ -40,12 +41,11 @@ public class ActionExecutorTestCase {
         // Create action branch:
         ActionBranch actionBranch = new ActionBranch.Builder()
                 .onCommandRegex("/r")
-                .withArguments(new String[]{"/r", propertyKey, this.propertiesFile})
                 .ofAction(new ReadPropertyAction())
                 .build();
 
         try {
-            ActionResult actionResult = ActionExecutor.getInstance().execute(actionBranch);
+            ActionResult actionResult = ActionExecutor.getInstance().execute(actionBranch, Arrays.asList("/r", propertyKey, this.propertiesFile));
             Assertions.assertNotNull(actionResult);
             Assertions.assertFalse(actionResult.isException());
             Assertions.assertEquals(0, actionResult.getExitCode());

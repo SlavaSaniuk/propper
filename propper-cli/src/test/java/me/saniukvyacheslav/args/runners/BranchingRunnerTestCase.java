@@ -49,7 +49,6 @@ public class BranchingRunnerTestCase {
         // Add ActionBranches:
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][r/R]")
-                .withArguments(args)
                 .ofAction(new ReadPropertyAction())
                 .build()
         );
@@ -68,7 +67,6 @@ public class BranchingRunnerTestCase {
         // Add ActionBranches:
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][r/R]")
-                .withArguments(args)
                 .ofAction(new ReadPropertyAction())
                 .build()
         );
@@ -87,7 +85,6 @@ public class BranchingRunnerTestCase {
         // Add ActionBranches:
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][r/R]")
-                .withArguments(args)
                 .ofAction(new ReadPropertyAction())
                 .build()
         );
@@ -97,7 +94,7 @@ public class BranchingRunnerTestCase {
     }
 
     @Test
-    void run_pathToPropertyFileLinkOnDirectory_eshouldPrintExceptionMessageAndReturn3ExitCode() {
+    void run_pathToPropertyFileLinkOnDirectory_shouldPrintExceptionMessageAndReturn3ExitCode() {
         String propertyKey = "not-existed-property-key";
 
         // Get runner:
@@ -106,7 +103,6 @@ public class BranchingRunnerTestCase {
         // Add ActionBranches:
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][r/R]")
-                .withArguments(args)
                 .ofAction(new ReadPropertyAction())
                 .build()
         );

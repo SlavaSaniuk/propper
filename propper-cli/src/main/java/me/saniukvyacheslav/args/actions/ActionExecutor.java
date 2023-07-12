@@ -16,15 +16,14 @@ public class ActionExecutor {
         return ActionExecutor.instance;
     }
 
-    public ActionResult execute(ActionBranch anActionBranch) throws UnhandledException {
+    public ActionResult execute(ActionBranch anActionBranch, List<String> anArguments) throws UnhandledException {
 
         // Get action and arguments:
         Action action = anActionBranch.getAction();
-        List<String> arguments = anActionBranch.getCommandArguments();
 
         // Execute action:
         try {
-            return action.doAction(arguments);
+            return action.doAction(anArguments);
         }catch (Exception e) {
             throw new UnhandledException(e);
         }

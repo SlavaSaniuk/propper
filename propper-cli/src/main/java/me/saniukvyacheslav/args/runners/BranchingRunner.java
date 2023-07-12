@@ -6,6 +6,7 @@ import me.saniukvyacheslav.args.actions.ActionExecutor;
 import me.saniukvyacheslav.args.actions.ActionResult;
 import me.saniukvyacheslav.args.exceptions.UnhandledException;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -38,10 +39,11 @@ public class BranchingRunner implements Runner {
                 currentBranch = branch;
                 break;
         }}
+        if (currentBranch == null) return UnhandledException.unhandledExceptionCode;
 
         // Execute current action:
         try {
-            ActionResult actionResult = BranchingRunner.actionExecutor.execute(currentBranch);
+            ActionResult actionResult = BranchingRunner.actionExecutor.execute(currentBranch, Arrays.asList(aCommandArgs));
 
             // Check if action completed without exceptions:
             if (!(actionResult.isException())) {
@@ -60,7 +62,7 @@ public class BranchingRunner implements Runner {
             System.err.println(e.getUnhandledExceptionMessage());
             e.getUnhandledException().printStackTrace();
             System.out.println(e.getUnhandledExceptionMessage());
-            return e.getUnhandledExceptionCode();
+            return UnhandledException.unhandledExceptionCode;
         }
     }
 

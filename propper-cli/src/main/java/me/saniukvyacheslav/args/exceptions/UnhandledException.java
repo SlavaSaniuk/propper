@@ -4,8 +4,7 @@ import lombok.Getter;
 
 public class UnhandledException extends Throwable {
 
-    @Getter
-    private final int unhandledExceptionCode = 999;
+    public static final int unhandledExceptionCode = 999;
     @Getter
     private final Exception unhandledException;
     @Getter

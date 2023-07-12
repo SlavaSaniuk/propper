@@ -2,52 +2,62 @@ package me.saniukvyacheslav.args.actions;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.List;
-
+/**
+ * ActionBranch used to map user command with {@link Action} user action.
+ * Use {@link ActionBranch.Builder} to create different program branches.
+ */
 public class ActionBranch {
 
     @Getter
-    private String commandRegex;
+    private final String commandRegex;
     @Getter
-    private List<String> commandArguments;
-    @Getter
-    private Action action;
+    private final Action action;
 
-    private ActionBranch(String aCommandRegex, List<String> aCommandArguments, Action anAction) {
+    /**
+     * Construct new branch by specified mapping "command - action".
+     * @param aCommandRegex - command regular expression.
+     * @param anAction - user action.
+     */
+    private ActionBranch(String aCommandRegex, Action anAction) {
         this.commandRegex = aCommandRegex;
-        this.commandArguments = aCommandArguments;
         this.action = anAction;
     }
 
+    /**
+     * Builder used to create new instances of {@link ActionBranch} branches.
+     */
     public static class Builder {
 
         private String commandReg;
-
-        private List<String> commandArgs;
         private Action branchAction;
 
-        public Builder() {}
-
+        /**
+         * Set command regular expression to {@link ActionBranch} branch instance.
+         * Example: if you want use "/d" or "-R" arguments, you must specify [/|-][r|R] command regular expression
+         * @param aCommandRegex - command regular expression.
+         * @return - This builder.
+         */
         public Builder onCommandRegex(String aCommandRegex) {
             this.commandReg = aCommandRegex;
             return this;
         }
 
-        public Builder withArguments(String[] anArguments) {
-            this.commandArgs = Arrays.asList(anArguments);
-            return this;
-        }
-
+        /**
+         * Set command action to {@link ActionBranch} branch instance.
+         * @param anAction - user action.
+         * @return - This builder.
+         */
         public Builder ofAction(Action anAction) {
             this.branchAction = anAction;
             return this;
         }
 
+        /**
+         * Build {@link ActionBranch} branch.
+         * @return - Created {@link ActionBranch} branch.
+         */
         public ActionBranch build() {
-            return new ActionBranch(this.commandReg, this.commandArgs, this.branchAction);
+            return new ActionBranch(this.commandReg, this.branchAction);
         }
-
     }
-
 }
