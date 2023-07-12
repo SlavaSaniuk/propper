@@ -1,6 +1,6 @@
-package me.saniukvyacheslav.core.fs;
+package me.saniukvyacheslav.fs;
 
-import me.saniukvyacheslav.core.prop.Property;
+import me.saniukvyacheslav.prop.Property;
 
 import java.io.IOException;
 

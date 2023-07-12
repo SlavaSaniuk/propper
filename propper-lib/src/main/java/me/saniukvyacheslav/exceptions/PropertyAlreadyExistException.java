@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.core.exceptions;
+package me.saniukvyacheslav.exceptions;
 
 /**
  * PropertyAlreadyExist exception describes situation, when property instance already exist in repository.

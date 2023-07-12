@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.core.prop;
+package me.saniukvyacheslav.prop;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.core.exceptions;
+package me.saniukvyacheslav.exceptions;
 
 /**
  * PropertyNotFoundException exception throws in cases, when property object not exist or not found in repository.

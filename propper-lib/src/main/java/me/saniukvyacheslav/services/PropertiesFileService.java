@@ -1,11 +1,11 @@
-package me.saniukvyacheslav.core.services;
+package me.saniukvyacheslav.services;
 
-import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
-import me.saniukvyacheslav.core.fs.FileRepository;
-import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
-import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
-import me.saniukvyacheslav.core.prop.PropertyWrapper;
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
+import me.saniukvyacheslav.fs.FileRepository;
+import me.saniukvyacheslav.prop.Property;
+import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
+import me.saniukvyacheslav.exceptions.PropertyNotFoundException;
+import me.saniukvyacheslav.prop.PropertyWrapper;
 
 import java.io.IOException;
 

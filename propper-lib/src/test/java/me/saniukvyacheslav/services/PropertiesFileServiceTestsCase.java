@@ -1,9 +1,9 @@
-package me.saniukvyacheslav.core.services;
+package me.saniukvyacheslav.services;
 
-import me.saniukvyacheslav.core.exceptions.PropertyAlreadyExistException;
-import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
-import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.exceptions.PropertyNotFoundException;
+import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
+import me.saniukvyacheslav.prop.Property;
+import me.saniukvyacheslav.exceptions.PropertyNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

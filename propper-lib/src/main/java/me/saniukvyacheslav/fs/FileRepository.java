@@ -1,7 +1,7 @@
-package me.saniukvyacheslav.core.fs;
+package me.saniukvyacheslav.fs;
 
-import me.saniukvyacheslav.core.prop.Property;
-import me.saniukvyacheslav.core.prop.PropertyWrapper;
+import me.saniukvyacheslav.prop.Property;
+import me.saniukvyacheslav.prop.PropertyWrapper;
 
 import java.io.*;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
-package me.saniukvyacheslav.core.fs;
+package me.saniukvyacheslav.fs;
 
-import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
-import me.saniukvyacheslav.core.prop.Property;
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
+import me.saniukvyacheslav.prop.Property;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

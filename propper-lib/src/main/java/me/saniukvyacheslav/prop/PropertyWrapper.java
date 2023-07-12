@@ -1,6 +1,6 @@
-package me.saniukvyacheslav.core.prop;
+package me.saniukvyacheslav.prop;
 
-import me.saniukvyacheslav.core.exceptions.PropertyIsInvalidException;
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 
 /**
  * PropertyWrapper wrapper class has utilities methods for working with {@link Property} instances.
