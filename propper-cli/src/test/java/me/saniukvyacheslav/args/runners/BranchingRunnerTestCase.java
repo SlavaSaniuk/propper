@@ -1,6 +1,7 @@
 package me.saniukvyacheslav.args.runners;
 
 import me.saniukvyacheslav.args.actions.ActionBranch;
+import me.saniukvyacheslav.core.actions.CreatePropertyAction;
 import me.saniukvyacheslav.core.actions.ReadPropertyAction;
 import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
 import me.saniukvyacheslav.services.PropertiesFileService;
@@ -109,5 +110,24 @@ public class BranchingRunnerTestCase {
 
         int exitCode = runner.run(args[0], args);
         Assertions.assertEquals(3, exitCode);
+    }
+
+    @Test
+    void run_createPropertyInFile_shouldCreatePropertyAndPrintOkAndreturn0ExitCode() {
+        String propertyKey = "branchingrunner.run.create11";
+        String propertyValue = "value1";
+
+        // Get runner:
+        String[] args = {"-C", propertyKey, propertyValue, this.propertiesFile};
+        BranchingRunner runner = BranchingRunner.getInstance();
+        // Add ActionBranches:
+        runner.addActionBranch(new ActionBranch.Builder()
+                .onCommandRegex("[/|-][c/C]")
+                .ofAction(new CreatePropertyAction())
+                .build()
+        );
+
+        int exitCode = runner.run(args[0], args);
+        Assertions.assertEquals(0, exitCode);
     }
 }
