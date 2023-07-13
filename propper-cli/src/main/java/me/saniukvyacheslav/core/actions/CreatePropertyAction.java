@@ -11,6 +11,13 @@ import me.saniukvyacheslav.services.PropertiesService;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *  {@link CreatePropertyAction} user action used in cases, when user wants to create property in file.
+ * In {@link #doAction(List)} arguments parameter, the second(1) element is property key, the third element(2) is
+ * property value, and the four(3) element is path on property file.
+ * If {@link #doAction(List)} method completes without exceptions, method return "OK" string in
+ * {@link ActionResult#getActionResult()} field.
+ */
 public class CreatePropertyAction implements Action {
 
     @Override
