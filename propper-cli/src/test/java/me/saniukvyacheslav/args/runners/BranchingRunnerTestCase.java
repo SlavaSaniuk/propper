@@ -3,7 +3,9 @@ package me.saniukvyacheslav.args.runners;
 import me.saniukvyacheslav.args.actions.ActionBranch;
 import me.saniukvyacheslav.core.actions.CreatePropertyAction;
 import me.saniukvyacheslav.core.actions.ReadPropertyAction;
+import me.saniukvyacheslav.core.actions.UpdatePropertyAction;
 import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
+import me.saniukvyacheslav.exceptions.PropertyNotFoundException;
 import me.saniukvyacheslav.services.PropertiesFileService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -114,8 +116,17 @@ public class BranchingRunnerTestCase {
 
     @Test
     void run_createPropertyInFile_shouldCreatePropertyAndPrintOkAndreturn0ExitCode() {
-        String propertyKey = "branchingrunner.run.create11";
+        String propertyKey = "branchingrunner.run.create1";
         String propertyValue = "value1";
+
+        // If property is already exist, delete it:
+        try {
+            this.propertiesFileService.delete(propertyKey);
+        } catch (PropertyNotFoundException e) {
+            LOGGER.debug(e.getMessage());
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
 
         // Get runner:
         String[] args = {"-C", propertyKey, propertyValue, this.propertiesFile};
@@ -124,6 +135,35 @@ public class BranchingRunnerTestCase {
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][c/C]")
                 .ofAction(new CreatePropertyAction())
+                .build()
+        );
+
+        int exitCode = runner.run(args[0], args);
+        Assertions.assertEquals(0, exitCode);
+    }
+
+    @Test
+    void run_updatePropertyInFile_shouldUpdatePropertyAndPrintOkAndreturn0ExitCode() {
+        String propertyKey = "branchingrunner.run.update1";
+        String propertyValue = "value1";
+        String propertyNewValue = "value2";
+
+        // If property isn't exist, create it:
+        try {
+            this.propertiesFileService.create(propertyKey, propertyValue);
+        } catch (PropertyAlreadyExistException e) {
+            LOGGER.debug(e.getMessage());
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Get runner:
+        String[] args = {"-U", propertyKey, propertyNewValue, this.propertiesFile};
+        BranchingRunner runner = BranchingRunner.getInstance();
+        // Add ActionBranches:
+        runner.addActionBranch(new ActionBranch.Builder()
+                .onCommandRegex("[/|-][u/U]")
+                .ofAction(new UpdatePropertyAction())
                 .build()
         );
 
