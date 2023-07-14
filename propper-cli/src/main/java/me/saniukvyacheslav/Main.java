@@ -1,11 +1,19 @@
 package me.saniukvyacheslav;
 
+import me.saniukvyacheslav.args.actions.Action;
 import me.saniukvyacheslav.args.actions.ActionBranch;
 import me.saniukvyacheslav.args.runners.BranchingRunner;
 import me.saniukvyacheslav.core.actions.*;
 
+/**
+ * propper-cli application.
+ */
 public class Main {
 
+    /**
+     * Run propper-cli application.
+     * @param args - command line arguments.
+     */
     public static void main(String[] args) {
 
         // Branching runner:
@@ -33,10 +41,13 @@ public class Main {
                 .ofAction(new DeletePropertyAction())
                 .build());
         // If command /H - print help:
+        Action helpAction = new HelpAction();
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][h/H]")
-                .ofAction(new HelpAction())
+                .ofAction(helpAction)
                 .build());
+        // If command is not supported, then execute help action:
+        runner.onUnknownCommand(helpAction);
 
         // Run:
         int exitCode = runner.run(args[0], args);
