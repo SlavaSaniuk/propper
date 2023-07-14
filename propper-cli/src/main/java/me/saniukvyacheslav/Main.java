@@ -2,10 +2,7 @@ package me.saniukvyacheslav;
 
 import me.saniukvyacheslav.args.actions.ActionBranch;
 import me.saniukvyacheslav.args.runners.BranchingRunner;
-import me.saniukvyacheslav.core.actions.CreatePropertyAction;
-import me.saniukvyacheslav.core.actions.DeletePropertyAction;
-import me.saniukvyacheslav.core.actions.ReadPropertyAction;
-import me.saniukvyacheslav.core.actions.UpdatePropertyAction;
+import me.saniukvyacheslav.core.actions.*;
 
 public class Main {
 
@@ -24,8 +21,7 @@ public class Main {
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][c/C]")
                 .ofAction(new CreatePropertyAction())
-                .build()
-        );
+                .build());
         // If command /U - update property:
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][u/U]")
@@ -35,6 +31,11 @@ public class Main {
         runner.addActionBranch(new ActionBranch.Builder()
                 .onCommandRegex("[/|-][d/D]")
                 .ofAction(new DeletePropertyAction())
+                .build());
+        // If command /H - print help:
+        runner.addActionBranch(new ActionBranch.Builder()
+                .onCommandRegex("[/|-][h/H]")
+                .ofAction(new HelpAction())
                 .build());
 
         // Run:

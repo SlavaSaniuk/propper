@@ -11,20 +11,36 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * {@link BranchingRunner} runner is implementation of {@link Runner} interface.
+ * This singleton instance used to start one variant ob execution of application.
+ * Different actions, which user wants to execute, must be implemented in {@link ActionBranch} instances.
+ */
 public class BranchingRunner implements Runner {
 
-    private static BranchingRunner instance;
+    private static BranchingRunner instance; // This singleton instance;
     @Getter
-    private final Set<ActionBranch> branches = new HashSet<>();
-    private static final ActionExecutor actionExecutor = ActionExecutor.getInstance();
+    private final Set<ActionBranch> branches = new HashSet<>(); // Supported action branches;
+    private static final ActionExecutor actionExecutor = ActionExecutor.getInstance(); // Action executor;
 
+    /**
+     * Default constructor.
+     */
     private BranchingRunner() {}
 
+    /**
+     * Get current singleton instance.
+     * @return - this class current singleton instance.
+     */
     public static BranchingRunner getInstance() {
         if(BranchingRunner.instance == null) BranchingRunner.instance = new BranchingRunner();
         return BranchingRunner.instance;
     }
 
+    /**
+     * Add supported {@link ActionBranch} branch.
+     * @param anActionBranch - supported branch.
+     */
     public void addActionBranch(ActionBranch anActionBranch) {
         this.branches.add(anActionBranch);
     }
