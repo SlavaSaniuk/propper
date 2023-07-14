@@ -1,6 +1,7 @@
 package me.saniukvyacheslav.args.runners;
 
 import lombok.Getter;
+import me.saniukvyacheslav.args.actions.Action;
 import me.saniukvyacheslav.args.actions.ActionBranch;
 import me.saniukvyacheslav.args.actions.ActionExecutor;
 import me.saniukvyacheslav.args.actions.ActionResult;
@@ -22,6 +23,7 @@ public class BranchingRunner implements Runner {
     @Getter
     private final Set<ActionBranch> branches = new HashSet<>(); // Supported action branches;
     private static final ActionExecutor actionExecutor = ActionExecutor.getInstance(); // Action executor;
+    private Action onUnknownCommandAction;
 
     /**
      * Default constructor.
@@ -45,6 +47,15 @@ public class BranchingRunner implements Runner {
         this.branches.add(anActionBranch);
     }
 
+    /**
+     * Set user action, which will be executed, when specified command is not supported.
+     * @param anAction - action, which will be executed.
+     */
+    public void onUnknownCommand(Action anAction) {
+        if (anAction == null) throw new NullPointerException("Action instance must be not null.");
+        this.onUnknownCommandAction = anAction;
+    }
+
     @Override
     public int run(String aCommand, String[] aCommandArgs) {
 
@@ -55,7 +66,21 @@ public class BranchingRunner implements Runner {
                 currentBranch = branch;
                 break;
         }}
-        if (currentBranch == null) return UnhandledException.unhandledExceptionCode;
+
+        // If command is not supported and current branch is not selected, execute onUnknownCommandAction:
+        if (currentBranch == null) {
+            try {
+                ActionResult result = BranchingRunner.actionExecutor.execute(this.onUnknownCommandAction, Arrays.asList(aCommandArgs));
+                System.out.println(result.getActionResult());
+                return result.getExitCode();
+            } catch (UnhandledException e) {
+                // Print exception message in out and err streams:
+                System.err.println(e.getUnhandledExceptionMessage());
+                e.getUnhandledException().printStackTrace();
+                System.out.println(e.getUnhandledExceptionMessage());
+                return UnhandledException.unhandledExceptionCode;
+            }
+        }
 
         // Execute current action:
         try {

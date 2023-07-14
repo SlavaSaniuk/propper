@@ -2,6 +2,7 @@ package me.saniukvyacheslav.args.runners;
 
 import me.saniukvyacheslav.args.actions.ActionBranch;
 import me.saniukvyacheslav.core.actions.CreatePropertyAction;
+import me.saniukvyacheslav.core.actions.HelpAction;
 import me.saniukvyacheslav.core.actions.ReadPropertyAction;
 import me.saniukvyacheslav.core.actions.UpdatePropertyAction;
 import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
@@ -168,6 +169,17 @@ public class BranchingRunnerTestCase {
         );
 
         int exitCode = runner.run(args[0], args);
+        Assertions.assertEquals(0, exitCode);
+    }
+
+    @Test
+    void run_commandIsNotSupported_shouldExecuteOnNotSupportedActionAndReturn0() {
+        BranchingRunner runner = BranchingRunner.getInstance();
+        runner.onUnknownCommand(new HelpAction());
+
+        String[] args = {"/unknown command", "arg1", "arg2"};
+        int exitCode = runner.run(args[0], args);
+
         Assertions.assertEquals(0, exitCode);
     }
 }

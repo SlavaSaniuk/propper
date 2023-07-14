@@ -41,11 +41,22 @@ public class ActionExecutor {
         Action action = anActionBranch.getAction();
 
         // Execute action:
+        return this.execute(action, anArguments);
+    }
+
+    /**
+     * Execute specified action instance with specified arguments.
+     * @param anAction - user action.
+     * @param anArguments - arguments for action.
+     * @return - action result instance.
+     * @throws UnhandledException - If developer didn't handle all possible exceptions.
+     */
+    public ActionResult execute(Action anAction, List<String> anArguments) throws UnhandledException {
+        // Execute action:
         try {
-            return action.doAction(anArguments);
+            return anAction.doAction(anArguments);
         }catch (Exception e) {
             throw new UnhandledException(e);
         }
     }
-
 }
