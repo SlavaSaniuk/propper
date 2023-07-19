@@ -8,6 +8,8 @@ import me.saniukvyacheslav.exceptions.PropertyNotFoundException;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link PropertiesFileService} service is implementation of {@link PropertiesService} interface,
@@ -109,4 +111,13 @@ public class PropertiesFileService implements PropertiesService {
         this.fileRepository.delete(aPropertyKey);
     }
 
+    @Override
+    public List<Property> list() throws IOException {
+        return this.fileRepository.list();
+    }
+
+    @Override
+    public Map<String, String> map() throws IOException {
+        return this.fileRepository.map();
+    }
 }

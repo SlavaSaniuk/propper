@@ -11,7 +11,7 @@ import java.io.IOException;
  * PropertiesService is common service for working with properties.
  * Service has CRUD methods for working with properties in any repositories.
  */
-public interface PropertiesService {
+public interface PropertiesService extends AdvancesPropertiesService {
 
     /**
      * Read property instance from repository by property key.
