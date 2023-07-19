@@ -11,6 +11,7 @@
     <modules>
         <module>propper-lib</module>
         <module>propper-cli</module>
+        <module>propper-gui</module>
     </modules>
 
     <properties>
