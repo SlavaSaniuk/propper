@@ -1,0 +1,4 @@
+Version 1.0.1
+    * Added AdvancesRepository interface with new methods: list() and map();
+    * FileRepository implements AdvancedRepository interface.
+    * Added Property#parse() static method, which parse property instance from String.

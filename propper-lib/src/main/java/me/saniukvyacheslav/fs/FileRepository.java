@@ -11,7 +11,7 @@ import java.util.*;
  * FileRepository used for work with properties files.
  * FileRepository class implement {@link Repository} interface with CRUD methods.
  */
-public class FileRepository implements Repository, AdvancedRepository {
+public class FileRepository implements AdvancedRepository {
 
     private final File propertiesFile; // Property file;
 
