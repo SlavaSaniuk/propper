@@ -1,0 +1,2 @@
+Version 1.0.1:
+    * Added support for printing all properties (/L [PATH_TO_PROPERTY_FILE] arguments).

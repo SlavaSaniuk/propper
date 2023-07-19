@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class HelpAction implements Action {
 
-    private static final String applicationHelp = "propper-cli appication uses for working with properties in properties files.\n" +
+    private static final String applicationHelp = "propper-cli application uses for working with properties in properties files.\n" +
             "Usage:\n" +
             "\t* To read property:\n" +
             "\tpropper-cli.jar -R [PROPERTY_KEY] [PROPERTIES_FILE]\n" +
@@ -20,6 +20,8 @@ public class HelpAction implements Action {
             "\tpropper-cli.jar -U [PROPERTY_KEY] [PROPERTY_NEW_VALUE] [PROPERTIES_FILE]\n" +
             "\t* To delete property:\n" +
             "\tpropper-cli.jar -D [PROPERTY_KEY] [PROPERTIES_FILE]\n" +
+            "\t* To print all properties:\n" +
+            "\tpropper-cli.jar -L [PROPERTIES_FILE]\n" +
             "\t* Show help:\n" +
             "\tpropper-cli.jar -H\n" +
             "Example:\n" +

@@ -40,6 +40,11 @@ public class Main {
                 .onCommandRegex("[/|-][d/D]")
                 .ofAction(new DeletePropertyAction())
                 .build());
+        // If command /L - print all properties:
+        runner.addActionBranch(new ActionBranch.Builder()
+                .onCommandRegex("[/|-][l/L]")
+                .ofAction(new ListPropertiesAction())
+                .build());
         // If command /H - print help:
         Action helpAction = new HelpAction();
         runner.addActionBranch(new ActionBranch.Builder()
