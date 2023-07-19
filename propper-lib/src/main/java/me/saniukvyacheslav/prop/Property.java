@@ -2,6 +2,7 @@ package me.saniukvyacheslav.prop;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 
 /**
  * Property object used to store key-value pair of Strings.
@@ -27,6 +28,30 @@ public class Property {
         // Property value:
         if (aValue == null) this.propertyValue = "";
         else this.propertyValue = aValue;
+    }
+
+    public static Property parse(String propertyString) throws PropertyIsInvalidException {
+        // Check String to parse:
+        if (propertyString == null) throw new NullPointerException("Parsed string must be not null.");
+        if (propertyString.isEmpty()) throw new IllegalArgumentException("Parsed string must be not empty.");
+
+        // If parsed string is comment or ..., return null:
+        if (propertyString.startsWith("!")) return null;
+        if (propertyString.startsWith("@")) return null;
+
+        // Trim parsed string:
+        String propertyStr = propertyString.trim();
+        if (propertyStr.startsWith("=")) throw new PropertyIsInvalidException("Property key must be not empty.");
+
+        // Check if property string has equal sing:
+        if (!propertyStr.contains("=")) return null;
+
+        // Parse property str:
+        String[] keyValuePair = propertyStr.split("=");
+
+        // Create property object:
+        if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
+        else return new Property(keyValuePair[0], keyValuePair[1]);
     }
 
     @Override

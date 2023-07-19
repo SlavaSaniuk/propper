@@ -6,12 +6,13 @@ import me.saniukvyacheslav.prop.PropertyWrapper;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * FileRepository used for work with properties files.
  * FileRepository class implement {@link Repository} interface with CRUD methods.
  */
-public class FileRepository implements Repository {
+public class FileRepository implements Repository, AdvancedRepository {
 
     private final File propertiesFile; // Property file;
 
@@ -144,6 +145,19 @@ public class FileRepository implements Repository {
         }
     }
 
+    @Override
+    public List<Property> list() throws IOException {
+
+
+
+        return null;
+    }
+
+    @Override
+    public Map<String, String> map() throws IOException {
+        return null;
+    }
+
 
     private BufferedWriter openWriter() throws IOException {
         // Check if properties file is writable before:
@@ -168,7 +182,7 @@ public class FileRepository implements Repository {
         return sb;
     }
 
-    private Property parsePropertyString(String aStr) {
+    public static Property parsePropertyString(String aStr) {
         String[] keyValuePair = aStr.split("=");
 
         // Create property object:

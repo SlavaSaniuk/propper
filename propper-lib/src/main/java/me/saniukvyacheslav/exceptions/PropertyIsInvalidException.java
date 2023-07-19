@@ -1,5 +1,7 @@
 package me.saniukvyacheslav.exceptions;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 
@@ -13,6 +15,8 @@ import me.saniukvyacheslav.prop.PropertyWrapper;
  */
 public class PropertyIsInvalidException extends RuntimeException {
 
+    @Getter @Setter
+    private int code;
     /**
      * Construct new exception instance with specified message.
      * @param aMessage - exception message.
@@ -21,4 +25,7 @@ public class PropertyIsInvalidException extends RuntimeException {
         super(aMessage);
     }
 
+    public PropertyIsInvalidException(int aCode) {
+        super();
+    }
 }
