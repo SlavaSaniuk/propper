@@ -30,6 +30,15 @@ public class Property {
         else this.propertyValue = aValue;
     }
 
+    /**
+     * Parse property from specified string.
+     * Property must be in valid format [property.key=property.value].
+     * If specified string start with ! or @, method return null.
+     * If specified string doesn't have "=" sign, method return null.
+     * @param propertyString - string to parse;
+     * @return - parsed property instance.
+     * @throws PropertyIsInvalidException - if property without key.
+     */
     public static Property parse(String propertyString) throws PropertyIsInvalidException {
         // Check String to parse:
         if (propertyString == null) throw new NullPointerException("Parsed string must be not null.");

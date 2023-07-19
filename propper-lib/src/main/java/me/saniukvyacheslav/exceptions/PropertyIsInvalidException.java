@@ -1,7 +1,5 @@
 package me.saniukvyacheslav.exceptions;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 

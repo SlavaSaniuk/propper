@@ -1,12 +1,11 @@
 package me.saniukvyacheslav.fs;
 
+import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * FileRepository used for work with properties files.
@@ -76,7 +75,7 @@ public class FileRepository implements Repository, AdvancedRepository {
         String readedStr;
         try(BufferedReader reader = this.openReader()) {
             while ((readedStr = reader.readLine()) != null) {
-                if (readedStr.startsWith(aKey)) return this.parsePropertyString(readedStr);
+                if (readedStr.startsWith(aKey)) return FileRepository.parsePropertyString(readedStr);
             }
         }
         // If property not with specified key not found in file, then return null:
@@ -148,14 +147,38 @@ public class FileRepository implements Repository, AdvancedRepository {
     @Override
     public List<Property> list() throws IOException {
 
+        List<Property> propertyList = new ArrayList<>();
 
+        // Read properties file:
+        String readLine;
+        try(BufferedReader reader = this.openReader()) {
+            while ((readLine = reader.readLine()) != null) {
+                if (readLine.isEmpty()) continue;
 
-        return null;
+                try {
+                    Property readProperty = Property.parse(readLine);
+                    if (readProperty != null) propertyList.add(readProperty);
+                }catch (PropertyIsInvalidException e) {
+                    // Skip read string;
+                }
+            }
+        }
+
+        // Return read property list:
+        return propertyList;
     }
 
     @Override
     public Map<String, String> map() throws IOException {
-        return null;
+        // Result map:
+        Map<String, String> resultMap = new HashMap<>();
+
+        // Read property:
+        List<Property> list = this.list();
+        list.forEach(Property -> resultMap.put(Property.getPropertyKey(), Property.getPropertyValue()));
+
+        // Return result map:
+        return resultMap;
     }
 
 
