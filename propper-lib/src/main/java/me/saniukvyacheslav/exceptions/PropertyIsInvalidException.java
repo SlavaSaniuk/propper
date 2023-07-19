@@ -15,17 +15,11 @@ import me.saniukvyacheslav.prop.PropertyWrapper;
  */
 public class PropertyIsInvalidException extends RuntimeException {
 
-    @Getter @Setter
-    private int code;
     /**
      * Construct new exception instance with specified message.
      * @param aMessage - exception message.
      */
     public PropertyIsInvalidException(String aMessage) {
         super(aMessage);
-    }
-
-    public PropertyIsInvalidException(int aCode) {
-        super();
     }
 }
