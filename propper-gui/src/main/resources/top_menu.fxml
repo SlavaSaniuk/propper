@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<MenuBar xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:id="topMenu"
+         fx:controller="me.saniukvyacheslav.gui.controllers.TopMenuController">
+    <Menu text="File">
+        <MenuItem text="Open" onAction="#onOpenFileAction" />
+        <MenuItem text="Close" onAction="#closeApplication"/>
+    </Menu>
+    <Menu text="About">
+        <MenuItem text="About program"> </MenuItem>
+    </Menu>
+</MenuBar>
