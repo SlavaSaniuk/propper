@@ -62,6 +62,10 @@ public class PrimaryNodeController implements Initializable, Observer {
             this.loadPropertiesFile((File) arguments[0]);
     }
 
+    /**
+     *  Load properties from specified properties file and add it to properties table.
+     * @param aPropertiesFile - properties file.
+     */
     public void loadPropertiesFile(File aPropertiesFile) {
         // Initialize properties service:
         if (this.propertiesService != null) this.propertiesService = null;
