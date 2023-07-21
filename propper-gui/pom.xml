@@ -33,6 +33,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>me.saniukvyacheslav</groupId>
+            <artifactId>propper-lib</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>20</version>

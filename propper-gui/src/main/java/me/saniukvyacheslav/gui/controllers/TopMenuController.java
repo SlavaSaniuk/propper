@@ -4,9 +4,6 @@ package me.saniukvyacheslav.gui.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import lombok.Setter;
 import me.saniukvyacheslav.Main;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -23,7 +20,7 @@ public class TopMenuController implements Observable, Initializable {
 
     // Class variables:
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>();
-    private final FileChooser fileChooser = new FileChooser();
+    private final FileChooser fileChooser = new FileChooser(); // FileChooser for openFile;
 
 
     @FXML
@@ -32,8 +29,12 @@ public class TopMenuController implements Observable, Initializable {
         this.notify(TopMenuEvents.OPEN_FILE, propertiesFile);
     }
 
+    /**
+     * Exit from application with exit code 0.
+     */
     @FXML
     public void onExitMenuAction() {
+        // Exit from application:
         Main.exit();
     }
 
