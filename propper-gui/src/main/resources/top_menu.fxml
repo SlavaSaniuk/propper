@@ -8,11 +8,11 @@
 
 <MenuBar xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:id="topMenu"
          fx:controller="me.saniukvyacheslav.gui.controllers.TopMenuController">
     <Menu text="File">
         <MenuItem text="Open" onAction="#onOpenFileAction" />
         <MenuItem text="Close" onAction="#closeApplication"/>
+        <MenuItem text="Exit" onAction="#onExitMenuAction" />
     </Menu>
     <Menu text="About">
         <MenuItem text="About program"> </MenuItem>

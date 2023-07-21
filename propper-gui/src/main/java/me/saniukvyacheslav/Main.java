@@ -17,6 +17,13 @@ public class Main extends Application {
         Application.launch(args);
     }
 
+    /**
+     * Close application with exit code 0.
+     */
+    public static void exit() {
+        System.exit(0);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;

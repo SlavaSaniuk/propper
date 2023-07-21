@@ -32,6 +32,11 @@ public class TopMenuController implements Observable, Initializable {
         this.notify(TopMenuEvents.OPEN_FILE, propertiesFile);
     }
 
+    @FXML
+    public void onExitMenuAction() {
+        Main.exit();
+    }
+
     /**
      * Close propper-gui application with exit code 0.
      */
