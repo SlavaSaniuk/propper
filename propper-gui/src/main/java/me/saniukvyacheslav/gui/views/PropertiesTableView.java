@@ -1,21 +1,23 @@
 package me.saniukvyacheslav.gui.views;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 /**
  * {@link PropertiesTableView} view used to stylize properties table.
- * Use {@link PropertiesTableView#draw()} method to apply styles to inner {@link GridPane}.
+ * Use {@link PropertiesTableView#drawEmpty()} method to apply styles to inner {@link GridPane}.
  */
 public class PropertiesTableView {
 
-    private final GridPane propsTable;
+    private final GridPane propsTable; // GridPane layout;
 
     /**
      * Construct new {@link PropertiesTableView} view with inner GridPane table.
@@ -23,12 +25,15 @@ public class PropertiesTableView {
      */
     public PropertiesTableView(GridPane aPropertiesTable) {
         this.propsTable = aPropertiesTable;
+
+        // Set common style:
+        this.propsTable.getStyleClass().addAll("properties-table-common");
     }
 
     /**
-     * Apply styles to inner GridPane properties table.
+     * Create properties table title row, and apply common styles to GridPane.
      */
-    public void draw() {
+    public GridPane drawEmpty() {
 
         // Apply column constraints:
         this.columnConstraints();
@@ -36,8 +41,7 @@ public class PropertiesTableView {
         // Create table title:
         this.tableTitle();
 
-        // Set table grid visibility:
-        this.propsTable.setGridLinesVisible(true);
+        return this.propsTable;
     }
 
     /**
@@ -48,7 +52,6 @@ public class PropertiesTableView {
 
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setPercentWidth(50);
-        columnConstraints.setHalignment(HPos.CENTER);
 
         this.propsTable.getColumnConstraints().add(0, columnConstraints);
         this.propsTable.getColumnConstraints().add(1, columnConstraints);
@@ -60,8 +63,12 @@ public class PropertiesTableView {
      * Note: Columns creates via {@link PropertiesTableView#titleColumn(String)} method.
      */
     private void tableTitle() {
-        this.propsTable.add(this.titleColumn("Key"), 0,0);
-        this.propsTable.add(this.titleColumn("Value"), 1, 0);
+        Node keyTitle = this.titleColumn("Key");
+        Node valueTitle = this.titleColumn("Value");
+        this.propsTable.add(keyTitle, 0,0);
+        this.propsTable.add(valueTitle, 1, 0);
+        GridPane.setHalignment(keyTitle, HPos.CENTER);
+        GridPane.setHalignment(valueTitle, HPos.CENTER);
     }
 
     /**
@@ -71,11 +78,33 @@ public class PropertiesTableView {
      * @return - title column.
      */
     private Label titleColumn(String aTitle) {
+        // Create label node:
         Label label = new Label(aTitle);
-        label.setAlignment(Pos.CENTER);
-        label.setTextAlignment(TextAlignment.CENTER);
-        label.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12));
+        // Set css style:
+        label.getStyleClass().addAll(
+                "properties-table-title-column");
         return label;
+    }
+
+    /**
+     *
+     * @param isWritable
+     * @return
+     */
+    public static Node createPropertyCellNode(String aText, boolean isWritable) {
+
+        Node node = null;
+        if (isWritable) node = new TextField(aText);
+        else node = new Label(aText);
+
+        node.getStyleClass().addAll(
+                "properties-cell-common", "property-key");
+        GridPane.setHgrow(node, Priority.ALWAYS);
+        node.minWidth(Double.MAX_VALUE);
+        node.maxWidth(Double.MAX_VALUE);
+
+        return node;
+
     }
 
 }

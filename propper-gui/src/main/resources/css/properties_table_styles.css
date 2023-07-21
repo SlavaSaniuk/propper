@@ -1,0 +1,18 @@
+.properties-table-common {
+    -fx-background-color: #FFFFFF;
+    -fx-grid-lines-visible: true;
+    -fx-text-fill: #111111;
+}
+
+.properties-cell-common {
+    -fx-padding:  0 0 0 5;
+    -fx-text-alignment: left;
+}
+
+.properties-table-title-column {
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+.property-key {
+}

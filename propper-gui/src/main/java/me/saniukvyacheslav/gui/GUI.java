@@ -4,9 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import me.saniukvyacheslav.Main;
 import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
+
+import java.util.Objects;
 
 public class GUI {
 
@@ -22,8 +25,18 @@ public class GUI {
         Node primaryNode = fxmlLoader.load();
         PrimaryNodeController primaryNodeController = fxmlLoader.getController();
 
+        // Create primary scene and add css to it:
+        Scene primaryScene = new Scene((Parent) primaryNode, 800, 600);
+
+        String styleshet = Main.class.getResource("/css/properties_table_styles.css").toExternalForm();
+        System.out.println(styleshet);
+        primaryScene.getStylesheets().addAll(
+                styleshet
+        );
+
+
         // Create primary scene and set it to primary stage:
-        aPrimaryStage.setScene(new Scene((Parent) primaryNode, 800, 600));
+        aPrimaryStage.setScene(primaryScene);
         aPrimaryStage.show();
 
     }
