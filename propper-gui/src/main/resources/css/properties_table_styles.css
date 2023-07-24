@@ -16,3 +16,8 @@
 
 .property-key {
 }
+
+.title_cell {
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}

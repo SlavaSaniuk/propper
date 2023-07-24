@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="me.saniukvyacheslav.gui.controllers.PropertiesTableController"
+            fx:id="propertiesTable">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50" />
+        <ColumnConstraints percentWidth="50" />
+    </columnConstraints>
+    <Label text="Key" GridPane.rowIndex="0" GridPane.columnIndex="0"
+           GridPane.halignment="CENTER" styleClass="title_cell" GridPane.hgrow="ALWAYS"/>
+    <Label text="Value" GridPane.rowIndex="0" GridPane.columnIndex="1"
+           GridPane.halignment="CENTER" styleClass="title_cell" GridPane.hgrow="ALWAYS"/>
+</GridPane>

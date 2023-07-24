@@ -12,8 +12,7 @@
     <HBox>
         <fx:include fx:id="topMenu" source="top_menu.fxml" />
     </HBox>
-    <GridPane fx:id="propertiesTable">
-    </GridPane>
+    <fx:include fx:id="propertiesTable" source="fxml/properties_table.fxml" />
     <Region VBox.vgrow="ALWAYS" />
     <fx:include fx:id="statusLine" source="fxml/status_line.fxml" />
 </VBox>
