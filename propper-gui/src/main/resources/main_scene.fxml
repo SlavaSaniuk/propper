@@ -14,4 +14,6 @@
     </HBox>
     <GridPane fx:id="propertiesTable">
     </GridPane>
+    <Region VBox.vgrow="ALWAYS" />
+    <fx:include fx:id="statusLine" source="fxml/status_line.fxml" />
 </VBox>

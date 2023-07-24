@@ -29,9 +29,10 @@ public class GUI {
         Scene primaryScene = new Scene((Parent) primaryNode, 800, 600);
 
         String styleshet = Main.class.getResource("/css/properties_table_styles.css").toExternalForm();
-        System.out.println(styleshet);
+        String statusLineStyles = Objects.requireNonNull(Main.class.getResource("/css/status_line_styles.css")).toExternalForm();
         primaryScene.getStylesheets().addAll(
-                styleshet
+                styleshet,
+                statusLineStyles
         );
 
 

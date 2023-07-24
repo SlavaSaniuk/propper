@@ -27,6 +27,8 @@ public class PrimaryNodeController implements Initializable, Observer {
     // Inner controllers:
     @FXML @Getter
     private TopMenuController topMenuController;
+    @FXML
+    private StatusLineController statusLineController;
     // Class variables:
     private PropertiesService propertiesService; // Properties service;
 
@@ -36,7 +38,7 @@ public class PrimaryNodeController implements Initializable, Observer {
         // Configure top menu controller:
         // Subscribe observers:
         this.topMenuController.subscribe(this, TopMenuEvents.OPEN_FILE);
-
+        this.topMenuController.subscribe(this.statusLineController, TopMenuEvents.OPEN_FILE);
     }
 
     @Override
