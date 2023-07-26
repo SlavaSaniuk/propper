@@ -45,7 +45,9 @@ public class PropertyModel {
         this.valuePropertyField.setOnKeyReleased(PropertyChangesController.getInstance().getKeyReleasedHandler());
 
         // Subscribe property view on property changes controller:
-        PropertyChangesController.getInstance().subscribe(this.propertyView, PropertyEvents.KEY_UPDATE_EVENT, PropertyEvents.VALUE_UPDATE_EVENT);
+        PropertyChangesController.getInstance().subscribe(this.propertyView,
+                PropertyEvents.KEY_UPDATE_EVENT, PropertyEvents.VALUE_UPDATE_EVENT,
+                PropertyEvents.ABORT_KEY_UPDATE_EVENT, PropertyEvents.ABORT_VALUE_UPDATE_EVENT);
     }
 
 }

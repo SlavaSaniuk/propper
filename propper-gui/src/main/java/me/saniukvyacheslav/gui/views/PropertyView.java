@@ -59,15 +59,6 @@ public class PropertyView implements Stylable, Observer {
     }
 
     /**
-     * Set/unset "updated" css pseudo class to all property fields (key and value fields).
-     * @param isUpdated - "updated" css pseudo class flag.
-     */
-    public void setUpdatedWholeProperty(boolean isUpdated) {
-        this.setUpdatedPropertyKey(isUpdated);
-        this.setUpdatedPropertyValue(isUpdated);
-    }
-
-    /**
      * Update property field based on {@link PropertyEvents} events.
      * This view listens {@link PropertyChangesController} controller on property changes events.
      * Note: The first object in arguments array must be property key, to detect if changes link with current view instance.
@@ -89,15 +80,20 @@ public class PropertyView implements Stylable, Observer {
             case 202: // VALUE_UPDATE_EVENT event:
                 this.onPropertyValueUpdateEvent();
                 break;
+            case 203: // ABORT_KEY_UPDATE_EVENT event:
+                this.onAbortPropertyKeyUpdateEvent();
+                break;
+            case 204: // ABORT_VALUE_UPDATE_EVENT event:
+                this.onAbortPropertyValueUpdateEvent();
+                break;
         }
     }
 
     /**
-     * Set "updated" css pseudo class to property fields.
-     * If property key was updated, that's why all property fields must have "updated" css pseudo class.
+     * Set "updated" css pseudo class to property field.
      */
     public void onPropertyKeyUpdateEvent() {
-        this.setUpdatedWholeProperty(true);
+        this.setUpdatedPropertyKey(true);
     }
 
     /**
@@ -106,4 +102,19 @@ public class PropertyView implements Stylable, Observer {
     public void onPropertyValueUpdateEvent() {
         this.setUpdatedPropertyValue(true);
     }
+
+    /**
+     * Unset "updated" css pseudo class to property key field.
+     */
+    public void onAbortPropertyKeyUpdateEvent() {
+        this.setUpdatedPropertyKey(false);
+    }
+
+    /**
+     * Unset "updated" css pseudo class to property value field.
+     */
+    public void onAbortPropertyValueUpdateEvent() {
+        this.setUpdatedPropertyValue(false);
+    }
+
 }
