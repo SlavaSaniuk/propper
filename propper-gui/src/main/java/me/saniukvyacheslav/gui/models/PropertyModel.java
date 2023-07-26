@@ -43,16 +43,35 @@ public class PropertyModel implements Observer {
         // Add listeners:
         // Listener on changes of property key field:
         this.keyPropertyField.setOnKeyReleased(PropertyChangesController.getInstance().getKeyReleasedHandler());
+        // Listener on changes of property value field:
+        this.valuePropertyField.setOnKeyReleased(PropertyChangesController.getInstance().getKeyReleasedHandler());
 
         // Subscribe this model on property changes controller:
-        PropertyChangesController.getInstance().subscribe(this, PropertyEvents.KEY_UPDATE_EVENT);
+        PropertyChangesController.getInstance().subscribe(this, PropertyEvents.KEY_UPDATE_EVENT, PropertyEvents.VALUE_UPDATE_EVENT);
     }
 
-
+    /**
+     * Update property model based on {@link PropertyEvents} events.
+     * This model listens {@link PropertyChangesController} controller on property changes events.
+     * Note: The first object in arguments array must be property key, to detect if changes link with current model instance.
+     * @param event - property changes event.
+     * @param arguments - array of arguments.
+     */
     @Override
     public void update(PropperApplicationEvent event, Object... arguments) {
-        if (this.property.getPropertyKey().equals(arguments[0])) {
-            this.onPropertyKeyUpdateEvent();
+
+        // Check if this model instance was updating:
+        String keyOfUpdatedProperty = (String) arguments[0];
+        if (!(this.property.getPropertyKey().equals(keyOfUpdatedProperty)))
+            return;
+
+        switch (event.getCode()) {
+            case 201: // KEY_UPDATE_EVENT event:
+                this.onPropertyKeyUpdateEvent();
+                break;
+            case 202: // VALUE_UPDATE_EVENT event:
+                this.onPropertyValueUpdateEvent();
+                break;
         }
     }
 
@@ -63,4 +82,12 @@ public class PropertyModel implements Observer {
     public void onPropertyKeyUpdateEvent() {
         this.propertyView.setUpdatedWholeProperty(true);
     }
+
+    /**
+     * Set "updated" css pseudo class to property value field.
+     */
+    public void onPropertyValueUpdateEvent() {
+        this.propertyView.setUpdatedPropertyValue(true);
+    }
+
 }

@@ -70,7 +70,8 @@ public class PropertyChangesController implements Observable {
             } else {
                 this.keyUpdatedProperties.remove(propertyField);
             }
-
+        }else {
+            this.notify(PropertyEvents.VALUE_UPDATE_EVENT, propertyField.getPropertyKey());
         }
 
         System.out.println(this.keyUpdatedProperties.size());
