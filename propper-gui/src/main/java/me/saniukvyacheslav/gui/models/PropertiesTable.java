@@ -1,20 +1,22 @@
 package me.saniukvyacheslav.gui.models;
 
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import me.saniukvyacheslav.prop.Property;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Properties table model.
+ */
 public class PropertiesTable {
 
     // Embedded nodes:
-    private GridPane embeddedGridPane;
+    private final GridPane embeddedGridPane;
     // Class variables:
     private final List<Property> loadedProperties = new ArrayList<>();
+    private final List<PropertyModel> tableProperties = new ArrayList<>();
 
     /**
      * Construct new {@link PropertiesTable} model instance.
@@ -31,22 +33,13 @@ public class PropertiesTable {
         this.loadedProperties.addAll(aPropertiesList);
 
         // Load properties in embedded grid pane:
-        for (int i=1; i<(this.loadedProperties.size()+1); i++) {
-            this.embeddedGridPane.add(this.createCell(this.loadedProperties.get(i-1).getPropertyKey(), false), 0, i);
-            this.embeddedGridPane.add(this.createCell(this.loadedProperties.get(i-1).getPropertyValue(), true), 1, i);
+        int i=1;
+        for (Property property: aPropertiesList) {
+            PropertyModel model = new PropertyModel(property);
+            this.tableProperties.add(model);
+            this.embeddedGridPane.addRow(i, model.getKeyPropertyField(), model.getValuePropertyField());
+            i++;
         }
     }
-
-    private Node createCell(String aDefaultText, boolean isWritable) {
-        Node cellNode;
-        if (isWritable) {
-            cellNode = new TextField();
-            ((TextField) cellNode).setText(aDefaultText);
-        }
-        else cellNode = new Label(aDefaultText);
-
-        return cellNode;
-    }
-
 
 }

@@ -21,3 +21,16 @@
     -fx-font-weight: bold;
     -fx-text-alignment: center;
 }
+
+.property-cell-common {
+    -fx-padding:  0 0 0 5;
+    -fx-text-alignment: left;
+}
+
+.property-field {
+}
+
+.property-field:updated {
+    -fx-font-style: oblique;
+    -fx-text-fill: #525366;
+}
