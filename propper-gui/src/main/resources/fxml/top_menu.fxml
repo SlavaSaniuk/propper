@@ -12,7 +12,8 @@
          fx:id="topMenuBar" >
     <Menu text="File" fx:id="menu_file_menu">
         <MenuItem fx:id="file_menu_item_open" text="Open" onAction="#onOpenFileEvent" />
-        <MenuItem text="Close" onAction="#closeApplication"/>
+        <MenuItem fx:id="file_menu_item_save" text="Save" onAction="#onSaveFileEvent" />
+        <MenuItem fx:id="file_menu_item_close" text="Close" onAction="#onCloseFileEvent"/>
         <MenuItem text="Exit" onAction="#onExitMenuAction" />
     </Menu>
     <Menu text="About">

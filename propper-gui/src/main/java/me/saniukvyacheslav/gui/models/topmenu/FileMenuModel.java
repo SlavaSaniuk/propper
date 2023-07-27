@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCombination;
 public class FileMenuModel {
 
     private MenuItem openFileItem; // OPEN_FILE menu item;
-
+    private MenuItem saveFileItem; // SAVE_FILE menu item;
 
     public FileMenuModel(Menu aFileMenu) {
 
@@ -19,6 +19,7 @@ public class FileMenuModel {
         for (MenuItem item: aFileMenu.getItems()) {
             if (item.getId() == null) continue;
             if (item.getId().equals("file_menu_item_open")) this.openFileItem = item;
+            if (item.getId().equals("file_menu_item_save")) this.saveFileItem = item;
         }
 
         this.setHotKeys();
@@ -26,7 +27,8 @@ public class FileMenuModel {
 
     private void setHotKeys() {
         // For openFileItem:
-        KeyCombination combination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-        this.openFileItem.setAccelerator(combination);
+        this.openFileItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        // For saveFileItem;
+        this.saveFileItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
     }
 }

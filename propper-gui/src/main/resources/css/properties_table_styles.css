@@ -9,19 +9,6 @@
     -fx-text-alignment: left;
 }
 
-.properties-table-title-column {
-    -fx-font-weight: bold;
-    -fx-text-alignment: center;
-}
-
-.property-key {
-}
-
-.title_cell {
-    -fx-font-weight: bold;
-    -fx-text-alignment: center;
-}
-
 .property-cell-common {
     -fx-padding:  0 0 0 5;
     -fx-text-alignment: left;

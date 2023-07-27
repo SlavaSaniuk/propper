@@ -39,24 +39,23 @@ public class FileMenuController implements Observable {
         this.notify(FileMenuEvents.OPEN_FILE_EVENT, propertiesFile);
     }
 
+    /**
+     * Save properties file.
+     * Method notify observers about {@link FileMenuEvents#SAVE_FILE_EVENT} event.
+     */
+    public void onSaveFileEvent() {
+        System.out.println("Save file event stab.");
 
+        // Notify observers:
+        this.notify(FileMenuEvents.SAVE_FILE_EVENT);
+    }
 
+    public void onCloseFileEvent() {
+        System.out.println("Close properties file event stub.");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // Notify observers:
+        this.notify(FileMenuEvents.CLOSE_FILE_EVENT);
+    }
 
 
     /**

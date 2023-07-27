@@ -46,9 +46,16 @@ public class TopMenuController implements Initializable {
     }
 
 
-    @FXML
-    public void onOpenFileEvent() {
-        this.fileMenuController.onOpenFileEvent();
+    @FXML public void onOpenFileEvent() { this.fileMenuController.onOpenFileEvent(); }
+
+    @FXML public void onSaveFileEvent() { this.fileMenuController.onSaveFileEvent(); }
+
+    /**
+     * On "close properties file" event.
+     * Call {@link FileMenuController#onCloseFileEvent()} method.
+     */
+    @FXML public void onCloseFileEvent() {
+        this.fileMenuController.onCloseFileEvent();
     }
 
     /**
@@ -56,17 +63,12 @@ public class TopMenuController implements Initializable {
      */
     @FXML
     public void onExitMenuAction() {
+        System.out.println("123");
         // Exit from application:
         Main.exit();
     }
 
-    /**
-     * Close propper-gui application with exit code 0.
-     */
-    @FXML
-    public void closeApplication() {
-        System.exit(0);
-    }
+
 
 
 }
