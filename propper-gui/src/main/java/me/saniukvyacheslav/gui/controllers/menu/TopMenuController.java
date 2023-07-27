@@ -1,0 +1,72 @@
+package me.saniukvyacheslav.gui.controllers.menu;
+
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import lombok.Getter;
+import me.saniukvyacheslav.Main;
+import me.saniukvyacheslav.gui.events.Observer;
+import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
+import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class TopMenuController implements Initializable {
+
+    // Fx nodes:
+    @FXML Node topMenuBar; // TopMenu Bar node;
+
+    // Class variables:
+    private final FileMenuController fileMenuController = FileMenuController.getInstance(); // FileMenu controller;
+    @Getter private FileMenuModel fileMenuModel;
+
+    /**
+     * Subscribe observers on FileMenu events.
+     * @param anObserver - observer.
+     * @param anEvents - supported events.
+     */
+    public void subscribeOnFileMenuEvents(Observer anObserver, PropperApplicationEvent... anEvents) {
+        this.fileMenuController.subscribe(anObserver, anEvents);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        // Construct models:
+        for (Menu menu : ((MenuBar) this.topMenuBar).getMenus()) {
+            if (menu.getId() == null) continue;
+            if (menu.getId().equals("menu_file_menu"))
+                this.fileMenuModel = new FileMenuModel(menu);
+        }
+
+    }
+
+
+    @FXML
+    public void onOpenFileEvent() {
+        this.fileMenuController.onOpenFileEvent();
+    }
+
+    /**
+     * Exit from application with exit code 0.
+     */
+    @FXML
+    public void onExitMenuAction() {
+        // Exit from application:
+        Main.exit();
+    }
+
+    /**
+     * Close propper-gui application with exit code 0.
+     */
+    @FXML
+    public void closeApplication() {
+        System.exit(0);
+    }
+
+
+}

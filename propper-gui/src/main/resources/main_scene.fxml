@@ -10,7 +10,7 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="me.saniukvyacheslav.gui.controllers.PrimaryNodeController">
     <HBox>
-        <fx:include fx:id="topMenu" source="top_menu.fxml" />
+        <fx:include fx:id="topMenu" source="fxml/top_menu.fxml" />
     </HBox>
     <fx:include fx:id="propertiesTable" source="fxml/properties_table.fxml" />
     <Region VBox.vgrow="ALWAYS" />

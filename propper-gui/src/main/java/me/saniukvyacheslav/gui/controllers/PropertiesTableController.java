@@ -37,7 +37,7 @@ public class PropertiesTableController implements Initializable, Observer {
     public void update(PropperApplicationEvent event, Object... arguments) {
 
         switch (event.getCode()) {
-            case 101:
+            case 102:
                 File propertiesFile = ((File) arguments[0]);
                 this.loadPropertiesFile(propertiesFile);
                 break;

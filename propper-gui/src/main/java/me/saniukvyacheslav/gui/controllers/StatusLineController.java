@@ -4,9 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.events.topmenu.TopMenuEvents;
+import me.saniukvyacheslav.gui.controllers.menu.TopMenuEvents;
 import me.saniukvyacheslav.gui.models.StatusLine;
 import me.saniukvyacheslav.gui.views.StatusLineView;
 
@@ -37,7 +38,7 @@ public class StatusLineController implements Observer, Initializable {
     public void update(PropperApplicationEvent event, Object... arguments) {
 
         switch (event.getCode()) {
-            case 101: // OPEN_FILE top menu event:
+            case 102: // OPEN_FILE_EVENT FileMenuController event:
                 this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
                 break;
             case 205: // PROPERTY_UPDATE_EVENT PropertyChangesController event:
