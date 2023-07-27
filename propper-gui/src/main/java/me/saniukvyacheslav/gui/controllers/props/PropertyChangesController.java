@@ -7,10 +7,14 @@ import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.nodes.PropertyField;
+import me.saniukvyacheslav.prop.Property;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This controller handle property changes.
+ */
 public class PropertyChangesController implements Observable {
 
     // Class variables:
@@ -34,6 +38,35 @@ public class PropertyChangesController implements Observable {
      * Private default constructor.
      */
     private PropertyChangesController() {}
+
+    /**
+     * Get updates map (origin_property_key = new_property_key_value).
+     * @return - updates map.
+     */
+    public Map<String, Property> getUpdatesMap() {
+        Map<String, Property> updatesMap = new HashMap<>(); // Updates map;
+
+        // Add properties, where key was updating:
+        this.keyUpdatedProperties.forEach((originPropertyKey, newPropertyKey) ->
+            updatesMap.put(originPropertyKey, new Property(newPropertyKey, ""))
+        );
+
+        // Add properties, where value was updating:
+        this.valueUpdatedProperties.forEach((originKey, newPropertyValue) -> {
+            if (updatesMap.containsKey(originKey)) updatesMap.get(originKey).setPropertyValue(newPropertyValue);
+            else updatesMap.put(originKey, new Property(originKey, newPropertyValue));
+        });
+
+        return updatesMap;
+    }
+
+    /**
+     * Get properties updates count.
+     * @return - updates count.
+     */
+    public int getUpdatesCount() {
+        return this.getUpdatesMap().size();
+    }
 
     @Override
     public void subscribe(Observer anObserver, PropperApplicationEvent... anApplicationEvents) {
@@ -77,7 +110,7 @@ public class PropertyChangesController implements Observable {
                 if (aPropertyField.isKeyPropertyField())
                     PropertyChangesController.getInstance().notify(PropertyEvents.KEY_UPDATE_EVENT, aPropertyField.getPropertyKey());
                 else PropertyChangesController.getInstance().notify(PropertyEvents.VALUE_UPDATE_EVENT, aPropertyField.getPropertyKey());
-                PropertyChangesController.getInstance().notify(PropertyEvents.PROPERTY_UPDATE_EVENT);
+                PropertyChangesController.getInstance().notify(PropertyEvents.PROPERTY_UPDATE_EVENT, PropertyChangesController.getInstance().getUpdatesCount());
             }
         }
 
@@ -95,7 +128,7 @@ public class PropertyChangesController implements Observable {
                 if (aPropertyField.isKeyPropertyField())
                     PropertyChangesController.getInstance().notify(PropertyEvents.ABORT_KEY_UPDATE_EVENT, aPropertyField.getPropertyKey());
                 else PropertyChangesController.getInstance().notify(PropertyEvents.ABORT_VALUE_UPDATE_EVENT, aPropertyField.getPropertyKey());
-                PropertyChangesController.getInstance().notify(PropertyEvents.PROPERTY_UPDATE_EVENT);
+                PropertyChangesController.getInstance().notify(PropertyEvents.PROPERTY_UPDATE_EVENT, PropertyChangesController.getInstance().getUpdatesCount());
             }
         }
 

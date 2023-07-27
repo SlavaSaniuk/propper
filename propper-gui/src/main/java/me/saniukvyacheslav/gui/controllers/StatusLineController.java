@@ -36,6 +36,15 @@ public class StatusLineController implements Observer, Initializable {
     @Override
     public void update(PropperApplicationEvent event, Object... arguments) {
 
+        switch (event.getCode()) {
+            case 101: // OPEN_FILE top menu event:
+                this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
+                break;
+            case 205: // PROPERTY_UPDATE_EVENT PropertyChangesController event:
+                this.onPropertyChangeEvent((int) arguments[0]);
+                break;
+        }
+
         // If user open new properties file:
         if (event == TopMenuEvents.OPEN_FILE) {
             this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
@@ -52,6 +61,16 @@ public class StatusLineController implements Observer, Initializable {
         // Clear model, set path to properties file, and set new label text:
         this.statusLineModel.clear();
         this.statusLineModel.setPropertiesFilePath(aPathToPropertiesFile);
+        this.statusLineLabel.setText(this.statusLineModel.getLineText());
+    }
+
+    /**
+     * Update status line text, when user update property key or value.
+     * @param anUpdatesCount - whole updates count.
+     */
+    public void onPropertyChangeEvent(int anUpdatesCount) {
+        // Set updates count in model, then set new text to label:
+        this.statusLineModel.setUpdateActionsCounter(anUpdatesCount);
         this.statusLineLabel.setText(this.statusLineModel.getLineText());
     }
 

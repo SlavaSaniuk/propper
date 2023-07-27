@@ -7,9 +7,8 @@ import lombok.Setter;
  */
 public class StatusLine {
 
-    @Setter
-    private String propertiesFilePath;
-    private int updateActionsCounter;
+    @Setter private String propertiesFilePath;
+    @Setter private int updateActionsCounter;
     private int insertActionsCounter;
     private int deleteActionsCounter;
     private final StringBuilder stringBuilder = new StringBuilder(); // Final StringBuilder;
@@ -51,7 +50,9 @@ public class StatusLine {
             else this.stringBuilder.append(tmp);
         }
 
-        return this.stringBuilder.toString();
+        tmp = this.stringBuilder.toString();
+        this.stringBuilder.setLength(0);
+        return tmp;
     }
 
     /**

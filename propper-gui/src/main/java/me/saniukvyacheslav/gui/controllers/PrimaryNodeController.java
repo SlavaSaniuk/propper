@@ -2,6 +2,8 @@ package me.saniukvyacheslav.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
+import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.events.topmenu.TopMenuEvents;
@@ -25,6 +27,8 @@ public class PrimaryNodeController implements Initializable, Observer {
         this.topMenuController.subscribe(this, TopMenuEvents.OPEN_FILE);
         this.topMenuController.subscribe(this.propertiesTableController, TopMenuEvents.OPEN_FILE);
         this.topMenuController.subscribe(this.statusLineController, TopMenuEvents.OPEN_FILE);
+        // On PropertyChangesController:
+        PropertyChangesController.getInstance().subscribe(this.statusLineController, PropertyEvents.PROPERTY_UPDATE_EVENT);
     }
 
     @Override
