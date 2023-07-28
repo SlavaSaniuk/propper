@@ -22,7 +22,6 @@ public class PropertiesTableModel {
     private final PropertiesTableView tableView; // Properties table view;
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
-    @Getter private boolean isNew = false; // Is table for new properties file event;
 
     /**
      * Construct new {@link PropertiesTableModel} model instance.
@@ -92,8 +91,6 @@ public class PropertiesTableModel {
     public void newTable() {
         // Empty table:
         this.emptyTable();
-        // Set state:
-        this.isNew = true;
     }
 
     /**
@@ -113,6 +110,9 @@ public class PropertiesTableModel {
         this.isClear = true;
     }
 
+    /**
+     * Clear embedded GridPane and show default layout label.
+     */
     public void closeTable() {
         this.clearTable();
         this.defaultLayout();

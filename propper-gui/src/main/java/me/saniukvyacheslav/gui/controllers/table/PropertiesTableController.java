@@ -20,6 +20,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * PropertiesTable controller.
+ * This controller handler {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents} FileMenu menu events.
+ * It's an entry point for working with {@link PropertiesTableModel} model.
+ */
 public class PropertiesTableController implements Initializable, Observer {
 
     // Embedded nodes:
@@ -51,7 +56,7 @@ public class PropertiesTableController implements Initializable, Observer {
                 File propertiesFile = ((File) arguments[0]);
                 this.loadPropertiesFile(propertiesFile);
                 break;
-            case 105:
+            case 105: // CLOSE_FILE_EVENT event:
                 this.closePropertiesFile();
         }
 
