@@ -1,9 +1,10 @@
-package me.saniukvyacheslav.gui.controllers;
+package me.saniukvyacheslav.gui.controllers.statusline;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -38,6 +39,9 @@ public class StatusLineController implements Observer, Initializable {
     public void update(PropperApplicationEvent event, Object... arguments) {
 
         switch (event.getCode()) {
+            case 101:
+                this.onNewFileEvent(); // NEW_FILE_EVENT FileMenu event:
+                break;
             case 102: // OPEN_FILE_EVENT FileMenuController event:
                 this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
                 break;
@@ -51,6 +55,15 @@ public class StatusLineController implements Observer, Initializable {
             this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
         }
 
+    }
+
+    /**
+     * Update status line text, when user creates new file.
+     * Clear path on properties file.
+     */
+    public void onNewFileEvent() {
+        this.statusLineModel.clear();
+        this.statusLineLabel.setText(this.statusLineModel.getLineText());
     }
 
     /**
