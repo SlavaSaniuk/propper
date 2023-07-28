@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * This controller handle property changes.
+ * Singleton instance.
  */
 public class PropertyChangesController implements Observable {
 
@@ -66,6 +67,15 @@ public class PropertyChangesController implements Observable {
      */
     public int getUpdatesCount() {
         return this.getUpdatesMap().size();
+    }
+
+    /**
+     * Clear all properties changes in store (these key/value maps).
+     */
+    public void clear() {
+        // Clear changes maps:
+        this.keyUpdatedProperties.clear();
+        this.valueUpdatedProperties.clear();
     }
 
     @Override

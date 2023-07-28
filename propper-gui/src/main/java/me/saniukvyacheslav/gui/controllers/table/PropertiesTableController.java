@@ -27,6 +27,10 @@ public class PropertiesTableController implements Initializable, Observer {
     // Class variables:
     private PropertiesTableModel propertiesTableModel; // Properties table model;
     private PropertiesService propertiesService; // Properties service;
+    private String currentPropertiesFilePath; // Path to current properties file;
+    // States:
+    private boolean IS_NEW = false; // Is properties file is new - flag;
+    private boolean IS_OPENED = false; // Is properties file opened flag;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,11 +61,20 @@ public class PropertiesTableController implements Initializable, Observer {
      * Initialize new empty properties table and set model state "isNew" to true.
      */
     public void newPropertiesFile() {
+        // Check if other properties file is opened:
+        if (this.IS_NEW || this.IS_OPENED) this.closePropertiesFile();
+
         // Initialize new empty table:
         this.propertiesTableModel.newTable();
+
+        // Set state:
+        this.IS_NEW = true;
     }
 
     public void loadPropertiesFile(File aPropertiesFile) {
+        // Check if other properties file is opened:
+        if (this.IS_NEW || this.IS_OPENED) this.closePropertiesFile();
+
         if (this.propertiesService != null) this.propertiesService = null;
         this.propertiesService = PropertiesServiceFactory.fileService(aPropertiesFile);
 
@@ -75,18 +88,34 @@ public class PropertiesTableController implements Initializable, Observer {
 
         // Load in model:
         this.propertiesTableModel.loadProperties(loadedProperties);
+
+        // Set state and path to opened file:
+        this.IS_OPENED = true;
+        this.currentPropertiesFilePath = aPropertiesFile.getAbsolutePath();
     }
 
+    /**
+     * Close current properties file.
+     * Clear embedded properties table and show default layout.
+     * If properties table has unsaved changes, then method offer save properties file to user.
+     */
     public void closePropertiesFile() {
 
-        // Check if properties table model has unsaved changes:
-        if(this.propertiesTableModel.isUnsavedChanges()) {
-            Optional<ButtonType> btnOpt = ApplicationDialogs.unsavedResultDialog("Close properties file:").showAndWait();
-            System.out.println(btnOpt);
+        // Check for unsaved changes in table model:
+        if (this.propertiesTableModel.isUnsavedChanges()) {
+            Optional<ButtonType> userAnswer = ApplicationDialogs.saveFileDialog(this.currentPropertiesFilePath).showAndWait();
+            System.out.println(userAnswer);
         }
 
-        this.propertiesTableModel.clearTable();
+        // Clear table model:
+        this.propertiesTableModel.closeTable();
+        System.out.println("Properties file was closed;");
 
+        // Set states:
+        this.IS_OPENED = false;
+        this.IS_NEW = false;
+        // Zeroing vars:
+        this.currentPropertiesFilePath = null;
     }
 
 }

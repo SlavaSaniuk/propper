@@ -104,7 +104,18 @@ public class PropertiesTableModel {
         this.embeddedGridPane.getColumnConstraints().clear();
         this.embeddedGridPane.setGridLinesVisible(false);
         this.embeddedGridPane.getChildren().clear();
+        // Remove all styles:
+        this.embeddedGridPane.getStyleClass().clear();
+
+        // Clear changes in PropertyChangesController:
+        PropertyChangesController.getInstance().clear();
+
         this.isClear = true;
+    }
+
+    public void closeTable() {
+        this.clearTable();
+        this.defaultLayout();
     }
 
     public void loadProperties(List<Property> aPropertiesList) {

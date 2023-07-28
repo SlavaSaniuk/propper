@@ -64,8 +64,6 @@ public class FileMenuController implements Observable {
      * Notify all subscribed observers about {@link FileMenuEvents#CLOSE_FILE_EVENT} event.
      */
     public void onCloseFileEvent() {
-        System.out.println("FileMewController: CLOSE_FILE_EVENT;");
-
         // Notify observers:
         this.notify(FileMenuEvents.CLOSE_FILE_EVENT);
     }
