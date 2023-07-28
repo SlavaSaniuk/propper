@@ -58,7 +58,7 @@ public class TopMenuController implements Initializable {
     @FXML public void onSaveFileEvent() { this.fileMenuController.onSaveFileEvent(); }
 
     /**
-     * On "close properties file" event.
+     * Notify observers about {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#CLOSE_FILE_EVENT}.
      * Call {@link FileMenuController#onCloseFileEvent()} method.
      */
     @FXML public void onCloseFileEvent() {

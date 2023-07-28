@@ -13,9 +13,11 @@ import javafx.scene.input.KeyCombination;
  */
 public class FileMenuModel {
 
+    // Embedded FX nodes:
     private MenuItem openFileItem; // OPEN_FILE menu item;
     private MenuItem saveFileItem; // SAVE_FILE menu item;
     private MenuItem newFileItem; // NEW_FILE menu item;
+    private MenuItem closeFileItem; // CLOSE_FILE menu item;
 
     /**
      * Construct new model for FileMenu menu.
@@ -27,9 +29,20 @@ public class FileMenuModel {
         // Initialize menu items:
         for (MenuItem item: aFileMenu.getItems()) {
             if (item.getId() == null) continue;
-            if (item.getId().equals("file_menu_item_new")) this.newFileItem = item;
-            if (item.getId().equals("file_menu_item_open")) this.openFileItem = item;
-            if (item.getId().equals("file_menu_item_save")) this.saveFileItem = item;
+            switch (item.getId()) {
+                case "file_menu_item_new":
+                    this.newFileItem = item;
+                    break;
+                case "file_menu_item_open":
+                    this.openFileItem = item;
+                    break;
+                case "file_menu_item_save":
+                    this.saveFileItem = item;
+                    break;
+                case "file_menu_item_close":
+                    this.closeFileItem = item;
+                    break;
+            }
         }
 
         // Set keyboard hotkeys:
@@ -41,6 +54,7 @@ public class FileMenuModel {
      * "Ctrl+N" for "New file" menu item.
      * "Ctrl+O" for "Open file" menu item.
      * "Ctrl+S" for "Save file" menu item.
+     * "Ctrl+X" for "Close file" menu item.
      */
     private void setHotKeys() {
         // For NewFile fileMenu item:
@@ -49,6 +63,7 @@ public class FileMenuModel {
         this.openFileItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         // For saveFileItem;
         this.saveFileItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-
+        // For closeFileItem;
+        this.closeFileItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN));
     }
 }

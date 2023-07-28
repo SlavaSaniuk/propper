@@ -19,7 +19,7 @@ public enum FileMenuEvents implements PropperApplicationEvent {
     SAVE_FILE_EVENT(103),
 
     /**
-     * Close properties file application event. Event calls when user close properties file.
+     * Close file application event. Event will be triggered, when user click on "Close" FileMenu item.
      */
     CLOSE_FILE_EVENT(105);
 
