@@ -30,6 +30,15 @@ public class FileMenuController implements Observable {
         return FileMenuController.INSTANCE;
     }
 
+    /**
+     * Notify all subscribed observers about {@link FileMenuEvents#NEW_FILE_EVENT} event.
+     */
+    public void onNewFileEvent() {
+        System.out.println("FileMenuController: NEW_FILE_EVENT;");
+        // Notify observers:
+        this.notify(FileMenuEvents.NEW_FILE_EVENT);
+    }
+
     public void onOpenFileEvent() {
         // Set fileChooser title:
         this.fileChooser.setTitle("Open properties file:");

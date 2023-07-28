@@ -45,6 +45,13 @@ public class TopMenuController implements Initializable {
 
     }
 
+    /**
+     * Notify {@link me.saniukvyacheslav.gui.controllers.table.PropertiesTableController} about
+     * {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#NEW_FILE_EVENT} event.
+     */
+    @FXML public void onNewFileEvent() {
+        this.fileMenuController.onNewFileEvent();
+    }
 
     @FXML public void onOpenFileEvent() { this.fileMenuController.onOpenFileEvent(); }
 

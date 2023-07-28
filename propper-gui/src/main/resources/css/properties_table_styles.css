@@ -4,6 +4,22 @@
     -fx-text-fill: #111111;
 }
 
+.default-text-label {
+    -fx-font-size: 14;
+    -fx-text-alignment: center;
+}
+
+.not-empty-table {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #111111;
+}
+
+.title-cell {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
 .properties-cell-common {
     -fx-padding:  0 0 0 5;
     -fx-text-alignment: left;

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="me.saniukvyacheslav.gui.controllers.PrimaryNodeController">
-    <HBox>
+    <top>
+        <HBox>
         <fx:include fx:id="topMenu" source="fxml/top_menu.fxml" />
-    </HBox>
-    <fx:include fx:id="propertiesTable" source="fxml/properties_table.fxml" />
-    <Region VBox.vgrow="ALWAYS" />
-    <fx:include fx:id="statusLine" source="fxml/status_line.fxml" />
-</VBox>
+        </HBox>
+    </top>
+    <center>
+        <fx:include fx:id="propertiesTable" source="fxml/properties_table.fxml" />
+    </center>
+    <bottom>
+        <fx:include fx:id="statusLine" source="fxml/status_line.fxml" />
+    </bottom>
+</BorderPane>

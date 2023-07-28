@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.gui.controllers;
+package me.saniukvyacheslav.gui.controllers.table;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,8 +8,8 @@ import me.saniukvyacheslav.core.properties.PropertiesServiceFactory;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.models.PropertiesTableModel;
-import me.saniukvyacheslav.gui.views.PropertiesTableView;
+import me.saniukvyacheslav.gui.models.table.PropertiesTableModel;
+import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.services.PropertiesService;
 
@@ -40,6 +40,9 @@ public class PropertiesTableController implements Initializable, Observer {
     public void update(PropperApplicationEvent event, Object... arguments) {
 
         switch (event.getCode()) {
+            case 101: // NEW_FILE_EVENT event:
+                this.newPropertiesFile();
+                break;
             case 102:
                 File propertiesFile = ((File) arguments[0]);
                 this.loadPropertiesFile(propertiesFile);
@@ -48,6 +51,14 @@ public class PropertiesTableController implements Initializable, Observer {
                 this.closePropertiesFile();
         }
 
+    }
+
+    /**
+     * Initialize new empty properties table and set model state "isNew" to true.
+     */
+    public void newPropertiesFile() {
+        // Initialize new empty table:
+        this.propertiesTableModel.newTable();
     }
 
     public void loadPropertiesFile(File aPropertiesFile) {
