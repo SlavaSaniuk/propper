@@ -21,7 +21,7 @@ public class ExtendedCrudRepositoryTestCase {
 
     @BeforeAll
     static void beforeAll() throws IOException {
-        propertiesFile = new File("testsd12sd.fil");
+        propertiesFile = new File("tests12sd.fil");
         boolean isCreated = propertiesFile.createNewFile();
         if (!isCreated) throw new RuntimeException("Test properties file didn't created.");
         if (!propertiesFile.exists()) throw new RuntimeException("Test properties file didn't created.");
@@ -123,6 +123,110 @@ public class ExtendedCrudRepositoryTestCase {
             Assertions.assertNotNull(testResult);
             Assertions.assertEquals(0, testResult.size());
         } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void readByKeys_listOfKeys_shouldReturnReadListOfProperties() {
+        // Properties to save:
+        Property prop1 = new Property("readbykeys.property.key.1","property.value.1");
+        Property prop2 = new Property("readbykeys.property.key.2","property.value.2");
+        Property prop3 = new Property("readbykeys.property.key.3", "property.value.3");
+        List<Property> validProperties = new ArrayList<>();
+        validProperties.add(prop1);
+        validProperties.add(prop2);
+        validProperties.add(prop3);
+
+        // Save properties:
+        try {
+            List<Property> testResult = this.extendedCrudRepository.save(validProperties);
+            Assertions.assertNotNull(testResult);
+            Assertions.assertEquals(validProperties.size(), testResult.size());
+            LOGGER.debug(String.format("Saved properties list: [%s];", testResult));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Read properties:
+        try {
+            List<String> keys = new ArrayList<>();
+            keys.add(prop1.getPropertyKey());
+            keys.add(prop2.getPropertyKey());
+            keys.add(prop3.getPropertyKey());
+            List<Property> readProperties = this.extendedCrudRepository.readByKeys(keys);
+            Assertions.assertNotNull(readProperties);
+            Assertions.assertEquals(3, readProperties.size());
+            LOGGER.debug(String.format("Read list: [%s];", readProperties));
+        }catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void readByKeys_someKeysAreInvalid_shouldSkipIt() {
+        // Properties to save:
+        Property prop1 = new Property("readbykeys2.property.key.1","property.value.1");
+        Property prop2 = new Property("readbykeys2.property.key.2","property.value.2");
+        Property prop3 = new Property("readbykeys2.property.key.3", "property.value.3");
+        List<Property> validProperties = new ArrayList<>();
+        validProperties.add(prop1);
+        validProperties.add(prop2);
+        validProperties.add(prop3);
+
+        // Save properties:
+        try {
+            List<Property> testResult = this.extendedCrudRepository.save(validProperties);
+            Assertions.assertNotNull(testResult);
+            Assertions.assertEquals(validProperties.size(), testResult.size());
+            LOGGER.debug(String.format("Saved properties list: [%s];", testResult));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Read properties:
+        try {
+            List<String> keys = new ArrayList<>();
+            keys.add(prop1.getPropertyKey());
+            keys.add(null);
+            keys.add("");
+            List<Property> readProperties = this.extendedCrudRepository.readByKeys(keys);
+            Assertions.assertNotNull(readProperties);
+            Assertions.assertEquals(1, readProperties.size());
+            LOGGER.debug(String.format("Read list: [%s];", readProperties));
+        }catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void read_listOfProperties_shouldReturnReadListOfProperties() {
+        // Properties to save:
+        Property prop1 = new Property("read2.property.key.1","property.value.1");
+        Property prop2 = new Property("read2.property.key.2","property.value.2");
+        Property prop3 = new Property("read2.property.key.3", "property.value.3");
+        List<Property> validProperties = new ArrayList<>();
+        validProperties.add(prop1);
+        validProperties.add(prop2);
+        validProperties.add(prop3);
+
+        // Save properties:
+        try {
+            List<Property> testResult = this.extendedCrudRepository.save(validProperties);
+            Assertions.assertNotNull(testResult);
+            Assertions.assertEquals(validProperties.size(), testResult.size());
+            LOGGER.debug(String.format("Saved properties list: [%s];", testResult));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Read properties:
+        try {
+            List<Property> readProperties = this.extendedCrudRepository.read(validProperties);
+            Assertions.assertNotNull(readProperties);
+            Assertions.assertEquals(3, readProperties.size());
+            LOGGER.debug(String.format("Read list: [%s];", readProperties));
+        }catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
     }

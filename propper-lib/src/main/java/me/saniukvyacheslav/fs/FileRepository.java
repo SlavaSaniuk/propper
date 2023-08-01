@@ -266,5 +266,67 @@ public class FileRepository implements AdvancedRepository {
         return checkedProperties;
     }
 
+    /**
+     * Read specified properties from repository.
+     * This method used {@link ExtendedCrudRepository#readByKeys(List)} method under the hood.
+     * @param aPropertiesList - list of properties will be read.
+     * @return - list of read properties.
+     * @throws IOException - If IO exceptions occur.
+     */
+    @Override
+    public List<Property> read(@Nullable List<Property> aPropertiesList) throws IOException {
+        // Check specified list:
+        if (aPropertiesList == null) return null;
+        // List of properties keys:
+        List<String> propertiesKeys = new ArrayList<>();
+        if (aPropertiesList.isEmpty()) return this.readByKeys(propertiesKeys); // Return empty list;
+
+        // Check properties in list:
+        aPropertiesList.stream().filter(Objects::nonNull).forEach((property -> propertiesKeys.add(property.getPropertyKey())));
+
+        // Read by keys:
+        return this.readByKeys(propertiesKeys);
+    }
+
+    /**
+     * Read properties from repository by properties keys.
+     * If any key in specified list is invalid, method skip it.
+     * If specified list is null or empty, method return null or empty list.
+     * @param aPropertiesKeys - list of properties keys.
+     * @return - list of read properties.
+     * @throws IOException - If IO exceptions occur.
+     */
+    @Override
+    public List<Property> readByKeys(@Nullable List<String> aPropertiesKeys) throws IOException {
+
+        // Result list:
+        List<Property> resultList = new ArrayList<>();
+
+        // Check specified list:
+        if (aPropertiesKeys == null) return null;
+        if (aPropertiesKeys.isEmpty()) return resultList;
+        List<String> checkedKeys = new ArrayList<>();
+        for (String propertyKey: aPropertiesKeys) {
+            // Check key:
+            try {
+                PropertyWrapper.checkPropertyKey(propertyKey);
+            } catch (PropertyIsInvalidException exc) {
+                // Skip property:
+            }
+            checkedKeys.add(propertyKey);
+        }
+
+        // Get properties list:
+        List<Property> allProperties = this.list();
+        // Iterate through all read properties:
+        allProperties.forEach((property -> {
+            if (checkedKeys.contains(property.getPropertyKey()))
+                resultList.add(property);
+        }));
+
+        // Result list:
+        return resultList;
+    }
+
 
 }
