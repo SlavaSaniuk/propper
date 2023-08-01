@@ -10,7 +10,7 @@ import java.util.Map;
  * {@link AdvancedRepository} repository interface extends {@link Repository} CRUD interface and define new methods for
  * working with properties in repository.
  */
-public interface AdvancedRepository extends Repository {
+public interface AdvancedRepository extends Repository, ExtendedCrudRepository {
 
     /**
      * Get all properties from repository as list of properties.

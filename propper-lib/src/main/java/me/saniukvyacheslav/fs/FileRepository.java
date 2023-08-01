@@ -4,6 +4,7 @@ import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 
@@ -214,5 +215,56 @@ public class FileRepository implements AdvancedRepository {
         else return new Property(keyValuePair[0], keyValuePair[1]);
 
     }
+
+    /**
+     * Save list of {@link Property} properties in repository.
+     * If any property in list is invalid, method skip it, and not save it in repository.
+     * If specified list is null or empty, method skip it, and return new empty list.
+     * @param aPropertiesList - list of {@link Property} properties.
+     * @return - list of saved properties.
+     * @throws IOException - If IO exceptions occur.
+     */
+    @Override
+    public List<Property> save(@Nullable List<Property> aPropertiesList) throws IOException {
+
+        // Result list:
+        List<Property> checkedProperties = new ArrayList<>();
+
+        // Check specified properties list:
+        if (aPropertiesList == null) return checkedProperties;
+        if (aPropertiesList.size() == 0) return checkedProperties;
+
+        // Read file content before:
+        StringBuilder fileContent = this.readFileContent();
+
+        // Iterate through properties list:
+        for (int i=0; (i<aPropertiesList.size()); i++) {
+            Property property = aPropertiesList.get(i);
+            // Check property before:
+            try {
+                PropertyWrapper.checkProperty(property);
+            }catch (PropertyIsInvalidException e) {
+                // Skip property if it's invalid:
+                continue;
+            }
+
+            // Append properties to end of file:
+            // If last property:
+            if (i == (aPropertiesList.size()-1)) fileContent.append(property);
+            else fileContent.append(property).append("\n");
+            checkedProperties.add(property);
+        }
+
+        // Write new file content:
+        // Open writer:
+        try (BufferedWriter writer = this.openWriter()) {
+            writer.write(fileContent.toString());
+            writer.flush();
+        }
+
+        // Saved properties:
+        return checkedProperties;
+    }
+
 
 }
