@@ -4,15 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 
+import java.text.ParseException;
+import java.util.Optional;
+
 /**
  * Property object used to store key-value pair of Strings.
  */
 public class Property {
 
-    @Getter @Setter
-    private String propertyKey;
-    @Getter @Setter
-    private String propertyValue;
+    @Getter final private String propertyKey;
+    @Getter @Setter private String propertyValue;
 
     /**
      * Construct new property object with specified key-value pair.
@@ -61,6 +62,27 @@ public class Property {
         // Create property object:
         if (keyValuePair.length == 1) return new Property(keyValuePair[0], "");
         else return new Property(keyValuePair[0], keyValuePair[1]);
+    }
+
+    /**
+     * Parse specified string to Property instance.
+     * This is safe implementation of {@link Property#parse(String)} method.
+     * If specified string is null, empty, comment, doesn't have '=' sign or key, then {@link ParseException} will be throwing.
+     * @param aStr - string to parse.
+     * @return - property instance.
+     * @throws ParseException - if specified string cannot be parsed.
+     */
+    public static Property safeParse(String aStr) throws ParseException {
+        try {
+            // Unsafe parse and handle exceptions:
+            return Optional.ofNullable(Property.parse(aStr)).orElseThrow(() -> new ParseException(String.format("Specified string [%s] is not a property.", aStr), 0));
+        }catch (NullPointerException e) {
+            throw new ParseException("Specified {String} is null.", 0);
+        }catch (IllegalArgumentException e) {
+            throw new ParseException("Specified {String} is empty.", 0);
+        }catch (PropertyIsInvalidException e) {
+            throw new ParseException(String.format("Specified property string [%s] without property key.",aStr), 0);
+        }
     }
 
     @Override
