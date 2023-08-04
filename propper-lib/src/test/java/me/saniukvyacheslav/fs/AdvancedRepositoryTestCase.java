@@ -1,6 +1,9 @@
 package me.saniukvyacheslav.fs;
 
 import me.saniukvyacheslav.prop.Property;
+import me.saniukvyacheslav.repositories.AdvancedRepository;
+import me.saniukvyacheslav.repositories.FileRepository;
+import me.saniukvyacheslav.repositories.Repository;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

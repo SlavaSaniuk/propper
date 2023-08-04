@@ -1,8 +1,8 @@
 package me.saniukvyacheslav.core.actions;
 
 import me.saniukvyacheslav.args.actions.ActionResult;
-import me.saniukvyacheslav.fs.AdvancedRepository;
-import me.saniukvyacheslav.fs.FileRepository;
+import me.saniukvyacheslav.repositories.AdvancedRepository;
+import me.saniukvyacheslav.repositories.FileRepository;
 import me.saniukvyacheslav.prop.Property;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;

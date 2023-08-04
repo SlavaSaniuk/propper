@@ -2,6 +2,7 @@ package me.saniukvyacheslav.fs;
 
 import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.prop.Property;
+import me.saniukvyacheslav.repositories.FileRepository;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

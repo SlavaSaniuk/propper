@@ -1,7 +1,7 @@
 package me.saniukvyacheslav.services;
 
 import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
-import me.saniukvyacheslav.fs.FileRepository;
+import me.saniukvyacheslav.repositories.FileRepository;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.exceptions.PropertyAlreadyExistException;
 import me.saniukvyacheslav.exceptions.PropertyNotFoundException;

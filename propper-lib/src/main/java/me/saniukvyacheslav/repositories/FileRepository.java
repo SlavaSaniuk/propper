@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.fs;
+package me.saniukvyacheslav.repositories;
 
 import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 import me.saniukvyacheslav.prop.Property;
@@ -55,8 +55,7 @@ public class FileRepository implements AdvancedRepository {
 
     @Override
     public void create(Property aProperty) throws IOException {
-
-        // Check property
+                // Check property
         PropertyWrapper.checkProperty(aProperty);
 
         // Read file content before:

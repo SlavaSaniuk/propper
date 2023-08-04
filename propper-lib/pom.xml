@@ -29,6 +29,12 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>me.saniukvyacheslav</groupId>
+            <artifactId>Yalahae</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>

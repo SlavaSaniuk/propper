@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.fs;
+package me.saniukvyacheslav.repositories;
 
 import me.saniukvyacheslav.prop.Property;
 
