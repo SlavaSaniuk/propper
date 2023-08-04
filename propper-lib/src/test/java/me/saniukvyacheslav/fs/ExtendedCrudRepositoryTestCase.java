@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ExtendedCrudRepositoryTestCase {
 
@@ -227,6 +229,72 @@ public class ExtendedCrudRepositoryTestCase {
             Assertions.assertEquals(3, readProperties.size());
             LOGGER.debug(String.format("Read list: [%s];", readProperties));
         }catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    private List<Property> generateTestProperties(String aPrefixForKeys, int aSize) {
+        List<Property> testProperties = new ArrayList<>();
+
+        // Generate property instances:
+        String propertyKey;
+        for (int i=1; i<=aSize; i++) {
+            propertyKey = String.format("%s.property.key.%d", aPrefixForKeys, i);
+            testProperties.add(new Property(propertyKey, "property.value." +i));
+        }
+
+        // Test properties list:
+        return testProperties;
+
+    }
+
+    @Test
+    void update_listOfProperties_shouldReturnListOfUpdatedProperties() {
+        // Generate test properties:
+        List<Property> testProperties = this.generateTestProperties("update1", 10);
+        // Save test properties:
+        try {
+            List<Property> savedProperties = this.extendedCrudRepository.save(testProperties);
+            LOGGER.debug(String.format("Saved properties list: [%s];", savedProperties));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Change tests properties:
+        // Update 1, 3, 5 properties:
+        String newProperty1Value = "new-property-value-1";
+        testProperties.get(1).setPropertyValue(newProperty1Value);
+        String newProperty3Value = "new-property-value-1";
+        testProperties.get(3).setPropertyValue(newProperty3Value);
+        String newProperty5Value = "new-property-value-1";
+        testProperties.get(5).setPropertyValue(newProperty5Value);
+        // Update it in file:
+        try {
+            List<Property> updatedProperties = this.extendedCrudRepository.update(testProperties);
+            Assertions.assertNotNull(updatedProperties);
+            Assertions.assertEquals(3, updatedProperties.size());
+            LOGGER.debug(String.format("Updated properties list: [%s];", updatedProperties));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        // Read properties by keys:
+        List<String> keys = new ArrayList<>();
+        testProperties.forEach((property) -> keys.add(property.getPropertyKey()));
+        try {
+            List<Property> readProperties = this.extendedCrudRepository.readByKeys(keys);
+            Assertions.assertNotNull(readProperties);
+            Assertions.assertEquals(testProperties.size(), readProperties.size());
+            // Convert readProperties to map:
+            Map<String, String> keyValuePair = readProperties.stream()
+                    .collect(Collectors.toMap(Property::getPropertyKey, Property::getPropertyValue));
+            // Check values:
+            testProperties.forEach((testProperty) -> {
+                Assertions.assertTrue(keyValuePair.containsKey(testProperty.getPropertyKey()));
+                Assertions.assertEquals(testProperty.getPropertyValue(), keyValuePair.get(testProperty.getPropertyKey()));
+            });
+            LOGGER.debug(String.format("Read properties list: [%s];", readProperties));
+        } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
     }

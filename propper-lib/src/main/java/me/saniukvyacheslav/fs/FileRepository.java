@@ -6,7 +6,9 @@ import me.saniukvyacheslav.prop.PropertyWrapper;
 
 import javax.annotation.Nullable;
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * FileRepository used for work with properties files.
@@ -328,5 +330,55 @@ public class FileRepository implements AdvancedRepository {
         return resultList;
     }
 
+    @Override
+    public List<Property> update(@Nullable List<Property> aPropertiesList) throws IOException {
+        // Result list:
+        List<Property> resultList = new ArrayList<>();
+
+        // Check specified list:
+        if (aPropertiesList == null) return null;
+        if (aPropertiesList.isEmpty()) return resultList;
+
+        // Convert specified list to map of property_key=new_property_value:
+        Map<String, String> key_newValue_Pair = aPropertiesList.stream().collect(Collectors.toMap((Property::getPropertyKey), (Property::getPropertyValue)));
+
+        // Read file content:
+        StringBuilder fileContent = this.readFileContent();
+        // Convert string builder to array of strings:
+        String[] strings = fileContent.toString().split("\n");
+
+        // New file content:
+        StringBuilder newFileContent = new StringBuilder();
+        // Iterate through old file content:
+        for (String str : strings) {
+            // Try to parse string to Property:
+            try {
+                Property parsedProperty = Property.safeParse(str);
+                // If parsed string is property:
+                // Check for update for parsed property:
+                if (key_newValue_Pair.containsKey(parsedProperty.getPropertyKey())) {
+                    // Check for origin property value is not equal to new property value:
+                    if (!(parsedProperty.getPropertyValue().equals(key_newValue_Pair.get(parsedProperty.getPropertyKey())))) {
+                        parsedProperty.setPropertyValue(key_newValue_Pair.get(parsedProperty.getPropertyKey()));
+                        newFileContent.append(parsedProperty).append(System.lineSeparator());
+                        resultList.add(parsedProperty);
+                    }else newFileContent.append(parsedProperty).append(System.lineSeparator());
+                } else newFileContent.append(str).append(System.lineSeparator());
+
+            } catch (ParseException e) {
+                // If string cannot be parsed to property, add it to new file content:
+                newFileContent.append(str).append(System.lineSeparator());
+            }
+        }
+
+        // Write new file content to file:
+        // Write file content and find property:
+        try(BufferedWriter writer = this.openWriter()) {
+            writer.write(newFileContent.toString());
+            writer.flush();
+        }
+
+        return resultList;
+    }
 
 }

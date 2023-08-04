@@ -1,9 +1,9 @@
 package me.saniukvyacheslav.prop;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.saniukvyacheslav.exceptions.PropertyIsInvalidException;
 
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class Property {
 
     @Getter final private String propertyKey;
-    @Getter @Setter private String propertyValue;
+    @Getter private String propertyValue;
 
     /**
      * Construct new property object with specified key-value pair.
@@ -40,7 +40,7 @@ public class Property {
      * @return - parsed property instance.
      * @throws PropertyIsInvalidException - if property without key.
      */
-    public static Property parse(String propertyString) throws PropertyIsInvalidException {
+    public static Property parse(@Nullable String propertyString) throws PropertyIsInvalidException {
         // Check String to parse:
         if (propertyString == null) throw new NullPointerException("Parsed string must be not null.");
         if (propertyString.isEmpty()) throw new IllegalArgumentException("Parsed string must be not empty.");
@@ -72,7 +72,7 @@ public class Property {
      * @return - property instance.
      * @throws ParseException - if specified string cannot be parsed.
      */
-    public static Property safeParse(String aStr) throws ParseException {
+    public static Property safeParse(@Nullable String aStr) throws ParseException {
         try {
             // Unsafe parse and handle exceptions:
             return Optional.ofNullable(Property.parse(aStr)).orElseThrow(() -> new ParseException(String.format("Specified string [%s] is not a property.", aStr), 0));
@@ -83,6 +83,16 @@ public class Property {
         }catch (PropertyIsInvalidException e) {
             throw new ParseException(String.format("Specified property string [%s] without property key.",aStr), 0);
         }
+    }
+
+    /**
+     * Set property value to current instance.
+     * If specified value is null, property value will be empty.
+     * @param aValue - property value.
+     */
+    public void setPropertyValue(@Nullable String aValue) {
+        if (aValue == null) this.propertyValue = "";
+        else this.propertyValue = aValue;
     }
 
     @Override

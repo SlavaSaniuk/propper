@@ -36,4 +36,12 @@ public interface ExtendedCrudRepository {
      * @throws IOException - If IO exceptions occur.
      */
     List<Property> readByKeys(@Nullable List<String> aPropertiesKeys) throws IOException;
+
+    /**
+     * Update properties in repository.
+     * @param aPropertiesList - properties list with new values.
+     * @return - list of updated properties.
+     * @throws IOException - If IO exceptions occur.
+     */
+    List<Property> update(@Nullable List<Property> aPropertiesList) throws IOException;
 }
