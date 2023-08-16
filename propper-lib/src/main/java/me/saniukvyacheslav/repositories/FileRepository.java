@@ -329,6 +329,12 @@ public class FileRepository implements AdvancedRepository {
         return resultList;
     }
 
+    /**
+     * Update properties in repository.
+     * @param aPropertiesList - properties list with new values.
+     * @return - list of updated properties.
+     * @throws IOException - If IO exceptions occur.
+     */
     @Override
     public List<Property> update(@Nullable List<Property> aPropertiesList) throws IOException {
         // Result list:
@@ -378,6 +384,11 @@ public class FileRepository implements AdvancedRepository {
         }
 
         return resultList;
+    }
+
+    @Override
+    public List<Property> delete(@Nullable List<Property> aPropertiesToDelete) throws IOException {
+        return null;
     }
 
 }

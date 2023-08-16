@@ -1,7 +1,9 @@
 package me.saniukvyacheslav.core.controller;
 
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
@@ -20,6 +22,7 @@ import java.util.*;
 /**
  * RepositoryController controller used to open, close repository.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RepositoryController implements Observer, Observable {
 
     // Class variables:
@@ -37,13 +40,6 @@ public class RepositoryController implements Observer, Observable {
         LOGGER.debug(String.format("Get singleton instance of [%s] class;", RepositoryController.class.getName()));
         if(RepositoryController.INSTANCE == null) RepositoryController.INSTANCE = new RepositoryController();
         return RepositoryController.INSTANCE;
-    }
-
-    /**
-        Private default constructor.
-     */
-    private RepositoryController() {
-        LOGGER.debug(String.format("Create singleton instance of [%s] class;", RepositoryController.class.getName()));
     }
 
     /**
@@ -117,13 +113,18 @@ public class RepositoryController implements Observer, Observable {
             return;
         }
 
+        // Choose branch:
         switch (event.getCode()) {
+            case 101: { // New file event:
+
+                break;
+            }
             case 102: { // Open file event:
                 this.open(arguments);
                 break;
             }
-            case 103: { // Save file event:
-                break;
+            default: {
+                LOGGER.warn(String.format("Not supported event [eventCode: %d];", event.getCode()));
             }
         }
 

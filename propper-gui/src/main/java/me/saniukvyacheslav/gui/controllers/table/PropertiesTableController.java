@@ -5,7 +5,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import me.saniukvyacheslav.core.controller.RepositoryController;
-import me.saniukvyacheslav.core.properties.PropertiesServiceFactory;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
@@ -14,7 +13,6 @@ import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.models.table.PropertiesTableModel;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
 import me.saniukvyacheslav.prop.Property;
-import me.saniukvyacheslav.services.PropertiesService;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +53,7 @@ public class PropertiesTableController implements Initializable, Observer {
             case 101: // NEW_FILE_EVENT event:
                 this.newPropertiesFile();
                 break;
-            case 550:
+            case 550: // REPOSITORY_OPENING event:
                 // Parse arguments and load properties from repository:
                 if(arguments[0] == RepositoryTypes.FileRepository) {
                     this.loadPropertiesFile((File) arguments[1]);

@@ -201,7 +201,7 @@ public class FileRepositoryTestsCase {
 
     @Test
     void delete_keyIsNull_shouldThrowPIIE() {
-        Assertions.assertThrows(PropertyIsInvalidException.class, ()-> this.testsFileRepository2.delete(null));
+        Assertions.assertThrows(PropertyIsInvalidException.class, ()-> this.testsFileRepository2.delete(""));
     }
 
     @Test

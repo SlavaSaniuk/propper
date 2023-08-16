@@ -44,4 +44,6 @@ public interface ExtendedCrudRepository {
      * @throws IOException - If IO exceptions occur.
      */
     List<Property> update(@Nullable List<Property> aPropertiesList) throws IOException;
+
+    List<Property> delete(@Nullable List<Property> aPropertiesToDelete) throws IOException;
 }

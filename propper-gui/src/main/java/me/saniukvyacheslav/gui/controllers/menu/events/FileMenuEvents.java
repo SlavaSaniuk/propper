@@ -7,10 +7,6 @@ import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
  */
 public enum FileMenuEvents implements PropperApplicationEvent {
 
-    /**
-     * New file application event. Event will be triggered, when user click on FileMenu item.
-     */
-    NEW_FILE_EVENT(101),
 
     /**
      * Open file application event. Event calls when user open properties file.
