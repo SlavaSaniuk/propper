@@ -6,6 +6,8 @@ import me.saniukvyacheslav.core.controller.ErrorsController;
 import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
+import me.saniukvyacheslav.gui.controllers.menu.FileMenuController;
+import me.saniukvyacheslav.gui.controllers.menu.MenuErrors;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
@@ -43,14 +45,14 @@ public class PrimaryNodeController implements Initializable {
     private void subscribeObservers() {
         // +++ Top menu:
         // ++++++ FileMenu:
-        //this.topMenuController.subscribeOnFileMenuEvents(this.propertiesTableController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
-        //this.topMenuController.subscribeOnFileMenuEvents(this.statusLineController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
         this.topMenuController.subscribeOnFileMenuEvents(this.repositoryController, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT);
+        this.topMenuController.subscribeOnFileMenuEvents(this.errorsController, MenuErrors.FILE_CREATION_ERROR, MenuErrors.FILE_REWRITING_ERROR);
 
         // +++ RepositoryController:
         this.repositoryController.subscribe(this.errorsController, RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
         this.repositoryController.subscribe(this.propertiesTableController, RepositoryEvents.REPOSITORY_OPENED);
         this.repositoryController.subscribe(this.statusLineController, RepositoryEvents.REPOSITORY_OPENED);
+        this.repositoryController.subscribe(FileMenuController.getInstance(), RepositoryEvents.REPOSITORY_OPENED);
     }
 
 

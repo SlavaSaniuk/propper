@@ -3,9 +3,8 @@ package me.saniukvyacheslav.gui.models.topmenu;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
+import lombok.Getter;
+import me.saniukvyacheslav.gui.views.menu.FileMenuView;
 
 
 /**
@@ -14,10 +13,12 @@ import javafx.scene.input.KeyCombination;
 public class FileMenuModel {
 
     // Embedded FX nodes:
-    private MenuItem openFileItem; // OPEN_FILE menu item;
-    private MenuItem saveFileItem; // SAVE_FILE menu item;
-    private MenuItem newFileItem; // NEW_FILE menu item;
-    private MenuItem closeFileItem; // CLOSE_FILE menu item;
+    @Getter private MenuItem openFileItem; // OPEN_FILE menu item;
+    @Getter private MenuItem saveFileItem; // SAVE_FILE menu item;
+    @Getter private MenuItem newFileItem; // NEW_FILE menu item;
+    @Getter private MenuItem closeFileItem; // CLOSE_FILE menu item;
+    // View:
+    private final FileMenuView fileMenuView;
 
     /**
      * Construct new model for FileMenu menu.
@@ -45,25 +46,16 @@ public class FileMenuModel {
             }
         }
 
-        // Set keyboard hotkeys:
-        this.setHotKeys();
+        // Create view:
+        this.fileMenuView = new FileMenuView(this);
     }
 
     /**
-     * Set keyboard hotkeys to embedded menu items.
-     * "Ctrl+N" for "New file" menu item.
-     * "Ctrl+O" for "Open file" menu item.
-     * "Ctrl+S" for "Save file" menu item.
-     * "Ctrl+X" for "Close file" menu item.
+     * Enable/disable "Save", "Close" menu items.
+     * @param isDisabled - disabled state.
      */
-    private void setHotKeys() {
-        // For NewFile fileMenu item:
-        this.newFileItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-        // For openFileItem:
-        this.openFileItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
-        // For saveFileItem;
-        this.saveFileItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-        // For closeFileItem;
-        this.closeFileItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN));
+    public void setDisableSaveCloseMenuItems(boolean isDisabled) {
+        this.fileMenuView.setDisableMenuItem(this.saveFileItem, isDisabled);
+        this.fileMenuView.setDisableMenuItem(this.closeFileItem, isDisabled);
     }
 }

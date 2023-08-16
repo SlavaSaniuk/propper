@@ -115,10 +115,6 @@ public class RepositoryController implements Observer, Observable {
 
         // Choose branch:
         switch (event.getCode()) {
-            case 101: { // New file event:
-
-                break;
-            }
             case 102: { // Open file event:
                 this.open(arguments);
                 break;

@@ -22,7 +22,16 @@ public class TopMenuController implements Initializable {
 
     // Class variables:
     private final FileMenuController fileMenuController = FileMenuController.getInstance(); // FileMenu controller;
+    private static TopMenuController INSTANCE; // Instance of this controller;
     @Getter private FileMenuModel fileMenuModel;
+
+    /**
+     * Get current instance of this controller.
+     * @return - instance of this controller.
+     */
+    public static TopMenuController getInstance() {
+        return TopMenuController.INSTANCE;
+    }
 
     /**
      * Subscribe observers on FileMenu events.
@@ -36,6 +45,9 @@ public class TopMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // Initialize static instance:
+        TopMenuController.INSTANCE = this;
+
         // Construct models:
         for (Menu menu : ((MenuBar) this.topMenuBar).getMenus()) {
             if (menu.getId() == null) continue;
@@ -43,11 +55,13 @@ public class TopMenuController implements Initializable {
                 this.fileMenuModel = new FileMenuModel(menu);
         }
 
+        // Set models to controllers:
+        this.fileMenuController.setFileMenuModel(this.fileMenuModel);
     }
 
     /**
      * Notify {@link me.saniukvyacheslav.gui.controllers.table.PropertiesTableController} about
-     * {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#NEW_FILE_EVENT} event.
+     * {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#OPEN_FILE_EVENT} event.
      */
     @FXML public void onNewFileEvent() {
         this.fileMenuController.onNewFileEvent();

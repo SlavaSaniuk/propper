@@ -3,6 +3,7 @@ package me.saniukvyacheslav.gui.controllers.menu;
 import javafx.stage.FileChooser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.saniukvyacheslav.Main;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
@@ -10,6 +11,7 @@ import me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
+import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +23,14 @@ import java.util.Map;
  * Singleton instance.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FileMenuController implements Observable {
+public class FileMenuController implements Observable, Observer {
 
     // Class variables:
     private static final Logger LOGGER = LoggerFactory.getLogger(FileMenuController.class); // Logger;
     private static FileMenuController INSTANCE; // Singleton instance:
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // Map of observers;
     private final FileChooser fileChooser = new FileChooser(); // FileChooser;
+    @Setter private FileMenuModel fileMenuModel; // File menu model;
 
     /**
      * Get singleton instance of FileMenu controller.
@@ -130,6 +133,16 @@ public class FileMenuController implements Observable {
     }
 
     /**
+     * Enable "Save", "Close" menu items.
+     */
+    public void onRepositoryOpenedEvent() {
+        LOGGER.debug("REPOSITORY_OPENED [505] event:");
+        LOGGER.debug("Enable [SAVE], [CLOSE] menu items;");
+        if(this.fileMenuModel == null) this.fileMenuModel = TopMenuController.getInstance().getFileMenuModel();
+        this.fileMenuModel.setDisableSaveCloseMenuItems(false);
+    }
+
+    /**
      * Subscribe observer to this observable instance.
      * @param anObserver - observer.
      * @param anApplicationEvents - observer supported events.
@@ -168,5 +181,23 @@ public class FileMenuController implements Observable {
             }
         });
     }
+
+    /**
+     * Do something on event.
+     * @param event - {@link Observable} instance event.
+     * @param arguments - event arguments.
+     */
+    @Override
+    public void update(PropperApplicationEvent event, Object... arguments) {
+        switch (event.getCode()) {
+            case 550: { // REPOSITORY_OPENED event:
+                this.onRepositoryOpenedEvent();
+                break;
+            } default: {
+                LOGGER.warn(String.format("Event [eventCode: %d] not supported;", event.getCode()));
+            }
+        }
+    }
+
 
 }
