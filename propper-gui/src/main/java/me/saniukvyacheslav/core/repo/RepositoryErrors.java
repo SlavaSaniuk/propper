@@ -2,8 +2,6 @@ package me.saniukvyacheslav.core.repo;
 
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 
-import java.io.File;
-
 /**
  * This enum define common event of repository error.
  */
@@ -19,7 +17,7 @@ public enum RepositoryErrors implements PropperApplicationEvent {
     /**
      * Repository cannot be opened.
      * This error throws in cases, when user try to open invalid file.
-     * {@link me.saniukvyacheslav.core.controller.RepositoryController#initializeFileRepository(File)}.
+     * {@see RepositoryController#initializeFileRepository(File)}.
      */
     REPOSITORY_OPENING_ERROR(501);
 

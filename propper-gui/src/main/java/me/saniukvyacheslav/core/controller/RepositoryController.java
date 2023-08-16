@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.*;
 
+/**
+ * RepositoryController controller used to open, close repository.
+ */
 public class RepositoryController implements Observer, Observable {
 
     // Class variables:
