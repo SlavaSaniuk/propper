@@ -1,10 +1,13 @@
 package me.saniukvyacheslav.gui.controllers.menu.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 
 /**
- * "File" top menu application events.
+ * "File" TopMenu application events.
  */
+@AllArgsConstructor
 public enum FileMenuEvents implements PropperApplicationEvent {
 
 
@@ -12,6 +15,10 @@ public enum FileMenuEvents implements PropperApplicationEvent {
      * Open file application event. Event calls when user open properties file.
      */
     OPEN_FILE_EVENT(102),
+
+    /**
+     * SAVE FILE FileMenu application event.
+     */
     SAVE_FILE_EVENT(103),
 
     /**
@@ -19,19 +26,6 @@ public enum FileMenuEvents implements PropperApplicationEvent {
      */
     CLOSE_FILE_EVENT(105);
 
-    private final int eventCode; // Event code;
-
-    /**
-     * Construct new FileMenu application event with specified code.
-     * @param aEventCode - event code.
-     */
-    FileMenuEvents(int aEventCode) {
-        this.eventCode = aEventCode;
-    }
-
-    @Override
-    public int getCode() {
-        return this.eventCode;
-    }
+    @Getter private final int code; // Event code;
 
 }
