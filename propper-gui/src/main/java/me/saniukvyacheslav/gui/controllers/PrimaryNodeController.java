@@ -2,6 +2,10 @@ package me.saniukvyacheslav.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import me.saniukvyacheslav.core.controller.ErrorsController;
+import me.saniukvyacheslav.core.controller.RepositoryController;
+import me.saniukvyacheslav.core.repo.RepositoryErrors;
+import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
@@ -19,7 +23,8 @@ public class PrimaryNodeController implements Initializable {
     @FXML private TopMenuController topMenuController;
     @FXML private StatusLineController statusLineController;
     @FXML private PropertiesTableController propertiesTableController;
-
+    private final RepositoryController repositoryController = RepositoryController.getInstance(); // Repository controller;
+    private final ErrorsController errorsController = ErrorsController.getInstance(); // Errors controller;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -38,8 +43,14 @@ public class PrimaryNodeController implements Initializable {
     private void subscribeObservers() {
         // +++ Top menu:
         // ++++++ FileMenu:
-        this.topMenuController.subscribeOnFileMenuEvents(this.propertiesTableController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
-        this.topMenuController.subscribeOnFileMenuEvents(this.statusLineController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
+        //this.topMenuController.subscribeOnFileMenuEvents(this.propertiesTableController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
+        //this.topMenuController.subscribeOnFileMenuEvents(this.statusLineController, FileMenuEvents.NEW_FILE_EVENT, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
+        this.topMenuController.subscribeOnFileMenuEvents(this.repositoryController, FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT);
+
+        // +++ RepositoryController:
+        this.repositoryController.subscribe(this.errorsController, RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
+        this.repositoryController.subscribe(this.propertiesTableController, RepositoryEvents.REPOSITORY_OPENED);
+        this.repositoryController.subscribe(this.statusLineController, RepositoryEvents.REPOSITORY_OPENED);
     }
 
 

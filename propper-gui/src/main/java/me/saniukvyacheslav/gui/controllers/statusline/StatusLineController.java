@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -42,8 +43,10 @@ public class StatusLineController implements Observer, Initializable {
             case 101:
                 this.onNewFileEvent(); // NEW_FILE_EVENT FileMenu event:
                 break;
-            case 102: // OPEN_FILE_EVENT FileMenuController event:
-                this.onOpenFileAction(((File) arguments[0]).getAbsolutePath());
+            case 550: // REPOSITORY_OPENED event:
+                // Parse arguments:
+                RepositoryTypes type = (RepositoryTypes) arguments[0];
+                if (type == RepositoryTypes.FileRepository) this.onOpenFileAction(((File) arguments[1]).getAbsolutePath());
                 break;
             case 205: // PROPERTY_UPDATE_EVENT PropertyChangesController event:
                 this.onPropertyChangeEvent((int) arguments[0]);

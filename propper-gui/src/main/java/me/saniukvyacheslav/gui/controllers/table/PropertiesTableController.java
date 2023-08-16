@@ -4,7 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
+import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.properties.PropertiesServiceFactory;
+import me.saniukvyacheslav.core.repo.PropertiesRepository;
+import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -31,7 +34,7 @@ public class PropertiesTableController implements Initializable, Observer {
     @FXML private GridPane propertiesTable; // Embedded GridPane layout;
     // Class variables:
     private PropertiesTableModel propertiesTableModel; // Properties table model;
-    private PropertiesService propertiesService; // Properties service;
+    private PropertiesRepository propertiesRepository; // Properties service;
     private String currentPropertiesFilePath; // Path to current properties file;
     // States:
     private boolean IS_NEW = false; // Is properties file is new - flag;
@@ -52,9 +55,11 @@ public class PropertiesTableController implements Initializable, Observer {
             case 101: // NEW_FILE_EVENT event:
                 this.newPropertiesFile();
                 break;
-            case 102:
-                File propertiesFile = ((File) arguments[0]);
-                this.loadPropertiesFile(propertiesFile);
+            case 550:
+                // Parse arguments and load properties from repository:
+                if(arguments[0] == RepositoryTypes.FileRepository) {
+                    this.loadPropertiesFile((File) arguments[1]);
+                }
                 break;
             case 105: // CLOSE_FILE_EVENT event:
                 this.closePropertiesFile();
@@ -80,13 +85,13 @@ public class PropertiesTableController implements Initializable, Observer {
         // Check if other properties file is opened:
         if (this.IS_NEW || this.IS_OPENED) this.closePropertiesFile();
 
-        if (this.propertiesService != null) this.propertiesService = null;
-        this.propertiesService = PropertiesServiceFactory.fileService(aPropertiesFile);
+        if (this.propertiesRepository != null) this.propertiesRepository = null;
+        this.propertiesRepository = RepositoryController.getInstance().getPropertiesRepository();
 
         // Load properties from properties file:
         List<Property> loadedProperties;
         try {
-            loadedProperties = this.propertiesService.list();
+            loadedProperties = this.propertiesRepository.list();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
