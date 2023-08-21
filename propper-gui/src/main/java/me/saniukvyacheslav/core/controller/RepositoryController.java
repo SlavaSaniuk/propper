@@ -5,11 +5,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.error.ApplicationError;
+import me.saniukvyacheslav.core.property.PropertiesChanges;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
+import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
+import me.saniukvyacheslav.core.repo.file.FileRepositoryContentDecorator;
+import me.saniukvyacheslav.gui.controllers.table.PropertiesTableController;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -17,10 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
- * RepositoryController controller used to open, close repository.
+ * RepositoryController controller used to open, close repository and save properties in repository.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RepositoryController implements Observer, Observable {
@@ -30,8 +35,8 @@ public class RepositoryController implements Observer, Observable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryController.class); // Logger;
     @Getter private PropertiesRepository propertiesRepository; // Properties repository;
     public boolean isOpened = false; // Repository opening state;
+    private RepositoryTypes currentRepositoryType; // Current opening repository type;
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // Map of subscribers;
-
     /**
      * Get current singleton instance of this class.
      * @return - current singleton instance.
@@ -81,11 +86,15 @@ public class RepositoryController implements Observer, Observable {
 
         // Try to open file repository:
         try {
-            this.propertiesRepository = FileRepository.getInstance(aPropertiesFile);
-        }catch (IllegalArgumentException | NullPointerException e) {
+            // Open and init file repository:
+            this.propertiesRepository = FileRepositoryContentDecorator.getInstance().initRepository(aPropertiesFile);
+        }catch (IOException e) {
             LOGGER.error("Cannot open FileRepository for properties file;");
             ApplicationError openingError = new ApplicationError(RepositoryErrors.REPOSITORY_OPENING_ERROR.getCode(), "Properties file cannot be opened.");
-            openingError.setOriginalExceptionMessage(e.getMessage());
+
+            if (e instanceof RepositoryNotInitializedException) openingError.setOriginalExceptionMessage(((RepositoryNotInitializedException) e).getExceptionMessage());
+            else openingError.setOriginalExceptionMessage(e.getMessage());
+
             this.notify(RepositoryErrors.REPOSITORY_OPENING_ERROR, openingError);
             return;
         }
@@ -93,9 +102,60 @@ public class RepositoryController implements Observer, Observable {
 
         // Set state:
         this.isOpened = true;
+        this.currentRepositoryType = RepositoryTypes.FileRepository;
 
         // Notify observers:
         this.notify(RepositoryEvents.REPOSITORY_OPENED, RepositoryTypes.FileRepository, aPropertiesFile);
+
+    }
+
+    /**
+     * Try to save properties in repository.
+     * Get all properties changes from properties table and save, delete and update it.
+     */
+    public void save() {
+        LOGGER.debug("Try to save all changes in repository: ");
+
+        // Handle properties changes:
+        PropertiesChanges changes = PropertiesTableController.getInstance().getPropertiesTableModel().getPropertiesChanges();
+        LOGGER.debug(String.format("Save property changes: [%s];", changes));
+
+        // Save in repository:
+        // Inserts:
+        // Updates:
+        try {
+            this.propertiesRepository.updateKeys(changes.getPropertiesKeysUpdates());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // Deletions:
+        // Flush changes:
+        try {
+            this.propertiesRepository.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void close() {
+        // Check unsaved changes:
+
+        // Close repository:
+        this.closeRepository();
+    }
+
+    private void closeRepository() {
+        if (this.propertiesRepository == null) return;
+
+        // Try to close repository:
+        try {
+            // Switch repository type:
+            if (this.currentRepositoryType.getType() == 1) { // FileRepository:
+                ((FileRepository) this.propertiesRepository).close();
+            } else LOGGER.warn("Repository type not supported.");
+        }catch (Exception e) {
+            LOGGER.error("Error when closing repository.");
+        }
 
     }
 
@@ -107,16 +167,14 @@ public class RepositoryController implements Observer, Observable {
      */
     @Override
     public void update(PropperApplicationEvent event, Object... arguments) {
-        // Check parameters:
-        if (event.getCode() == 0) {
-            LOGGER.warn("Event code is 0. Do nothing.");
-            return;
-        }
-
         // Choose branch:
         switch (event.getCode()) {
-            case 102: { // Open file event:
+            case 102: { // OpenFile FileMenu event:
                 this.open(arguments);
+                break;
+            }
+            case 103: { // SaveFile FileMenu item:
+                this.save();
                 break;
             }
             default: {

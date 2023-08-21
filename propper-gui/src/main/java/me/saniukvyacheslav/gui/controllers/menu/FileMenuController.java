@@ -113,11 +113,11 @@ public class FileMenuController implements Observable, Observer {
     }
 
     /**
-     * Save properties file.
+     * Save properties in repository.
      * Method notify observers about {@link FileMenuEvents#SAVE_FILE_EVENT} event.
      */
     public void onSaveFileEvent() {
-        System.out.println("Save file event stab.");
+        LOGGER.debug("SAVE_FILE_EVENT FileMenu event:");
 
         // Notify observers:
         this.notify(FileMenuEvents.SAVE_FILE_EVENT);

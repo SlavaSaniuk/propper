@@ -4,12 +4,18 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import me.saniukvyacheslav.core.property.PropertiesChanges;
+import me.saniukvyacheslav.core.property.PropertiesChangesHandler;
+import me.saniukvyacheslav.core.property.PropertyChanges;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.models.PropertyModel;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
 import me.saniukvyacheslav.prop.Property;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Properties table model.
@@ -22,6 +28,7 @@ public class PropertiesTableModel {
     private final PropertiesTableView tableView; // Properties table view;
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
+    @Getter private final Set<Property> originPropertiesList = new HashSet<>();
 
     /**
      * Construct new {@link PropertiesTableModel} model instance.
@@ -129,9 +136,24 @@ public class PropertiesTableModel {
             PropertyModel model = new PropertyModel(property);
             this.embeddedGridPane.addRow(i, model.getKeyPropertyField(), model.getValuePropertyField());
             i++;
+
+            // Add property to origin properties list:
+            this.originPropertiesList.add(property);
         }
     }
 
+    private List<PropertyChanges> getListOfChanges() {
+        List<PropertyChanges> changesList = new ArrayList<>();
+        PropertyChangesController.getInstance().getUpdatesMap().forEach((String originKey, Property changedProp) -> {
+            changesList.add(new PropertyChanges(originKey, changedProp));
+        });
+
+        return changesList;
+    }
+
+    public PropertiesChanges getPropertiesChanges() {
+        return PropertiesChangesHandler.handle(this.originPropertiesList, this.getListOfChanges());
+    }
 
     /**
      * Check if this table model has unsaved properties changes.

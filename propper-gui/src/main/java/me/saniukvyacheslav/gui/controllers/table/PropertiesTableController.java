@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
+import lombok.Getter;
 import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * PropertiesTable controller.
@@ -31,12 +33,17 @@ public class PropertiesTableController implements Initializable, Observer {
     // Embedded nodes:
     @FXML private GridPane propertiesTable; // Embedded GridPane layout;
     // Class variables:
-    private PropertiesTableModel propertiesTableModel; // Properties table model;
+    private static PropertiesTableController INSTANCE;
+    @Getter private PropertiesTableModel propertiesTableModel; // Properties table model;
     private PropertiesRepository propertiesRepository; // Properties service;
     private String currentPropertiesFilePath; // Path to current properties file;
     // States:
     private boolean IS_NEW = false; // Is properties file is new - flag;
     private boolean IS_OPENED = false; // Is properties file opened flag;
+
+    public static PropertiesTableController getInstance() {
+        return PropertiesTableController.INSTANCE;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,6 +51,9 @@ public class PropertiesTableController implements Initializable, Observer {
         this.propertiesTableModel = new PropertiesTableModel(this.propertiesTable);
         // Construct view object and stylize properties table:
         new PropertiesTableView(this.propertiesTable).stylize();
+
+        // Initialize singleton instance:
+        PropertiesTableController.INSTANCE = this;
     }
 
     @Override
