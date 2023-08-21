@@ -98,7 +98,7 @@ public class FileRepositoryUtils {
                     break;
                 }
 
-                if(previousLine != null) readStrings.add(previousLine +System.lineSeparator());
+                if(previousLine != null) readStrings.add(previousLine);
                 previousLine = currentLine;
             }
         }
