@@ -35,22 +35,6 @@ public class FileRepositoryUtils {
     }
 
     /**
-     * Open BufferedWriter for specified file with mode.
-     * @param aFile - file.
-     * @param isAppend - is append mode.
-     * @return - writer.
-     * @throws IOException - If IO Exception occurs.
-     */
-    public static BufferedWriter openWriter(File aFile, boolean isAppend) throws IOException {
-        Objects.requireNonNull(aFile);
-        if (!aFile.canWrite()) {
-            throw new IOException(String.format("File: [%s] cannot be written.", aFile.getPath()));
-        } else {
-            return new BufferedWriter(new FileWriter(aFile, isAppend));
-        }
-    }
-
-    /**
      * Write list of strings in file line by line. Each element in list is line of text.
      * If line doesn't contain {@link System#lineSeparator()} or '\n' character, method automatically add that character to it.
      * @param aListOfString - list of text lines.
@@ -89,4 +73,37 @@ public class FileRepositoryUtils {
         }
     }
 
+    /**
+     * Read file line by line.
+     * @param aFile - file.
+     * @return - list of strings.
+     * @throws IOException - If IO exception occurs.
+     */
+    public static List<String> readStringsFromFileLineByLine(File aFile) throws IOException {
+        // Check parameter:
+        Objects.requireNonNull(aFile, "Specified [File] instance must be not null.");
+
+        // Read line by line:
+        List<String> readStrings = new ArrayList<>();
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(aFile))) {
+            String currentLine; String previousLine = null;
+
+            // Read file line by line:
+            while (true) {
+
+                currentLine = reader.readLine(); // Read current line;
+                if (currentLine == null) { // If end of file:
+                    if(previousLine != null) readStrings.add(previousLine);
+                    break;
+                }
+
+                if(previousLine != null) readStrings.add(previousLine +System.lineSeparator());
+                previousLine = currentLine;
+            }
+        }
+
+        return readStrings;
+
+    }
 }

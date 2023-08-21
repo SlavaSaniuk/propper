@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FileRepositoryUtilsTestCase {
@@ -57,5 +58,67 @@ public class FileRepositoryUtilsTestCase {
         Assertions.assertEquals(srcList.size(), readStrings.size());
         LOGGER.debug("Read strings: ");
         readStrings.forEach((str) -> LOGGER.debug("\t" +str));
+    }
+
+    @Test
+    void readStringsFromFileLineByLine_emptyFile_shouldReturnEmptyList() {
+
+        List<String> readStrings = null;
+        try {
+           readStrings = FileRepositoryUtils.readStringsFromFileLineByLine(FileRepositoryUtilsTestCase.propertiesFile);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        Assertions.assertNotNull(readStrings);
+        Assertions.assertTrue(readStrings.isEmpty());
+    }
+
+    @Test
+    void readStringsFromFileLineByLine_fileWithOneLine_shouldReturnListWithOneElement() {
+        List<String> srcList = new ArrayList<>(Collections.singletonList("Hello world"));
+
+        // Write src list:
+        try {
+            FileRepositoryUtils.writeStringsToFileLineByLine(srcList, FileRepositoryUtilsTestCase.propertiesFile);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        List<String> readStrings = null;
+        try {
+            readStrings = FileRepositoryUtils.readStringsFromFileLineByLine(FileRepositoryUtilsTestCase.propertiesFile);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        Assertions.assertNotNull(readStrings);
+        Assertions.assertEquals(srcList.size(), readStrings.size());
+        LOGGER.debug("Read strings:");
+        readStrings.forEach((line) -> LOGGER.debug("\t" +line));
+    }
+
+    @Test
+    void readStringsFromFileLineByLine_fileWithFelLines_shouldReturnListWithFewElements() {
+        List<String> srcList = new ArrayList<>(Arrays.asList("Hello world", "My name is Vyacheslav!.", "\n"));
+
+        // Write src list:
+        try {
+            FileRepositoryUtils.writeStringsToFileLineByLine(srcList, FileRepositoryUtilsTestCase.propertiesFile);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        List<String> readStrings = null;
+        try {
+            readStrings = FileRepositoryUtils.readStringsFromFileLineByLine(FileRepositoryUtilsTestCase.propertiesFile);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        Assertions.assertNotNull(readStrings);
+        Assertions.assertEquals(srcList.size(), readStrings.size());
+        LOGGER.debug("Read strings:");
+        readStrings.forEach((line) -> LOGGER.debug("\t" +line));
     }
 }
