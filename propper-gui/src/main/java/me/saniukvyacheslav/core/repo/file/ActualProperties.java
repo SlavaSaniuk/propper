@@ -111,7 +111,7 @@ public class ActualProperties {
         return this.memoryProperties;
     }
 
-    private void syncStore() {
+    public void syncStore() {
         // Sync map:
         this.memoryProperties.forEach((property -> this.memoryPropertiesMap.put(property.getPropertyKey(), property.getPropertyValue())));
     }

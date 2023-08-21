@@ -101,6 +101,16 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
         FileRepository.getInstance().updateKeys(anKeysChanges);
     }
 
+    /**
+     * Update properties value in repository.
+     * Method accept map of property_key=new_property_value pairs.
+     * @param anValueChanges - map of property_key=new_property_value pairs.
+     */
+    @Override
+    public void updateValues(Map<String, String> anValueChanges) {
+        FileRepository.getInstance().updateValues(anValueChanges);
+    }
+
     @Override
     public void close() throws Exception {
 

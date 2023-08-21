@@ -31,4 +31,11 @@ public interface PropertiesRepository {
      * @param anKeysChanges - map of origin_property_key-new_property_key pairs.
      */
     void updateKeys(Map<String, String> anKeysChanges);
+
+    /**
+     * Update properties value in repository.
+     * Method accept map of property_key=new_property_value pairs.
+     * @param anValueChanges - map of property_key=new_property_value pairs.
+     */
+    void updateValues(Map<String, String> anValueChanges);
 }

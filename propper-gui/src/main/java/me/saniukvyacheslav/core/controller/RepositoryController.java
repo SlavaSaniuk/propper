@@ -123,11 +123,10 @@ public class RepositoryController implements Observer, Observable {
         // Save in repository:
         // Inserts:
         // Updates:
-        try {
-            this.propertiesRepository.updateKeys(changes.getPropertiesKeysUpdates());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // Update properties keys before:
+        this.propertiesRepository.updateKeys(changes.getPropertiesKeysUpdates());
+        // Update properties values:
+        this.propertiesRepository.updateValues(changes.getPropertiesValueUpdates());
         // Deletions:
         // Flush changes:
         try {

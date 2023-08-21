@@ -39,22 +39,19 @@ public class PropertiesChanges {
     }
 
     /**
-     * Check if properties has changes.
-     * @return - true, if properties has changes.
+     * Get map of properties values updates.
+     * Map of values updates consist of property_key=actual_property_value pairs.
+     * @return - Map of values updates.
      */
-    public boolean isEmpty() {
-        if (!this.propertiesInserts.isEmpty()) return false;
-        if (!this.propertiesUpdates.isEmpty()) return false;
-        return this.propertiesDeletes.isEmpty();
-    }
-
-    /**
-     * Clear all changes in this instance.
-     */
-    public void clear() {
-        this.propertiesInserts.clear();
-        this.propertiesUpdates.clear();
-        this.propertiesDeletes.clear();
+    public Map<String, String> getPropertiesValueUpdates() {
+        // Result map:
+        Map<String, String> propertiesKeyUpdates = new HashMap<>();
+        // Check properties changes list:
+        this.propertiesUpdates.forEach(propertyChanges -> {
+            // If actual key not equals origin key, then add it to map:
+            propertiesKeyUpdates.put(propertyChanges.getChangedProperty().getPropertyKey(), propertyChanges.getChangedProperty().getPropertyValue());
+        });
+        return propertiesKeyUpdates;
     }
 
     /**

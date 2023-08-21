@@ -150,6 +150,11 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
         return set;
     }
 
+    /**
+     * Update properties keys in repository.
+     * Method accept map of origin_property_key=new_property_key pairs.
+     * @param aKeysChanges - map of origin_property_key-new_property_key pairs.
+     */
     @Override
     public void updateKeys(@Nullable Map<String, String> aKeysChanges) {
         // Check parameter:
@@ -170,11 +175,49 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
             // If actual properties contains key, replace with new property:
             if (this.actualProperties.contains(originKey)) {
                 Property changedProperty = this.actualProperties.changePropertyKey(originKey, actualKey);
-                if (changedProperty != null) LOGGER.debug(String.format("New property for origin property key [%s] is [%s];", originKey, changedProperty));
+                if (changedProperty != null) LOGGER.debug(String.format("New property key for [%s] is [%s];", originKey, changedProperty.getPropertyKey()));
             }
         });
 
     }
 
+    /**
+     * Update properties value in repository.
+     * Method accept map of property_key=new_property_value pairs.
+     * @param aValueChanges - map of property_key=new_property_value pairs.
+     */
+    @Override
+    public void updateValues(@Nullable Map<String, String> aValueChanges) {
+        // Check repository state:
+        if(!(this.isInitialized)) throw new RuntimeException(new RepositoryNotInitializedException("File repository not initialized"));
+
+        // Check parameters:
+        if (aValueChanges == null) {
+            LOGGER.debug("Values updates map is null. Nothing to do.");
+            return;
+        }
+        if (aValueChanges.isEmpty()) {
+            LOGGER.debug("Values updates map is empty. Nothing to do.");
+            return;
+        }
+
+        // Iterate through updates map:
+        LOGGER.debug("Try to update properties values in memory properties repository:");
+        LOGGER.debug(String.format("Expected [%d] properties values updates:", aValueChanges.size()));
+        this.actualProperties.syncStore(); // Sync store for searching;
+        aValueChanges.forEach((key, changedValue) -> {
+            // Get property:
+            Property property = this.actualProperties.getPropertyByKey(key);
+            if (property != null) {
+                // Check property value:
+                if (!(property.getPropertyValue().equals(changedValue))) {
+                    property.setPropertyValue(changedValue); // Update value:
+                    LOGGER.debug(String.format("New property value for [%s] is [%s];", property.getPropertyKey(), property.getPropertyValue()));
+                }else LOGGER.debug(String.format("New property value for [%s] is equals old value. Skip it;", property.getPropertyKey()));
+            }
+        });
+        this.actualProperties.syncStore();
+
+    }
 
 }
