@@ -7,6 +7,7 @@ import lombok.Getter;
 import me.saniukvyacheslav.core.property.PropertiesChanges;
 import me.saniukvyacheslav.core.property.PropertiesChangesHandler;
 import me.saniukvyacheslav.core.property.PropertyChanges;
+import me.saniukvyacheslav.core.util.UniqueElementsList;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.models.PropertyModel;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
@@ -29,6 +30,7 @@ public class PropertiesTableModel {
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
     @Getter private final Set<Property> originPropertiesList = new HashSet<>();
+    private final List<PropertyModel> propertiesModels = new UniqueElementsList<>();
 
     /**
      * Construct new {@link PropertiesTableModel} model instance.
@@ -137,8 +139,9 @@ public class PropertiesTableModel {
             this.embeddedGridPane.addRow(i, model.getKeyPropertyField(), model.getValuePropertyField());
             i++;
 
-            // Add property to origin properties list:
+            // Add property to origin properties list and properties models lists:
             this.originPropertiesList.add(property);
+            this.propertiesModels.add(model);
         }
     }
 
@@ -161,6 +164,12 @@ public class PropertiesTableModel {
      */
     public boolean isUnsavedChanges() {
         return PropertyChangesController.getInstance().getUpdatesCount() != 0;
+    }
+
+    public void removeUpdatedClassFromPropertiesModels() {
+        this.propertiesModels.forEach((model) -> {
+            model.getPropertyView().setUpdatedPropertyValue(false);
+        });
     }
 
 }

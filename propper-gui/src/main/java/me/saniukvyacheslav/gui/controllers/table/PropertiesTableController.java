@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 /**
  * PropertiesTable controller.
@@ -69,10 +68,18 @@ public class PropertiesTableController implements Initializable, Observer {
                     this.loadPropertiesFile((File) arguments[1]);
                 }
                 break;
+            case 551: // REPOSITORY_CHANGES_SAVED:
+                this.onRepositorySavedEvent();
+                break;
             case 105: // CLOSE_FILE_EVENT event:
                 this.closePropertiesFile();
         }
 
+    }
+
+    public void onRepositorySavedEvent() {
+        // Remove "updated" css class from all property views in table:
+        this.getPropertiesTableModel().removeUpdatedClassFromPropertiesModels();
     }
 
     /**

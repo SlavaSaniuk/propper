@@ -50,7 +50,7 @@ public class PrimaryNodeController implements Initializable {
 
         // +++ RepositoryController:
         this.repositoryController.subscribe(this.errorsController, RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
-        this.repositoryController.subscribe(this.propertiesTableController, RepositoryEvents.REPOSITORY_OPENED);
+        this.repositoryController.subscribe(this.propertiesTableController, RepositoryEvents.REPOSITORY_OPENED, RepositoryEvents.REPOSITORY_CHANGES_SAVED);
         this.repositoryController.subscribe(this.statusLineController, RepositoryEvents.REPOSITORY_OPENED);
         this.repositoryController.subscribe(FileMenuController.getInstance(), RepositoryEvents.REPOSITORY_OPENED);
     }

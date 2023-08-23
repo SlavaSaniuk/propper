@@ -131,6 +131,11 @@ public class RepositoryController implements Observer, Observable {
         // Flush changes:
         try {
             this.propertiesRepository.flush();
+
+            // Notify about successful saving:
+            LOGGER.debug("Call [REPOSITORY_CHANGES_SAVED: 551] repository event:");
+            this.notify(RepositoryEvents.REPOSITORY_CHANGES_SAVED);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
