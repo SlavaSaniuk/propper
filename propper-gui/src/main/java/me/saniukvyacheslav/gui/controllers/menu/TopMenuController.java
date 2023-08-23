@@ -8,6 +8,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import lombok.Getter;
 import me.saniukvyacheslav.Main;
+import me.saniukvyacheslav.gui.controllers.PropertiesTableController;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
@@ -60,7 +61,7 @@ public class TopMenuController implements Initializable {
     }
 
     /**
-     * Notify {@link me.saniukvyacheslav.gui.controllers.table.PropertiesTableController} about
+     * Notify {@link PropertiesTableController} about
      * {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#OPEN_FILE_EVENT} event.
      */
     @FXML public void onNewFileEvent() {

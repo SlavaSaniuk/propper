@@ -11,7 +11,7 @@ import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
-import me.saniukvyacheslav.gui.controllers.table.PropertiesTableController;
+import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -58,7 +58,7 @@ public class RepositoryController implements Observer, Observable {
         switch (repositoryType) {
             case 1: { // File repository:
                 LOGGER.debug(String.format("Repository implementation for PropertiesRepository: [%s];", FileRepository.class.getName()));
-                this.initializeFileRepository(arguments [1]);
+                this.openFileRepository(arguments [1]);
                 break;
             }
             case 2: {
@@ -74,10 +74,12 @@ public class RepositoryController implements Observer, Observable {
     }
 
     /**
-     * Try to initialize properties file repository.
+     * Open FileRepository repository.
+     * Try to init FileRepository instance, and notify observers about {@link RepositoryEvents#REPOSITORY_OPENED} event.
+     * After this method, developer can use {@link RootConfiguration#getPropertiesRepository()} method.
      * @param aPropertiesFile - properties file.
      */
-    private void initializeFileRepository(Object aPropertiesFile) {
+    private void openFileRepository(Object aPropertiesFile) throws NullPointerException, ClassCastException {
         LOGGER.debug("Try to initialize FileRepository repository:");
 
         // Check parameter:
@@ -105,7 +107,6 @@ public class RepositoryController implements Observer, Observable {
 
         // Notify observers:
         this.notify(RepositoryEvents.REPOSITORY_OPENED, RepositoryTypes.FileRepository, file);
-
     }
 
     /**
@@ -116,7 +117,7 @@ public class RepositoryController implements Observer, Observable {
         LOGGER.debug("Try to save all changes in repository: ");
 
         // Handle properties changes:
-        PropertiesChanges changes = PropertiesTableController.getInstance().getPropertiesTableModel().getPropertiesChanges();
+        PropertiesChanges changes = GuiConfiguration.getInstance().getPropertiesTableController().tableModel().getPropertiesChanges();
         LOGGER.debug(String.format("Save property changes: [%s];", changes));
 
         // Save in repository:

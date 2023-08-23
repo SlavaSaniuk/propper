@@ -2,6 +2,7 @@ package me.saniukvyacheslav.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import lombok.Getter;
 import me.saniukvyacheslav.core.controller.ErrorsController;
 import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
@@ -13,7 +14,8 @@ import me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
 import me.saniukvyacheslav.gui.controllers.statusline.StatusLineController;
-import me.saniukvyacheslav.gui.controllers.table.PropertiesTableController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,14 +23,17 @@ import java.util.ResourceBundle;
 
 public class PrimaryNodeController implements Initializable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrimaryNodeController.class); // Logger;
     // Inner controllers:
     @FXML private TopMenuController topMenuController;
     @FXML private StatusLineController statusLineController;
-    @FXML private PropertiesTableController propertiesTableController;
+    @FXML @Getter private PropertiesTableController propertiesTableController; // PropertiesTableController controller;
     private final RepositoryController repositoryController = RepositoryController.getInstance(); // Repository controller;
     private final ErrorsController errorsController = ErrorsController.getInstance(); // Errors controller;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        LOGGER.debug("Init222222222222222222222222");
 
         // Subscribe observers:
         this.subscribeObservers();

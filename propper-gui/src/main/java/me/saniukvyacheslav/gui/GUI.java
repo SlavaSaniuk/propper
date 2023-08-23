@@ -35,6 +35,8 @@ public class GUI {
                 statusLineStyles
         );
 
+        // Initialize GUI Configuration:
+        GuiConfiguration.getInstance().init(primaryNodeController);
 
         // Create primary scene and set it to primary stage:
         aPrimaryStage.setScene(primaryScene);
