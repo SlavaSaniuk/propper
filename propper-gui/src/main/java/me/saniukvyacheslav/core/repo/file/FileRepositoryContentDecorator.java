@@ -1,7 +1,6 @@
 package me.saniukvyacheslav.core.repo.file;
 
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
-import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;

@@ -1,6 +1,5 @@
 package me.saniukvyacheslav.core.repo;
 
-import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.prop.Property;
 
 import java.io.IOException;
