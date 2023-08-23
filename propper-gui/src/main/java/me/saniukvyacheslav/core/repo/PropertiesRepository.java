@@ -1,5 +1,6 @@
 package me.saniukvyacheslav.core.repo;
 
+import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.prop.Property;
 
 import java.io.IOException;
@@ -31,12 +32,12 @@ public interface PropertiesRepository {
      * Method accept map of origin_property_key=new_property_key pairs.
      * @param anKeysChanges - map of origin_property_key-new_property_key pairs.
      */
-    void updateKeys(Map<String, String> anKeysChanges);
+    void updateKeys(Map<String, String> anKeysChanges) throws IOException;
 
     /**
      * Update properties value in repository.
      * Method accept map of property_key=new_property_value pairs.
      * @param anValueChanges - map of property_key=new_property_value pairs.
      */
-    void updateValues(Map<String, String> anValueChanges);
+    void updateValues(Map<String, String> anValueChanges) throws RepositoryNotInitializedException, IOException;
 }

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FilePropertiesStore implements PropertiesStore {
+public class FilePropertiesStore implements PropertiesStore<ExtendedBaseProperty> {
 
     private static FilePropertiesStore INSTANCE; // Singleton instance;
     private static final Logger LOGGER = LoggerFactory.getLogger(FilePropertiesStore.class);
@@ -57,6 +57,19 @@ public class FilePropertiesStore implements PropertiesStore {
 
         // Set loading flag:
         this.isLoaded = true;
+    }
+
+    /**
+     * Get stored instances.
+     * @return - stored instance.
+     */
+    @Override
+    public List<ExtendedBaseProperty> getStored() {
+        if (!this.isLoaded) {
+            LOGGER.debug("Properties are not loaded. Return [null].");
+            return null;
+        }
+        return this.loadedProperties;
     }
 
     /**

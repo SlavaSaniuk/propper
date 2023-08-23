@@ -1,5 +1,6 @@
 package me.saniukvyacheslav.core.repo.file;
 
+import me.saniukvyacheslav.core.property.ExtendedBaseProperty;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.prop.Property;
@@ -48,7 +49,11 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
         // Construct new file content from actual properties:
         LOGGER.debug("Construct file content from actual properties:");
         List<String> newFileContent = new ArrayList<>();
-        this.fileRepository.getActualProperties().forEach((property) -> newFileContent.add(property.toString()));
+        List<ExtendedBaseProperty> storedProperties = this.fileRepository.getFilePropertiesStore().getStored();
+        storedProperties.forEach((extendedBaseProperty -> {
+            newFileContent.add(extendedBaseProperty.getActualProperty().toString());
+            extendedBaseProperty.sync();
+        }));
 
         // Write new file content:
         LOGGER.debug("Write new file content to file:");
@@ -77,7 +82,7 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
      * @param anKeysChanges - map of origin_property_key-new_property_key pairs.
      */
     @Override
-    public void updateKeys(Map<String, String> anKeysChanges) {
+    public void updateKeys(Map<String, String> anKeysChanges) throws IOException {
         this.fileRepository.updateKeys(anKeysChanges);
     }
 
@@ -87,7 +92,7 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
      * @param anValueChanges - map of property_key=new_property_value pairs.
      */
     @Override
-    public void updateValues(Map<String, String> anValueChanges) {
+    public void updateValues(Map<String, String> anValueChanges) throws IOException {
         this.fileRepository.updateValues(anValueChanges);
     }
 

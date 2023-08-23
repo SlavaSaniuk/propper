@@ -1,6 +1,7 @@
 package me.saniukvyacheslav.core.property;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.saniukvyacheslav.prop.Property;
 import me.saniukvyacheslav.prop.PropertyWrapper;
 
@@ -10,8 +11,8 @@ import me.saniukvyacheslav.prop.PropertyWrapper;
 public class ExtendedBaseProperty {
 
     @Getter private final long propertyId; // Property id;
-    @Getter private final Property originalProperty; // Original property;
-    @Getter private final Property actualProperty; // Actual property;
+    @Getter private Property originalProperty; // Original property;
+    @Getter @Setter private Property actualProperty; // Actual property;
 
     /**
      * Construct new instance.
@@ -50,4 +51,16 @@ public class ExtendedBaseProperty {
         return new Property(String.valueOf(aSrcProperty.getPropertyKey()), String.valueOf(aSrcProperty.getPropertyValue()));
     }
 
+    /**
+     * Sync property. Copy actual value to original value.
+     */
+    public void sync() {
+        this.originalProperty = ExtendedBaseProperty.copy(this.actualProperty);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ExtendedBaseProperty[propertyId: [%d], originalProperty[%s], actualProperty[%s]];",
+                this.propertyId, this.originalProperty, this.actualProperty);
+    }
 }

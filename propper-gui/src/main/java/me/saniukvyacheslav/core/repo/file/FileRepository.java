@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.RootConfiguration;
+import me.saniukvyacheslav.core.property.ExtendedBaseProperty;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
@@ -37,8 +38,7 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepository.class); // Logger;
     @Getter private boolean isInitialized = false; // Initialized state:
     @Getter private File repositoryObject;
-    private FilePropertiesStore filePropertiesStore; // Properties store instance:
-    private final ActualProperties actualProperties = new ActualProperties();
+    @Getter private FilePropertiesStore filePropertiesStore; // Properties store instance:
 
     /**
      * Get current singleton instance of this class.
@@ -125,12 +125,6 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
      */
     @Override
     public void close() throws Exception {
-        // Reset ActualProperties:
-        this.actualProperties.reset();
-    }
-
-    public List<Property> getActualProperties() {
-        return this.actualProperties.getMemoryProperties();
     }
 
     /**
@@ -181,28 +175,24 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
      * @param aKeysChanges - map of origin_property_key-new_property_key pairs.
      */
     @Override
-    public void updateKeys(@Nullable Map<String, String> aKeysChanges) {
+    public void updateKeys(@Nullable Map<String, String> aKeysChanges) throws IOException {
+        LOGGER.debug("Try to update properties keys in [FileRepository] repository:");
+
+        // If repository is not initialized:
+        if (!(this.isInitialized)) throw new RepositoryNotInitializedException(RepositoryTypes.FileRepository, this.repositoryObject);
         // Check parameter:
-        if (aKeysChanges == null) {
-            LOGGER.debug("Map of keys updates in null. Nothing to do.");
-            return;
-        }
-        if (aKeysChanges.isEmpty()) {
-            LOGGER.debug("Map of keys updates is empty. Nothing to do.");
-            return;
-        }
-        LOGGER.debug("Try to update properties keys in memory properties repository:");
+        Objects.requireNonNull(aKeysChanges, "Map [aKeysChanges] must be not [null]");
+        if (aKeysChanges.isEmpty()) return;
         LOGGER.debug(String.format("Expect [%d] keys updates;", aKeysChanges.size()));
 
-        // Update properties in memory table:
-        // Iterate through keys changes list:
-        aKeysChanges.forEach((originKey, actualKey) -> {
-            // If actual properties contains key, replace with new property:
-            if (this.actualProperties.contains(originKey)) {
-                Property changedProperty = this.actualProperties.changePropertyKey(originKey, actualKey);
-                if (changedProperty != null) LOGGER.debug(String.format("New property key for [%s] is [%s];", originKey, changedProperty.getPropertyKey()));
-            }
-        });
+        // Get stored properties:
+        List<ExtendedBaseProperty> storedProperties = this.filePropertiesStore.getStored();
+        // Update keys:
+        aKeysChanges.forEach((original_key, actual_key) -> storedProperties.stream().filter(ebp -> ebp.getOriginalKey().equals(original_key)).findFirst()
+                .ifPresent(extendedProperty -> {
+                    LOGGER.debug(String.format("Update property key of property[%s] with new value: [%s];", extendedProperty.getOriginalKey(), actual_key));
+                    extendedProperty.setActualProperty(new Property(actual_key, extendedProperty.getActualProperty().getPropertyValue()));
+                }));
 
     }
 
@@ -212,37 +202,25 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
      * @param aValueChanges - map of property_key=new_property_value pairs.
      */
     @Override
-    public void updateValues(@Nullable Map<String, String> aValueChanges) {
-        // Check repository state:
-        if(!(this.isInitialized)) throw new RuntimeException(new RepositoryNotInitializedException("File repository not initialized"));
-
+    public void updateValues(@Nullable Map<String, String> aValueChanges) throws IOException {
+        LOGGER.debug("Try to update properties values in [FileRepository] repository:");
+        // If repository is not initialized:
+        if (!(this.isInitialized)) throw new RepositoryNotInitializedException(RepositoryTypes.FileRepository, this.repositoryObject);
         // Check parameters:
-        if (aValueChanges == null) {
-            LOGGER.debug("Values updates map is null. Nothing to do.");
-            return;
-        }
-        if (aValueChanges.isEmpty()) {
-            LOGGER.debug("Values updates map is empty. Nothing to do.");
-            return;
-        }
+        Objects.requireNonNull(aValueChanges, "Map [aValueChanges] must be not null.");
+        if (aValueChanges.isEmpty()) return;
+        LOGGER.debug(String.format("Expect [%d] values updates;", aValueChanges.size()));
 
-        // Iterate through updates map:
-        LOGGER.debug("Try to update properties values in memory properties repository:");
-        LOGGER.debug(String.format("Expected [%d] properties values updates:", aValueChanges.size()));
-        this.actualProperties.syncStore(); // Sync store for searching;
-        aValueChanges.forEach((key, changedValue) -> {
-            // Get property:
-            Property property = this.actualProperties.getPropertyByKey(key);
-            if (property != null) {
-                // Check property value:
-                if (!(property.getPropertyValue().equals(changedValue))) {
-                    property.setPropertyValue(changedValue); // Update value:
-                    LOGGER.debug(String.format("New property value for [%s] is [%s];", property.getPropertyKey(), property.getPropertyValue()));
-                }else LOGGER.debug(String.format("New property value for [%s] is equals old value. Skip it;", property.getPropertyKey()));
-            }
-        });
-        this.actualProperties.syncStore();
-
+        // Get stored properties:
+        List<ExtendedBaseProperty> storedProperties = this.filePropertiesStore.getStored();
+        // Update keys:
+        aValueChanges.forEach((original_key, changed_value) -> storedProperties.stream().filter(ebp -> ebp.getActualProperty().getPropertyKey().equals(original_key)).findFirst()
+                .ifPresent(extendedProperty -> {
+                    if (!extendedProperty.getActualProperty().getPropertyValue().equals(changed_value)) {
+                        LOGGER.debug(String.format("Update property value of property[%s] with new value: [%s];", extendedProperty.getOriginalKey(), changed_value));
+                        extendedProperty.getActualProperty().setPropertyValue(changed_value);
+                    }
+                }));
     }
 
 }

@@ -120,16 +120,16 @@ public class RepositoryController implements Observer, Observable {
         PropertiesChanges changes = GuiConfiguration.getInstance().getPropertiesTableController().tableModel().getPropertiesChanges();
         LOGGER.debug(String.format("Save property changes: [%s];", changes));
 
-        // Save in repository:
-        // Inserts:
-        // Updates:
-        // Update properties keys before:
-        RootConfiguration.getInstance().getPropertiesRepository().updateKeys(changes.getPropertiesKeysUpdates());
-        // Update properties values:
-        RootConfiguration.getInstance().getPropertiesRepository().updateValues(changes.getPropertiesValueUpdates());
-        // Deletions:
-        // Flush changes:
         try {
+            // Save in repository:
+            // Inserts:
+            // Updates:
+            // Update properties keys before:
+            RootConfiguration.getInstance().getPropertiesRepository().updateKeys(changes.getPropertiesKeysUpdates());
+            // Update properties values:
+            RootConfiguration.getInstance().getPropertiesRepository().updateValues(changes.getPropertiesValueUpdates());
+            // Deletions:
+            // Flush changes:
             RootConfiguration.getInstance().getPropertiesRepository().flush();
 
             // Notify about successful saving:
