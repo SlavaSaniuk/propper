@@ -30,9 +30,7 @@ public class FilePropertiesStoreTestCase {
         FilePropertiesStore.getInstance().load(propertiesToLoad);
 
         Assertions.assertTrue(FilePropertiesStore.getInstance().isLoaded());
-        FilePropertiesStore.getInstance().getProperties().forEach((property -> {
-            LOGGER.debug(String.format("Loaded property: [%s];", property));
-        }));
+        FilePropertiesStore.getInstance().getProperties().forEach((property -> LOGGER.debug(String.format("Loaded property: [%s];", property))));
     }
 
     @Test

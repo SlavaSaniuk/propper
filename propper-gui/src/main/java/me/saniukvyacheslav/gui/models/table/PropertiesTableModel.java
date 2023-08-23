@@ -147,9 +147,7 @@ public class PropertiesTableModel {
 
     private List<PropertyChanges> getListOfChanges() {
         List<PropertyChanges> changesList = new ArrayList<>();
-        PropertyChangesController.getInstance().getUpdatesMap().forEach((String originKey, Property changedProp) -> {
-            changesList.add(new PropertyChanges(originKey, changedProp));
-        });
+        PropertyChangesController.getInstance().getUpdatesMap().forEach((String originKey, Property changedProp) -> changesList.add(new PropertyChanges(originKey, changedProp)));
 
         return changesList;
     }
@@ -167,9 +165,7 @@ public class PropertiesTableModel {
     }
 
     public void removeUpdatedClassFromPropertiesModels() {
-        this.propertiesModels.forEach((model) -> {
-            model.getPropertyView().setUpdatedPropertyValue(false);
-        });
+        this.propertiesModels.forEach((model) -> model.getPropertyView().setUpdatedPropertyValue(false));
     }
 
 }
