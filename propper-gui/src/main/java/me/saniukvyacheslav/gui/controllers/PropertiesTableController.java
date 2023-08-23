@@ -11,7 +11,7 @@ import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.models.table.PropertiesTableModel;
+import me.saniukvyacheslav.gui.models.PropertiesTableModel;
 import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,9 +118,9 @@ public class PropertiesTableController implements Observer {
             throw new RuntimeException(e);
         }
 
-        // Insert loaded properties in table model:
+        // Load loaded properties in table model:
         LOGGER.debug("Insert loaded properties in table model:");
-        this.tableModel.loadProperties(loadedList);
+        this.tableModel.loadIntoTable(loadedList);
     }
 
     public void onRepositorySavedEvent() {
@@ -136,7 +136,7 @@ public class PropertiesTableController implements Observer {
         if (this.IS_NEW || this.IS_OPENED) this.closePropertiesFile();
 
         // Initialize new empty table:
-        this.tableModel.newTable();
+        //this.tableModel.newTable();
 
         // Set state:
         this.IS_NEW = true;

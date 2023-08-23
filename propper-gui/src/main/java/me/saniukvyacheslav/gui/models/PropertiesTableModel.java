@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.gui.models.table;
+package me.saniukvyacheslav.gui.models;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -9,34 +9,32 @@ import me.saniukvyacheslav.core.property.PropertiesChangesHandler;
 import me.saniukvyacheslav.core.property.PropertyChanges;
 import me.saniukvyacheslav.core.util.UniqueElementsList;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
-import me.saniukvyacheslav.gui.models.PropertyModel;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
 import me.saniukvyacheslav.prop.Property;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Properties table model.
  */
 public class PropertiesTableModel {
 
-    // FX Nodes:
-    private final GridPane embeddedGridPane; // Embedded GridPane layout;
+
     // Class variables:
     private final PropertiesTableView tableView; // Properties table view;
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
     @Getter private final Set<Property> originPropertiesList = new HashSet<>();
     private final List<PropertyModel> propertiesModels = new UniqueElementsList<>();
+    private int lastTableRow = 0; // Last used table row;
+    private final GridPane embeddedGridPane; // Embedded GridPane layout (JavaFx GridPane node);
 
     /**
      * Construct new {@link PropertiesTableModel} model instance.
      * @param aGridPane - embedded GridPane layout.
      */
     public PropertiesTableModel(Node aGridPane) {
+        // Check and cast GridPane:
         if (aGridPane instanceof GridPane) this.embeddedGridPane = (GridPane) aGridPane;
         else throw new IllegalArgumentException("Parameter [aGridPane] must have GridPane class.");
 
@@ -44,14 +42,52 @@ public class PropertiesTableModel {
         this.tableView = new PropertiesTableView(this.embeddedGridPane);
 
         // Set default label:
-        this.defaultLayout();
+        this.drawDefaultLayout();
+    }
+
+    /**
+     * Load properties into this table.
+     * Attention: Method clear table before, and then draw new empty table.
+     * If developer wants to insert new property, developer has to use {@link PropertiesTableModel#insertIntoTable(Property)} method.
+     * @param aPropertiesList - list to load.
+     */
+    public void loadIntoTable(List<Property> aPropertiesList) {
+
+        // Draw empty table:
+        this.drawEmptyTable();
+
+        // Insert new rows:
+        aPropertiesList.forEach((property -> {
+            this.originPropertiesList.add(property); // Add property to origin properties list:
+            this.insertIntoTable(property);
+        }));
+
+    }
+
+    /**
+     * Insert property into table.
+     * Method create model for property and add it in {@link PropertiesTableModel#propertiesModels} list.
+     * Then, method add new row in {@link PropertiesTableModel#embeddedGridPane} GridPane.
+     * Attention: method doesn't add property in {@link PropertiesTableModel#originPropertiesList} list.
+     * @param aProperty - property to insert.
+     */
+    public void insertIntoTable(Property aProperty) {
+        Objects.requireNonNull(aProperty, "Property [aProperty] must be not [null].");
+
+        // Create model for property:
+        PropertyModel model = new PropertyModel(aProperty);
+        this.propertiesModels.add(model);
+
+        // Insert in GridPane:
+        this.lastTableRow += 1;
+        this.embeddedGridPane.addRow(this.lastTableRow, model.getKeyPropertyField(), model.getValuePropertyField());
     }
 
     /**
      * Set default label to embedded GridPane.
      * When properties file isn't opened, label is being showed.
      */
-    public void defaultLayout() {
+    private void drawDefaultLayout() {
         // Clear table before:
         if (!(this.isClear)) this.clearTable();
 
@@ -72,9 +108,10 @@ public class PropertiesTableModel {
     }
 
     /**
+     * Clear current table and draw new empty table.
      * Add title row to GridPane layout and stylize it.
      */
-    public void emptyTable() {
+    private void drawEmptyTable() {
         // Clear table before:
         if (!(this.isClear)) this.clearTable();
 
@@ -93,14 +130,6 @@ public class PropertiesTableModel {
         this.isClear = false;
     }
 
-    /**
-     *  New empty properties table for new property file.
-     * Set "isNew" state to true.
-     */
-    public void newTable() {
-        // Empty table:
-        this.emptyTable();
-    }
 
     /**
      *  Clear GridPane. Delete all children in GridPane (include title row), remove all constraints and set grid lines
@@ -124,26 +153,9 @@ public class PropertiesTableModel {
      */
     public void closeTable() {
         this.clearTable();
-        this.defaultLayout();
+        this.drawDefaultLayout();
     }
 
-    public void loadProperties(List<Property> aPropertiesList) {
-
-        // Initialize empty table:
-        this.emptyTable();
-
-        // Load properties in embedded grid pane:
-        int i=1;
-        for (Property property: aPropertiesList) {
-            PropertyModel model = new PropertyModel(property);
-            this.embeddedGridPane.addRow(i, model.getKeyPropertyField(), model.getValuePropertyField());
-            i++;
-
-            // Add property to origin properties list and properties models lists:
-            this.originPropertiesList.add(property);
-            this.propertiesModels.add(model);
-        }
-    }
 
     private List<PropertyChanges> getListOfChanges() {
         List<PropertyChanges> changesList = new ArrayList<>();
