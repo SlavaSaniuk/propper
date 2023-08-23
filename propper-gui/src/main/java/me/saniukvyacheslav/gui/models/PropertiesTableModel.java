@@ -24,7 +24,7 @@ public class PropertiesTableModel {
     private final PropertiesTableView tableView; // Properties table view;
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
-    @Getter private final Set<Property> originPropertiesList = new HashSet<>();
+    @Getter private final List<Property> originPropertiesList = new UniqueElementsList<>();
     private final List<PropertyModel> propertiesModels = new UniqueElementsList<>();
     private int lastTableRow = 0; // Last used table row;
     private final GridPane embeddedGridPane; // Embedded GridPane layout (JavaFx GridPane node);

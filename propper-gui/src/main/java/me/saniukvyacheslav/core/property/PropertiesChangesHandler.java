@@ -22,7 +22,7 @@ public class PropertiesChangesHandler {
      * @param changesList - list of properties changes.
      * @return - {@link PropertiesChanges} store instance.
      */
-    public static PropertiesChanges handle(Set<Property> originPropertiesList, List<PropertyChanges> changesList) {
+    public static PropertiesChanges handle(List<Property> originPropertiesList, List<PropertyChanges> changesList) {
         PropertiesChanges changes = new PropertiesChanges();
 
         // Check arguments:
