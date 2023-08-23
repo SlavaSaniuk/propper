@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
-import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -17,7 +16,6 @@ import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;

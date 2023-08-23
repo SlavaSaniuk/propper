@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import me.saniukvyacheslav.Main;
 import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
@@ -28,7 +27,7 @@ public class GUI {
         // Create primary scene and add css to it:
         Scene primaryScene = new Scene((Parent) primaryNode, 800, 600);
 
-        String styleshet = Main.class.getResource("/css/properties_table_styles.css").toExternalForm();
+        String styleshet = Objects.requireNonNull(Main.class.getResource("/css/properties_table_styles.css")).toExternalForm();
         String statusLineStyles = Objects.requireNonNull(Main.class.getResource("/css/status_line_styles.css")).toExternalForm();
         primaryScene.getStylesheets().addAll(
                 styleshet,
