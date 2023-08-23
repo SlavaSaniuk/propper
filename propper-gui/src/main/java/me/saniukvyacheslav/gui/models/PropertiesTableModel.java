@@ -176,8 +176,11 @@ public class PropertiesTableModel {
         return PropertyChangesController.getInstance().getUpdatesCount() != 0;
     }
 
-    public void removeUpdatedClassFromPropertiesModels() {
-        this.propertiesModels.forEach((model) -> model.getPropertyView().setUpdatedPropertyValue(false));
+    /**
+     * Clear "updated" css pseudo class from all properties models in table.
+     */
+    public void clearUpdatedClass() {
+        this.propertiesModels.forEach(model -> model.setUpdatedClass(false));
     }
 
 }

@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 public class PropertyModel {
 
-    // Class variables:
     @Getter private final Property property; // Origin property;
     @Getter private final PropertyField keyPropertyField; // Property key text field;
     @Getter private final PropertyField valuePropertyField; // Property value text field;
@@ -50,4 +49,12 @@ public class PropertyModel {
                 PropertyEvents.ABORT_KEY_UPDATE_EVENT, PropertyEvents.ABORT_VALUE_UPDATE_EVENT);
     }
 
+    /**
+     * Set/unset "UPDATED" css pseudo class for all property field.
+     * @param isUpdated - "updated" flag.
+     */
+    public void setUpdatedClass(boolean isUpdated) {
+        this.propertyView.setUpdatedPropertyKey(isUpdated);
+        this.propertyView.setUpdatedPropertyValue(isUpdated);
+    }
 }

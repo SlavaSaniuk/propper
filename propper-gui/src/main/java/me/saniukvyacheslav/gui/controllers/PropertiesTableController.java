@@ -80,7 +80,8 @@ public class PropertiesTableController implements Observer {
                 this.onRepositoryOpenedEvent();
                 break;
             case 551: // REPOSITORY_CHANGES_SAVED:
-                this.onRepositorySavedEvent();
+                LOGGER.debug("Event code: [551] - REPOSITORY_CHANGES_SAVED event.");
+                this.onRepositoryChangesSavedEvent();
                 break;
             case 105: // CLOSE_FILE_EVENT event:
                 this.closePropertiesFile();
@@ -123,9 +124,14 @@ public class PropertiesTableController implements Observer {
         this.tableModel.loadIntoTable(loadedList);
     }
 
-    public void onRepositorySavedEvent() {
+    /**
+     * Action on [551] REPOSITORY_CHANGES_SAVED event.
+     * Method remove "updated" css pseudo class from properties models in table.
+     */
+    public void onRepositoryChangesSavedEvent() {
+        LOGGER.debug("REPOSITORY_OPENED [551] event. Remove [UPDATED] css pseudo class from properties in table:");
         // Remove "updated" css class from all property views in table:
-        this.tableModel.removeUpdatedClassFromPropertiesModels();
+        this.tableModel.clearUpdatedClass();
     }
 
     /**
