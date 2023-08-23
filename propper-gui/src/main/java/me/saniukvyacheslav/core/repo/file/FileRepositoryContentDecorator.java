@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
+import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;
@@ -78,17 +79,18 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
 
     /**
      * Read all properties from file.
+     * @param aStore - properties store.
      * @return - Set of properties.
      * @throws IOException - If IO Exception occurs.
      */
     @Override
-    public List<Property> list() throws IOException {
+    public List<Property> list(PropertiesStore aStore) throws IOException {
         if (!FileRepository.getInstance().isInitialized()) {
             LOGGER.debug("Base [FileRepository] must be initialized before using.");
         }
 
         LOGGER.debug("Read properties from file via base [FileRepository] repository:");
-        return FileRepository.getInstance().list();
+        return FileRepository.getInstance().list(aStore);
     }
 
     /**

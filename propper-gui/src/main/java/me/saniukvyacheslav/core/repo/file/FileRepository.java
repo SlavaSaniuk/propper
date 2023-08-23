@@ -4,9 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
+import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
+import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.definition.Initializable;
 import me.saniukvyacheslav.prop.Property;
@@ -79,7 +81,7 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
             this.isInitialized = true;
 
             // Read all properties from repository:
-            if (!this.actualProperties.isLoaded()) this.actualProperties.load(this.list());
+            if (!this.actualProperties.isLoaded()) this.actualProperties.load(this.list(RootConfiguration.getInstance().getPropertiesStore()));
 
         }catch (ClassCastException | IOException e) {
             throw new RepositoryNotInitializedException(RepositoryTypes.FileRepository, objects[0], e.getMessage());
@@ -117,11 +119,12 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
 
     /**
      * Read all properties from properties file.
+     * @param aStore - properties store.
      * @return - Set of properties.
      * @throws IOException - If IO Exception occurs.
      */
     @Override
-    public List<Property> list() throws IOException {
+    public List<Property> list(PropertiesStore aStore) throws IOException {
 
         // Check if the repository is initialized:
         if (!this.isInitialized) throw new RepositoryNotInitializedException(REPOSITORY_TYPE, repositoryObject);

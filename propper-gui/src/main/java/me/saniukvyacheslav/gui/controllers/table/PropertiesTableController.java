@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
@@ -106,7 +107,7 @@ public class PropertiesTableController implements Initializable, Observer {
         // Load properties from properties file:
         List<Property> loadedProperties;
         try {
-            loadedProperties = this.propertiesRepository.list();
+            loadedProperties = this.propertiesRepository.list(RootConfiguration.getInstance().getPropertiesStore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

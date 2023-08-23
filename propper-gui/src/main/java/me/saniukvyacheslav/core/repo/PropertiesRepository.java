@@ -1,5 +1,6 @@
 package me.saniukvyacheslav.core.repo;
 
+import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.prop.Property;
 
 import java.io.IOException;
@@ -8,7 +9,8 @@ import java.util.Map;
 
 /**
  * This interface define common methods for working with properties in any repositories.
- * All repository implementations must implement this interface. {@link me.saniukvyacheslav.core.repo.file.FileRepository}.
+ * All repository implementations must implement this interface.
+ * Known implementations: {@link me.saniukvyacheslav.core.repo.file.FileRepository}.
  */
 public interface PropertiesRepository {
 
@@ -20,10 +22,11 @@ public interface PropertiesRepository {
 
     /**
      * Read all properties from repository.
+     * @param aStore - properties store.
      * @return - Set of properties.
      * @throws IOException - If IO Exception occurs.
      */
-    List<Property> list() throws IOException;
+    List<Property> list(PropertiesStore aStore) throws IOException;
 
     /**
      * Update properties keys in repository.
