@@ -2,17 +2,15 @@ package me.saniukvyacheslav.core.controller;
 
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.property.PropertiesChanges;
-import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
-import me.saniukvyacheslav.core.repo.file.FileRepositoryContentDecorator;
 import me.saniukvyacheslav.gui.controllers.table.PropertiesTableController;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -33,10 +31,10 @@ public class RepositoryController implements Observer, Observable {
     // Class variables:
     private static RepositoryController INSTANCE; // Singleton instance;
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryController.class); // Logger;
-    @Getter private PropertiesRepository propertiesRepository; // Properties repository;
     public boolean isOpened = false; // Repository opening state;
     private RepositoryTypes currentRepositoryType; // Current opening repository type;
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // Map of subscribers;
+
     /**
      * Get current singleton instance of this class.
      * @return - current singleton instance.
@@ -58,11 +56,9 @@ public class RepositoryController implements Observer, Observable {
 
         // Initialize repository based on type:
         switch (repositoryType) {
-            case 1: {
+            case 1: { // File repository:
                 LOGGER.debug(String.format("Repository implementation for PropertiesRepository: [%s];", FileRepository.class.getName()));
-                // Initialize file repository:
-                File propertiesFile = ((File) arguments[1]);
-                this.initializeFileRepository(propertiesFile);
+                this.initializeFileRepository(arguments [1]);
                 break;
             }
             case 2: {
@@ -81,31 +77,34 @@ public class RepositoryController implements Observer, Observable {
      * Try to initialize properties file repository.
      * @param aPropertiesFile - properties file.
      */
-    private void initializeFileRepository(File aPropertiesFile) {
-        LOGGER.debug("Initialize file repository:");
+    private void initializeFileRepository(Object aPropertiesFile) {
+        LOGGER.debug("Try to initialize FileRepository repository:");
+
+        // Check parameter:
+        Objects.requireNonNull(aPropertiesFile, "File [File] object must be not null.");
+        File file = ((File) aPropertiesFile); // Cast to file:
 
         // Try to open file repository:
         try {
             // Open and init file repository:
-            this.propertiesRepository = FileRepositoryContentDecorator.getInstance().initRepository(aPropertiesFile);
-        }catch (IOException e) {
+            RootConfiguration.getInstance().initFilePropertiesRepository(file);
+        }catch (RepositoryNotInitializedException e) {
             LOGGER.error("Cannot open FileRepository for properties file;");
             ApplicationError openingError = new ApplicationError(RepositoryErrors.REPOSITORY_OPENING_ERROR.getCode(), "Properties file cannot be opened.");
 
-            if (e instanceof RepositoryNotInitializedException) openingError.setOriginalExceptionMessage(((RepositoryNotInitializedException) e).getExceptionMessage());
-            else openingError.setOriginalExceptionMessage(e.getMessage());
+            openingError.setOriginalExceptionMessage(e.getExceptionMessage());
 
             this.notify(RepositoryErrors.REPOSITORY_OPENING_ERROR, openingError);
             return;
         }
-        LOGGER.debug(String.format("Initialization of file repository with properties file [%s] was successful;", aPropertiesFile.getPath()));
+        LOGGER.debug(String.format("Initialization of file repository with properties file [%s] was successful;", file.getPath()));
 
         // Set state:
         this.isOpened = true;
         this.currentRepositoryType = RepositoryTypes.FileRepository;
 
         // Notify observers:
-        this.notify(RepositoryEvents.REPOSITORY_OPENED, RepositoryTypes.FileRepository, aPropertiesFile);
+        this.notify(RepositoryEvents.REPOSITORY_OPENED, RepositoryTypes.FileRepository, file);
 
     }
 
@@ -124,13 +123,13 @@ public class RepositoryController implements Observer, Observable {
         // Inserts:
         // Updates:
         // Update properties keys before:
-        this.propertiesRepository.updateKeys(changes.getPropertiesKeysUpdates());
+        RootConfiguration.getInstance().getPropertiesRepository().updateKeys(changes.getPropertiesKeysUpdates());
         // Update properties values:
-        this.propertiesRepository.updateValues(changes.getPropertiesValueUpdates());
+        RootConfiguration.getInstance().getPropertiesRepository().updateValues(changes.getPropertiesValueUpdates());
         // Deletions:
         // Flush changes:
         try {
-            this.propertiesRepository.flush();
+            RootConfiguration.getInstance().getPropertiesRepository().flush();
 
             // Notify about successful saving:
             LOGGER.debug("Call [REPOSITORY_CHANGES_SAVED: 551] repository event:");
@@ -149,13 +148,13 @@ public class RepositoryController implements Observer, Observable {
     }
 
     private void closeRepository() {
-        if (this.propertiesRepository == null) return;
+        if (RootConfiguration.getInstance().getPropertiesRepository() == null) return;
 
         // Try to close repository:
         try {
             // Switch repository type:
             if (this.currentRepositoryType.getType() == 1) { // FileRepository:
-                ((FileRepository) this.propertiesRepository).close();
+                ((FileRepository) RootConfiguration.getInstance().getPropertiesRepository()).close();
             } else LOGGER.warn("Repository type not supported.");
         }catch (Exception e) {
             LOGGER.error("Error when closing repository.");

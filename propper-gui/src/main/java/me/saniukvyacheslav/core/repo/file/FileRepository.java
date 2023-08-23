@@ -8,18 +8,15 @@ import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
-import me.saniukvyacheslav.core.store.PropertiesStore;
+import me.saniukvyacheslav.core.store.FilePropertiesStore;
 import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.definition.Initializable;
 import me.saniukvyacheslav.prop.Property;
-import me.saniukvyacheslav.util.file.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -38,11 +35,10 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
     private static FileRepository INSTANCE; // Singleton instance;
     private static final RepositoryTypes REPOSITORY_TYPE = RepositoryTypes.FileRepository; // This repository type;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepository.class); // Logger;
-    private BufferedReader contentReader;
     @Getter private boolean isInitialized = false; // Initialized state:
-    private File repositoryObject;
+    @Getter private File repositoryObject;
+    private FilePropertiesStore filePropertiesStore; // Properties store instance:
     private final ActualProperties actualProperties = new ActualProperties();
-
 
     /**
      * Get current singleton instance of this class.
@@ -60,28 +56,17 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
      */
     @Override
     public void init(Object... objects) throws RepositoryNotInitializedException {
-        LOGGER.debug("Init current [FileRepository] singleton instance:");
+        LOGGER.debug(" Try to init current [FileRepository] singleton instance. Check parameters:");
 
+        // Cast arguments and check it:
         try {
-            // Get argument, cast and check it:
-            Objects.requireNonNull(objects[0], "File instance must be not null.");
-            File file = (File) objects[0];
-            LOGGER.debug(String.format("Properties file: [%s];", file));
+            // File:
+            Objects.requireNonNull(objects[0], "File [objects[0] argument] instance must be not null.");
+            File file = (File) objects[0]; // Cast;
+            LOGGER.debug(String.format("File: [%s];", file.getAbsolutePath()));
 
-            // Open reader, writer:
-            LOGGER.debug("Open reader for properties file:");
-            this.contentReader = IOUtils.openReader(file);
-            this.contentReader.mark(0);
-            LOGGER.debug("Open reader for properties file: SUCCESS;");
-
-            // Map parameter:
-            this.repositoryObject = file;
-
-            // Set initialized flag:
-            this.isInitialized = true;
-
-            // Read all properties from repository:
-            if (!this.actualProperties.isLoaded()) this.actualProperties.load(this.list(RootConfiguration.getInstance().getPropertiesStore()));
+            // Try to init:
+            this.initFileRepository(file);
 
         }catch (ClassCastException | IOException e) {
             throw new RepositoryNotInitializedException(RepositoryTypes.FileRepository, objects[0], e.getMessage());
@@ -91,16 +76,55 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
     }
 
     /**
+     * Init this FileRepository repository with file and store.
+     * @param aFile - properties file.
+     * @throws IOException - If IO Exception occurs.
+     */
+    private void initFileRepository(File aFile) throws IOException {
+        LOGGER.debug("Try to init this [FileRepository] instance with [File] argument:");
+        // Check parameters:
+        Objects.requireNonNull(aFile, "File [aFile] instance must be not null.");
+
+        // Try to open reader:
+        LOGGER.debug(String.format("Try to open reader for file [%s]:", aFile.getAbsolutePath()));
+        try {
+            BufferedReader reader = this.openReader(aFile);
+            reader.close();
+        } catch (IOException e) {
+            throw new FileNotFoundException(e.getMessage());
+        }
+
+        // Set initialized flag:
+        this.isInitialized = true;
+        this.repositoryObject = aFile;
+        LOGGER.debug("This repository was initialized;");
+
+        // Init FilePropertiesStore:
+        RootConfiguration.getInstance().initPropertiesStore(FilePropertiesStore.getInstance());
+        this.filePropertiesStore = (FilePropertiesStore) RootConfiguration.getInstance().getPropertiesStore();
+
+
+        // Load properties to store:
+        LOGGER.debug("Try to load properties in [PropertiesStore]:");
+        this.filePropertiesStore.load(this.list());
+    }
+
+    /**
+     * Open reader for file.
+     * @param aFile - file to be read.
+     * @return - reader.
+     * @throws FileNotFoundException - If file not found.
+     */
+    private BufferedReader openReader(File aFile) throws FileNotFoundException {
+        return new BufferedReader(new FileReader(aFile));
+    }
+
+    /**
      * Close reader/writer for properties file.
      * @throws Exception - IF IOException occur.
      */
     @Override
     public void close() throws Exception {
-        LOGGER.debug("Close current [FileRepository] singleton instance:");
-        LOGGER.debug("Close reader/writers for properties file:");
-        this.contentReader.close();
-        LOGGER.debug("Close reader/writers for properties file: SUCCESS;");
-
         // Reset ActualProperties:
         this.actualProperties.reset();
     }
@@ -119,24 +143,22 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
 
     /**
      * Read all properties from properties file.
-     * @param aStore - properties store.
-     * @return - Set of properties.
+     * @return - List of properties.
      * @throws IOException - If IO Exception occurs.
      */
     @Override
-    public List<Property> list(PropertiesStore aStore) throws IOException {
+    public List<Property> list() throws IOException {
 
         // Check if the repository is initialized:
         if (!this.isInitialized) throw new RepositoryNotInitializedException(REPOSITORY_TYPE, repositoryObject);
 
         // Check if properties already loaded:
-        // Then return actual properties list:
-        if(this.actualProperties.isLoaded()) return this.actualProperties.getMemoryProperties();
+        if(this.filePropertiesStore.isLoaded()) return this.filePropertiesStore.getProperties();
 
         // Result set:
         List<Property> set = new ArrayList<>();
         // Read file content:
-        List<String> fileContent = FileRepositoryUtils.readContentByLines(this.contentReader);
+        List<String> fileContent = FileRepositoryUtils.readContentByLines(this.openReader(this.repositoryObject));
         // Iterate through file content line by line:
         fileContent.forEach((line) -> {
             try { // Try to parse Property object:

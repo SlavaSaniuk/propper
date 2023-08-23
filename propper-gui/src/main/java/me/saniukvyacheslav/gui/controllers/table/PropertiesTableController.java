@@ -6,7 +6,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
 import me.saniukvyacheslav.core.RootConfiguration;
-import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
@@ -102,12 +101,12 @@ public class PropertiesTableController implements Initializable, Observer {
         if (this.IS_NEW || this.IS_OPENED) this.closePropertiesFile();
 
         if (this.propertiesRepository != null) this.propertiesRepository = null;
-        this.propertiesRepository = RepositoryController.getInstance().getPropertiesRepository();
+        this.propertiesRepository = RootConfiguration.getInstance().getPropertiesRepository();
 
         // Load properties from properties file:
         List<Property> loadedProperties;
         try {
-            loadedProperties = this.propertiesRepository.list(RootConfiguration.getInstance().getPropertiesStore());
+            loadedProperties = this.propertiesRepository.list();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

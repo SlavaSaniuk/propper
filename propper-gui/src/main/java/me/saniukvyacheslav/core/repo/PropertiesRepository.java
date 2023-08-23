@@ -22,11 +22,10 @@ public interface PropertiesRepository {
 
     /**
      * Read all properties from repository.
-     * @param aStore - properties store.
      * @return - Set of properties.
      * @throws IOException - If IO Exception occurs.
      */
-    List<Property> list(PropertiesStore aStore) throws IOException;
+    List<Property> list() throws IOException;
 
     /**
      * Update properties keys in repository.

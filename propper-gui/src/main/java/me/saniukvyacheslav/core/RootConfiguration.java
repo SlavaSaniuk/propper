@@ -1,10 +1,16 @@
 package me.saniukvyacheslav.core;
 
 import me.saniukvyacheslav.annotation.pattern.Singleton;
+import me.saniukvyacheslav.core.controller.RepositoryController;
+import me.saniukvyacheslav.core.repo.PropertiesRepository;
+import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
+import me.saniukvyacheslav.core.repo.file.FileRepository;
+import me.saniukvyacheslav.core.repo.file.FileRepositoryContentDecorator;
 import me.saniukvyacheslav.core.store.PropertiesStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Objects;
 
 /**
@@ -17,7 +23,9 @@ public class RootConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(RootConfiguration.class); // Logger;
     // Class variables:
     private PropertiesStore currentPropertiesStoreImpl; // Current PropertiesStore implementation;
+    private PropertiesRepository currentPropertiesRepositoryImpl; // Current PropertiesRepository implementation;
     private boolean propertiesStoreInitState; // PropertiesStore "init" state;
+    private boolean propertiesRepositoryInitState; // PropertiesRepository "init" state;
 
     /**
      * Private default constructor.
@@ -34,6 +42,15 @@ public class RootConfiguration {
         if (RootConfiguration.INSTANCE == null) RootConfiguration.INSTANCE = new RootConfiguration();
         return RootConfiguration.INSTANCE;
     }
+
+    /**
+     * Get [RepositoryController] controller.
+     * @return - RepositoryController controller.
+     */
+    public RepositoryController getRepositoryController() {
+        return RepositoryController.getInstance();
+    }
+
 
     /**
      * Get current PropertiesStore implementation.
@@ -61,4 +78,24 @@ public class RootConfiguration {
         this.propertiesStoreInitState = true;
     }
 
+    /**
+     * Get current PropertiesRepository repository.
+     * @return - PropertiesRepository repository implementation.
+     */
+    public PropertiesRepository getPropertiesRepository() {
+        if (!this.propertiesRepositoryInitState)
+            throw new IllegalStateException("Properties store service must be initialized before [see: RootConfiguration#init[*]PropertiesRepository method].");
+        else return this.currentPropertiesRepositoryImpl;
+    }
+
+    public void initFilePropertiesRepository(File aFile) throws RepositoryNotInitializedException {
+        LOGGER.debug("Try to init [FileRepository] instance:");
+        FileRepository.getInstance().init(aFile);
+
+        LOGGER.debug("Construct new [FileRepositoryContentDecorator] instance and map it:");
+        this.currentPropertiesRepositoryImpl = new FileRepositoryContentDecorator(FileRepository.getInstance());
+
+        // Set "init" state:
+        this.propertiesRepositoryInitState = true;
+    }
 }

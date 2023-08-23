@@ -10,8 +10,6 @@ public class FileRepositoryUtils {
 
     public static List<String> readContentByLines(BufferedReader aReader) throws IOException {
         Objects.requireNonNull(aReader, "Specified [BufferedReader] cannot be null.");
-        // Reset reader:
-        aReader.reset();
 
         // List of read strings:
         List<String> stringsList = new ArrayList<>();
