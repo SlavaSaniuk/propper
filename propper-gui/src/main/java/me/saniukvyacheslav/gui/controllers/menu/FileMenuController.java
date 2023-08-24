@@ -3,12 +3,12 @@ package me.saniukvyacheslav.gui.controllers.menu;
 import javafx.stage.FileChooser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.saniukvyacheslav.Main;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.exception.InitializationException;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.definition.Initializable;
+import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -78,7 +78,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
         LOGGER.debug("Show 'Create file' fileChooser dialog:");
 
         // Show save file dialog and check result:
-        File file = this.fileChooser.showSaveDialog(Main.getPrimaryStage());
+        File file = this.fileChooser.showSaveDialog(GuiConfiguration.getInstance().getPrimaryStage());
         if (file == null) {
             LOGGER.debug("FileChooser window was closed without choose. Do nothing;");
             return;
@@ -126,7 +126,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
         LOGGER.debug("Show 'Open file' fileChooser dialog:");
 
         // Select file and check it:
-        File propertiesFile = this.fileChooser.showOpenDialog(Main.getPrimaryStage());
+        File propertiesFile = this.fileChooser.showOpenDialog(GuiConfiguration.getInstance().getPrimaryStage());
         if (propertiesFile == null) {
             LOGGER.debug("FileChooser window was closed without choose. Do nothing;");
             return;

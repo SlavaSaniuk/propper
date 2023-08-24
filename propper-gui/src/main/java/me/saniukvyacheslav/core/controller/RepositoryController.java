@@ -40,7 +40,6 @@ public class RepositoryController implements Observer, Observable {
      * @return - current singleton instance.
      */
     public static RepositoryController getInstance() {
-        LOGGER.debug(String.format("Get singleton instance of [%s] class;", RepositoryController.class.getName()));
         if(RepositoryController.INSTANCE == null) RepositoryController.INSTANCE = new RepositoryController();
         return RepositoryController.INSTANCE;
     }

@@ -9,7 +9,7 @@ import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.controllers.menu.TopMenuEvents;
+import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
 import me.saniukvyacheslav.gui.models.StatusLine;
 import me.saniukvyacheslav.gui.views.StatusLineView;
 

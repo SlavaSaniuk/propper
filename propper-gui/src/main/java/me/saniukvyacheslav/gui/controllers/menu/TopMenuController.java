@@ -2,67 +2,52 @@ package me.saniukvyacheslav.gui.controllers.menu;
 
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import lombok.Getter;
 import me.saniukvyacheslav.Main;
+import me.saniukvyacheslav.core.PropperGui;
+import me.saniukvyacheslav.core.error.global.InitializationApplicationError;
+import me.saniukvyacheslav.core.exception.InitializationException;
+import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.controllers.PropertiesTableController;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
+import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
 import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+public class TopMenuController implements Observer {
 
-public class TopMenuController implements Initializable {
-
-    // Fx nodes:
+    @Getter private FileMenuController fileMenuController; // FileMenu controller;
+    private static TopMenuController INSTANCE; // Singleton instance of this controller;
     @FXML Node topMenuBar; // TopMenu Bar node;
 
-    // Class variables:
-    private final FileMenuController fileMenuController = FileMenuController.getInstance(); // FileMenu controller;
-    private static TopMenuController INSTANCE; // Instance of this controller;
-    @Getter private FileMenuModel fileMenuModel;
+    @FXML
+    public void initialize() {
 
-    /**
-     * Get current instance of this controller.
-     * @return - instance of this controller.
-     */
-    public static TopMenuController getInstance() {
-        return TopMenuController.INSTANCE;
-    }
-
-    /**
-     * Subscribe observers on FileMenu events.
-     * @param anObserver - observer.
-     * @param anEvents - supported events.
-     */
-    public void subscribeOnFileMenuEvents(Observer anObserver, PropperApplicationEvent... anEvents) {
-        this.fileMenuController.subscribe(anObserver, anEvents);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        // Initialize static instance:
-        TopMenuController.INSTANCE = this;
 
         // Construct models:
+        FileMenuModel fileMenuModel = null;
         for (Menu menu : ((MenuBar) this.topMenuBar).getMenus()) {
             if (menu.getId() == null) continue;
             if (menu.getId().equals("menu_file_menu"))
-                this.fileMenuModel = new FileMenuModel(menu);
+                fileMenuModel = new FileMenuModel(menu);
         }
 
-        // Set models to controllers:
-        this.fileMenuController.setFileMenuModel(this.fileMenuModel);
+        // Initialize FileMenu controller:
+        try {
+            this.fileMenuController = FileMenuController.getInstance(); // Construct new instance;
+            this.fileMenuController.init(fileMenuModel);
+        } catch (InitializationException e) {
+            // Show global error dialog and close application:
+            GuiConfiguration.getInstance().getErrorsController().showGlobalErrorDialogAndExit(new InitializationApplicationError(e, FileMenuController.class), true);
+        }
     }
 
     /**
      * Notify {@link PropertiesTableController} about
-     * {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#OPEN_FILE_EVENT} event.
+     * {@link FileMenuEvents#OPEN_FILE_EVENT} event.
      */
     @FXML public void onNewFileEvent() {
         this.fileMenuController.onNewFileEvent();
@@ -73,7 +58,7 @@ public class TopMenuController implements Initializable {
     @FXML public void onSaveFileEvent() { this.fileMenuController.onSaveFileEvent(); }
 
     /**
-     * Notify observers about {@link me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents#CLOSE_FILE_EVENT}.
+     * Notify observers about {@link FileMenuEvents#CLOSE_FILE_EVENT}.
      * Call {@link FileMenuController#onCloseFileEvent()} method.
      */
     @FXML public void onCloseFileEvent() {
@@ -85,12 +70,13 @@ public class TopMenuController implements Initializable {
      */
     @FXML
     public void onExitMenuAction() {
-        System.out.println("123");
         // Exit from application:
-        Main.exit();
+        PropperGui.getInstance().close(0);
     }
 
 
+    @Override
+    public void update(PropperApplicationEvent event, Object... arguments) {
 
-
+    }
 }

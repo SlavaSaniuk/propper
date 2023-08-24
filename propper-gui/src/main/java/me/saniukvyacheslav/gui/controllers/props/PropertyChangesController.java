@@ -2,7 +2,10 @@ package me.saniukvyacheslav.gui.controllers.props;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -16,6 +19,8 @@ import java.util.Map;
  * This controller handle property changes.
  * Singleton instance.
  */
+@Singleton
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertyChangesController implements Observable {
 
     // Class variables:
@@ -35,10 +40,6 @@ public class PropertyChangesController implements Observable {
         return PropertyChangesController.INSTANCE;
     }
 
-    /**
-     * Private default constructor.
-     */
-    private PropertyChangesController() {}
 
     /**
      * Get updates map (origin_property_key = new_property_key_value).

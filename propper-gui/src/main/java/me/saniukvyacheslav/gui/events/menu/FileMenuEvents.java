@@ -1,4 +1,4 @@
-package me.saniukvyacheslav.gui.controllers.menu.events;
+package me.saniukvyacheslav.gui.events.menu;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
