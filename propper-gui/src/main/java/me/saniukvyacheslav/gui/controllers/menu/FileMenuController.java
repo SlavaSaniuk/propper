@@ -3,11 +3,13 @@ package me.saniukvyacheslav.gui.controllers.menu;
 import javafx.stage.FileChooser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import me.saniukvyacheslav.Main;
+import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.error.ApplicationError;
+import me.saniukvyacheslav.core.exception.InitializationException;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
-import me.saniukvyacheslav.gui.controllers.menu.events.FileMenuEvents;
+import me.saniukvyacheslav.definition.Initializable;
+import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -18,30 +20,53 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * Singleton instance.
+ * FileMenuController controller.
+ * This controller instance handle FileMenu menu actions.
  */
+@Singleton
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FileMenuController implements Observable, Observer {
+public class FileMenuController implements Observable, Observer, Initializable {
 
-    // Class variables:
+    private static FileMenuController INSTANCE; // Singleton instance.
     private static final Logger LOGGER = LoggerFactory.getLogger(FileMenuController.class); // Logger;
-    private static FileMenuController INSTANCE; // Singleton instance:
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // Map of observers;
     private final FileChooser fileChooser = new FileChooser(); // FileChooser;
-    @Setter private FileMenuModel fileMenuModel; // File menu model;
+    private FileMenuModel fileMenuModel; // FileMenu model;
 
     /**
-     * Get singleton instance of FileMenu controller.
+     * Get current singleton instance of this class.
      * @return - singleton instance.
      */
     public static FileMenuController getInstance() {
-        if (FileMenuController.INSTANCE == null) FileMenuController.INSTANCE = new FileMenuController();
-
-        // Set common fileChooser title:
-        FileMenuController.INSTANCE.fileChooser.setTitle("Select file ...");
+        if(FileMenuController.INSTANCE == null) {
+            LOGGER.debug("Construct [FileMenuController] singleton instance. FileMenuController instance must be initialized.");
+            FileMenuController.INSTANCE = new FileMenuController();
+        }
         return FileMenuController.INSTANCE;
+    }
+
+    /**
+     * Initialize this singleton instance with FileMenu model object.
+     * @param objects - {@link FileMenuModel} model as first element in array.
+     * @throws InitializationException - if specified element null or not FileMenuModel.
+     */
+    @Override
+    public void init(Object... objects) throws InitializationException {
+        LOGGER.debug("Try to initialize [FileMenuController] singleton instance. Check arguments:");
+
+        // Cast and check parameters:
+        try {
+            Objects.requireNonNull(objects[0], "FileMenuModel [objects[0] must be not null.]");
+            this.fileMenuModel = (FileMenuModel) objects[0];
+        }catch (ClassCastException | NullPointerException e) {
+            throw new InitializationException(e);
+        }
+
+        LOGGER.debug(String.format("Model [FileMenuModel]: [%s];", this.fileMenuModel));
+        LOGGER.debug("Initialize [FileMenuController] singleton instance: SUCCESSFUL;");
     }
 
     /**
@@ -138,7 +163,6 @@ public class FileMenuController implements Observable, Observer {
     public void onRepositoryOpenedEvent() {
         LOGGER.debug("REPOSITORY_OPENED [505] event:");
         LOGGER.debug("Enable [SAVE], [CLOSE] menu items;");
-        if(this.fileMenuModel == null) this.fileMenuModel = TopMenuController.getInstance().getFileMenuModel();
         this.fileMenuModel.setDisableSaveCloseMenuItems(false);
     }
 
@@ -193,11 +217,15 @@ public class FileMenuController implements Observable, Observer {
             case 550: { // REPOSITORY_OPENED event:
                 this.onRepositoryOpenedEvent();
                 break;
-            } default: {
+            }
+            case 551: { // REPOSITORY_CHANGES_SAVED
+                // NOTHING TO DO;
+                break;
+            }
+            default: {
                 LOGGER.warn(String.format("Event [eventCode: %d] not supported;", event.getCode()));
             }
         }
     }
-
 
 }
