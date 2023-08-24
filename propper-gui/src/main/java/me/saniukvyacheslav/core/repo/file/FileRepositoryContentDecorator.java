@@ -33,8 +33,6 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
         this.contentFile = this.fileRepository.getRepositoryObject();
     }
 
-
-
     /**
      * Save changes in repository.
      * @throws IOException - If IO exception occurs.
@@ -99,6 +97,14 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
     @Override
     public void close() throws Exception {
 
+    }
+
+    /**
+     * Get repository object.
+     * @return - repository object.
+     */
+    public Object getRepositoryObject() {
+        return this.fileRepository.getRepositoryObject();
     }
 
 }

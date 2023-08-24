@@ -1,6 +1,8 @@
 package me.saniukvyacheslav.core.controller;
 
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.RootConfiguration;
@@ -12,9 +14,11 @@ import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
 import me.saniukvyacheslav.gui.GuiConfiguration;
+import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
+import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,12 +144,40 @@ public class RepositoryController implements Observer, Observable {
         }
     }
 
-    public void close() {
+
+    public void onCloseEvent() {
+        LOGGER.debug("Try to close repository instance:");
+
         // Check unsaved changes:
+        LOGGER.debug("Check for unsaved changes:");
+        boolean isUnsavedChanges = GuiConfiguration.getInstance().getPropertiesTableController().isTableHasUnsavedChanges();
+        LOGGER.debug(String.format("Properties table has unsaved changes: [%b];", isUnsavedChanges));
+
+        // Ask to save changes:
+        if (isUnsavedChanges) {
+            // If current repository is FileRepository, show save file dialog:
+            if (this.currentRepositoryType == RepositoryTypes.FileRepository) {
+                ButtonType answer =  this.showSaveFileDialog((File) RootConfiguration.getInstance().getPropertiesRepository().getRepositoryObject());
+                if (answer == ApplicationDialogs.BTN_YES) this.save(); // Save changes;
+            }
+        }
+
+        LOGGER.debug("Close repository: ");
 
         // Close repository:
-        this.closeRepository();
+        //this.closeRepository();
     }
+
+    public ButtonType showSaveFileDialog(File aFile) {
+        return ApplicationDialogs.saveFileDialog(aFile.getAbsolutePath()).showAndWait().orElse(ApplicationDialogs.BTN_CANCEL);
+    }
+
+
+
+
+
+
+
 
     private void closeRepository() {
         if (RootConfiguration.getInstance().getPropertiesRepository() == null) return;
@@ -176,8 +208,13 @@ public class RepositoryController implements Observer, Observable {
                 this.open(arguments);
                 break;
             }
-            case 103: { // SaveFile FileMenu item:
+            case 103: { // SAVE_FILE_MENU FileMenu event:
                 this.save();
+                break;
+            }
+            case 105: { // CLOSE_FILE_MENU FileMenu event:
+                LOGGER.debug(String.format("[%d: %s] event. Close repository:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
+                this.onCloseEvent();
                 break;
             }
             default: {

@@ -135,6 +135,16 @@ public class PropertiesTableController implements Observer {
     }
 
     /**
+     * Check for unsaved changes in PropertiesTable model.
+     * @return - true if table has unsaved changes.
+     */
+    public boolean isTableHasUnsavedChanges() {
+        LOGGER.debug("Check for unsaved changes in PropertiesTable model:");
+        return this.tableModel.isUnsavedChanged();
+    }
+
+
+    /**
      * Initialize new empty properties table and set model state "isNew" to true.
      */
     public void newPropertiesFile() {
@@ -153,10 +163,11 @@ public class PropertiesTableController implements Observer {
      * Clear embedded properties table and show default layout.
      * If properties table has unsaved changes, then method offer save properties file to user.
      */
+    @Deprecated
     public void closePropertiesFile() {
 
         // Check for unsaved changes in table model:
-        if (this.tableModel.isUnsavedChanges()) {
+        if (this.tableModel.isUnsavedChanged()) {
             Optional<ButtonType> userAnswer = ApplicationDialogs.saveFileDialog(this.currentPropertiesFilePath).showAndWait();
             System.out.println(userAnswer);
         }

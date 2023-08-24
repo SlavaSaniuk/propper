@@ -28,6 +28,7 @@ public class PropertiesTableModel {
     private final List<PropertyModel> propertiesModels = new UniqueElementsList<>();
     private int lastTableRow = 0; // Last used table row;
     private final GridPane embeddedGridPane; // Embedded GridPane layout (JavaFx GridPane node);
+    private boolean isUnsaved = false; // Unsaved state: If table has unsaved changes - true;
 
     /**
      * Construct new {@link PropertiesTableModel} model instance.
@@ -169,18 +170,26 @@ public class PropertiesTableModel {
     }
 
     /**
-     * Check if this table model has unsaved properties changes.
-     * @return - true, if this properties table has unsaved properties changes.
-     */
-    public boolean isUnsavedChanges() {
-        return PropertyChangesController.getInstance().getUpdatesCount() != 0;
-    }
-
-    /**
      * Clear "updated" css pseudo class from all properties models in table.
      */
     public void clearUpdatedClass() {
         this.propertiesModels.forEach(model -> model.setUpdatedClass(false));
+    }
+
+    /**
+     * Set this table unsaved state.
+     * @param state - state.
+     */
+    public void setUnsavedState(boolean state) {
+        this.isUnsaved = state;
+    }
+
+    /**
+     * Check for unsaved changes in this table.
+     * @return - true, if this table has unsaved changes.
+     */
+    public boolean isUnsavedChanged() {
+        return this.isUnsaved;
     }
 
 }

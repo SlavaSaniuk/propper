@@ -34,7 +34,7 @@ public class ApplicationDialogs {
     public static Alert saveFileDialog(@Nullable String aPathToPropertiesFile) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
-        alert.setTitle("Save properties file:");
+        alert.setTitle("Save file");
 
         // Set content text:
         // Check specified path for null and empty value:
@@ -48,6 +48,8 @@ public class ApplicationDialogs {
                 ApplicationDialogs.BTN_YES, ApplicationDialogs.BTN_NO, ApplicationDialogs.BTN_CANCEL);
         return alert;
     }
+
+
 
     public static Alert exceptionDialog(@Nullable String aTitle, @Nullable String aHeaderText, @Nullable String aContentText, boolean isPrintStackTrace, @Nullable Exception anException) {
         LOGGER.debug("Create exception dialog [Alert] instance. Check parameters:");

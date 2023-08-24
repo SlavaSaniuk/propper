@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -153,6 +154,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
      * Notify all subscribed observers about {@link FileMenuEvents#CLOSE_FILE_EVENT} event.
      */
     public void onCloseFileEvent() {
+        LOGGER.debug(String.format("Notify observers about [%d: %s] event:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
         // Notify observers:
         this.notify(FileMenuEvents.CLOSE_FILE_EVENT);
     }
@@ -173,6 +175,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
      */
     @Override
     public void subscribe(Observer anObserver, PropperApplicationEvent... anApplicationEvents) {
+        LOGGER.debug(String.format("Subscribe [%s] observer on [%s] FileMenu events.", anObserver, Arrays.toString(anApplicationEvents)));
         this.subscribers.put(anObserver, anApplicationEvents);
     }
 

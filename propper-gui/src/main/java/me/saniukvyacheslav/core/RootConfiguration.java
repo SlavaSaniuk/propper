@@ -55,7 +55,7 @@ public class RootConfiguration {
         LOGGER.debug("Subscribe these ROOT components on GUI application events:");
 
         // Subscribe this RepositoryController controller on FileMenu menu events:
-        GuiConfiguration.getInstance().getFileMenuController().subscribe(this.getRepositoryController(), FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT);
+        GuiConfiguration.getInstance().getFileMenuController().subscribe(this.getRepositoryController(), FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
 
         this.getRepositoryController().subscribe(this.getErrorsController(), RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
 
