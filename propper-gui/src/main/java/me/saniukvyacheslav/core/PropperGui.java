@@ -81,6 +81,9 @@ public class PropperGui {
         GuiConfiguration.getInstance().subscribeOnRootEvents();
         RootConfiguration.getInstance().subscribeOnGuiEvents();
 
+        // Set onClose request:
+        this.primaryStage.setOnCloseRequest((e) -> PropperGui.getInstance().normallyCloseApplication());
+
         // Show GUI:
         this.show();
     }
@@ -158,6 +161,22 @@ public class PropperGui {
     public void close(int aExitCode) {
         Platform.exit();
         System.exit(aExitCode);
+    }
+
+    /**
+     * Normally close application.
+     * Close [PropertiesRepository] if it was opened.
+     */
+    public void normallyCloseApplication() {
+        LOGGER.debug("Try to normally close application:");
+
+        // Check if PropertiesRepository is initialized:
+        if(RootConfiguration.getInstance().isPropertiesRepositoryInitialized()) { // Try to close PropertiesRepository:
+            RootConfiguration.getInstance().getRepositoryController().close();
+        }
+
+        // Close FX and application:
+        this.close(0);
     }
 
 }

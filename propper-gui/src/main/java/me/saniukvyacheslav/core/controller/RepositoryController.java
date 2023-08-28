@@ -145,11 +145,22 @@ public class RepositoryController implements Observer, Observable {
         }
     }
 
-
+    /**
+     * On "FileMenuEvents#CLOSE_FILE_EVENT" action.
+     * Try to close [PropertiesRepository] repository.
+     */
     public void onCloseEvent() {
+        LOGGER.debug(String.format("[%d: %s] event. Close repository:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
+        this.close();
+    }
+
+    /**
+     * Check for unsaved changes and close repository.
+     */
+    public void close() {
         LOGGER.debug("Try to close repository instance:");
 
-        // Check unsaved changes:
+        // Check for unsaved changes:
         LOGGER.debug("Check for unsaved changes:");
         boolean isUnsavedChanges = GuiConfiguration.getInstance().getPropertiesTableController().isTableHasUnsavedChanges();
         LOGGER.debug(String.format("Properties table has unsaved changes: [%b];", isUnsavedChanges));
@@ -167,21 +178,20 @@ public class RepositoryController implements Observer, Observable {
 
         // Close repository:
         this.closeRepository();
-
-        // Empty Properties Table:
     }
 
-    public ButtonType showSaveFileDialog(File aFile) {
+    /**
+     * Show "Save file" dialog.
+     * @param aFile - file to save.
+     * @return - user choose.
+     */
+    private ButtonType showSaveFileDialog(File aFile) {
         return ApplicationDialogs.saveFileDialog(aFile.getAbsolutePath()).showAndWait().orElse(ApplicationDialogs.BTN_CANCEL);
     }
 
-
-
-
-
-
-
-
+    /**
+     * Close [PropertiesRepository] repository and notify observers about {@link RepositoryEvents#REPOSITORY_CLOSED} event.
+     */
     private void closeRepository() {
 
         LOGGER.debug("Close [PropertiesRepository] repository:");
@@ -197,10 +207,10 @@ public class RepositoryController implements Observer, Observable {
             ((FileRepositoryContentDecorator) propertiesRepository).close();
         LOGGER.debug("Close [PropertiesRepository] repository: SUCCESS;");
 
+        this.isOpened = false;
         // Notify observers about REPOSITORY_CLOSED (552):
         this.notify(RepositoryEvents.REPOSITORY_CLOSED);
     }
-
 
     /**
      * Do something on event.
@@ -220,7 +230,6 @@ public class RepositoryController implements Observer, Observable {
                 break;
             }
             case 105: { // CLOSE_FILE_MENU FileMenu event:
-                LOGGER.debug(String.format("[%d: %s] event. Close repository:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
                 this.onCloseEvent();
                 break;
             }

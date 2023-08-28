@@ -70,7 +70,7 @@ public class TopMenuController implements Observer {
     @FXML
     public void onExitMenuAction() {
         // Exit from application:
-        PropperGui.getInstance().close(0);
+        PropperGui.getInstance().normallyCloseApplication();
     }
 
 
