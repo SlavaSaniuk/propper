@@ -32,7 +32,6 @@ public class GuiConfiguration {
     public static GuiConfiguration INSTANCE; // Singleton instance;
     @Getter private boolean isInitialized; // "Init" flag;
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiConfiguration.class); // Logger;
-    private  PrimaryNodeController primaryNodeController; // PrimaryNodeController controller;
     private TopMenuController topMenuController; // TopMenuController controller;
     private FileMenuController fileMenuController; // FileMenuController controller;
     private PropertiesTableController propertiesTableController; // PropertiesTableController controller;
@@ -49,15 +48,14 @@ public class GuiConfiguration {
 
         // Get controllers:
         LOGGER.debug("Create and map GUI controllers:");
-        this.primaryNodeController = aPrimaryNodeController;
-        LOGGER.debug(String.format("PrimaryNodeController controller: [%s];", this.primaryNodeController));
-        this.topMenuController = this.primaryNodeController.getTopMenuController();
+        LOGGER.debug(String.format("PrimaryNodeController controller: [%s];", aPrimaryNodeController));
+        this.topMenuController = aPrimaryNodeController.getTopMenuController();
         LOGGER.debug(String.format("TopMenuController controller: [%s];", this.topMenuController));
         this.fileMenuController = this.topMenuController.getFileMenuController();
         LOGGER.debug(String.format("FileMenuController controller: [%s];", this.fileMenuController));
-        this.propertiesTableController = this.primaryNodeController.getPropertiesTableController();
+        this.propertiesTableController = aPrimaryNodeController.getPropertiesTableController();
         LOGGER.debug(String.format("PropertiesTableController controller: [%s];", this.propertiesTableController));
-        this.statusLineController = this.primaryNodeController.getStatusLineController();
+        this.statusLineController = aPrimaryNodeController.getStatusLineController();
         LOGGER.debug(String.format("StatusLineController controller: [%s];", this.statusLineController));
         this.propertyChangesController = PropertyChangesController.getInstance();
         LOGGER.debug(String.format("PropertyChangesController controller: [%s];", this.propertyChangesController));

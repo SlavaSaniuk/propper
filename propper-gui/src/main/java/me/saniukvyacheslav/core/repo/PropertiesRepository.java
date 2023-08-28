@@ -1,6 +1,5 @@
 package me.saniukvyacheslav.core.repo;
 
-import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.prop.Property;
 
 import java.io.IOException;

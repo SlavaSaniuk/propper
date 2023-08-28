@@ -10,7 +10,6 @@ import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.models.StatusLine;
 import me.saniukvyacheslav.gui.models.StatusLineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +96,7 @@ public class StatusLineController implements Observer {
 
     /**
      * Update status line label text, when user open properties file.
-     * Clear path, reset counters in {@link StatusLine} model, set new path in it, and set new embedded label text.
+     * Clear path, reset counters in model, set new path in it, and set new embedded label text.
      * @param aPathToPropertiesFile - path to properties file.
      */
     public void onRepositoryOpenedEvent(String aPathToPropertiesFile) {
