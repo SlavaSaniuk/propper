@@ -57,4 +57,9 @@ public class PropertyModel {
         this.propertyView.setUpdatedPropertyKey(isUpdated);
         this.propertyView.setUpdatedPropertyValue(isUpdated);
     }
+
+    @Override
+    public String toString() {
+        return String.format("PropertyModel[ property: [%s], keyFieldText: [%s], valueFieldText: [%s]];", this.property, this.keyPropertyField.getText(), this.valuePropertyField.getText());
+    }
 }

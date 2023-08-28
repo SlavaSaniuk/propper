@@ -5,7 +5,6 @@ import javafx.scene.Node;
 import lombok.Getter;
 import lombok.Setter;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
-import me.saniukvyacheslav.gui.controllers.statusline.StatusLineController;
 
 /**
  * Main JavaFx controller.

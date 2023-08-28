@@ -15,7 +15,7 @@ import me.saniukvyacheslav.gui.controllers.menu.FileMenuController;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
-import me.saniukvyacheslav.gui.controllers.statusline.StatusLineController;
+import me.saniukvyacheslav.gui.controllers.StatusLineController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class GuiConfiguration {
     private FileMenuController fileMenuController; // FileMenuController controller;
     private PropertiesTableController propertiesTableController; // PropertiesTableController controller;
     private StatusLineController statusLineController; // StatusLineController controller;
-    private final PropertyChangesController propertyChangesController = PropertyChangesController.getInstance(); // PropertyChangesController controller;
+    private PropertyChangesController propertyChangesController; // PropertyChangesController controller;
 
     /**
      * Init this configuration.
@@ -59,7 +59,8 @@ public class GuiConfiguration {
         LOGGER.debug(String.format("PropertiesTableController controller: [%s];", this.propertiesTableController));
         this.statusLineController = this.primaryNodeController.getStatusLineController();
         LOGGER.debug(String.format("StatusLineController controller: [%s];", this.statusLineController));
-
+        this.propertyChangesController = PropertyChangesController.getInstance();
+        LOGGER.debug(String.format("PropertyChangesController controller: [%s];", this.propertyChangesController));
         // Set "init" flag:
         this.isInitialized = true;
         LOGGER.debug("Init singleton instance of [GuiConfiguration] configuration: SUCCESSFUL;");
@@ -74,7 +75,7 @@ public class GuiConfiguration {
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getFileMenuController(), RepositoryEvents.REPOSITORY_OPENED);
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getTopMenuController(), RepositoryEvents.REPOSITORY_OPENED);
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getPropertiesTableController(), RepositoryEvents.REPOSITORY_OPENED, RepositoryEvents.REPOSITORY_CHANGES_SAVED);
-        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getStatusLineController(), RepositoryEvents.REPOSITORY_OPENED);
+        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getStatusLineController(), RepositoryEvents.REPOSITORY_OPENED, RepositoryEvents.REPOSITORY_CHANGES_SAVED);
         this.propertyChangesController.subscribe(this.statusLineController, PropertyEvents.PROPERTY_UPDATE_EVENT);
     }
 
@@ -139,5 +140,15 @@ public class GuiConfiguration {
     public PropertiesTableController getPropertiesTableController() {
         if (!this.isInitialized) throw new IllegalStateException("Configuration [GuiConfiguration] is not initialized. See GuiConfiguration#init method.");
         else return this.propertiesTableController;
+    }
+
+    /**
+     * Get PropertyChangesController instance.
+     * @return - PropertiesTableController instance.
+     * @throws IllegalStateException - if this configuration haven't been initialized.
+     */
+    public PropertyChangesController getPropertyChangesController() {
+        if (!this.isInitialized) throw new IllegalStateException("Configuration [GuiConfiguration] is not initialized. See GuiConfiguration#init method.");
+        else return this.propertyChangesController;
     }
 }

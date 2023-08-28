@@ -149,14 +149,6 @@ public class PropertiesTableModel {
         this.isClear = true;
     }
 
-    /**
-     * Clear embedded GridPane and show default layout label.
-     */
-    public void closeTable() {
-        this.clearTable();
-        this.drawDefaultLayout();
-    }
-
 
     private List<PropertyChanges> getListOfChanges() {
         List<PropertyChanges> changesList = new ArrayList<>();

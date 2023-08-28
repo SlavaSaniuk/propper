@@ -39,7 +39,7 @@ public interface PropertiesRepository {
      * Method accept map of property_key=new_property_value pairs.
      * @param anValueChanges - map of property_key=new_property_value pairs.
      */
-    void updateValues(Map<String, String> anValueChanges) throws RepositoryNotInitializedException, IOException;
+    void updateValues(Map<String, String> anValueChanges) throws IOException;
 
     /**
      * Get repository object.
