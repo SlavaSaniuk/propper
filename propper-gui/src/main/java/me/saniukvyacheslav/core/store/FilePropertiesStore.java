@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class FilePropertiesStore implements PropertiesStore<ExtendedBaseProperty> {
 
     private static FilePropertiesStore INSTANCE; // Singleton instance;
-    private static final Logger LOGGER = LoggerFactory.getLogger(FilePropertiesStore.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilePropertiesStore.class); // Logger;
     // Class variables:
     @Getter private boolean isLoaded = false; // Loading flag;
     private final UniqueElementsList<ExtendedBaseProperty> loadedProperties = new UniqueElementsList<>(); // List of loaded properties;
@@ -86,14 +86,15 @@ public class FilePropertiesStore implements PropertiesStore<ExtendedBaseProperty
     }
 
     /**
-     * Reset current singleton instance. Clear loaded properties list and unset "loaded" flag.
+     * Close this [FilePropertiesStore] stare.
+     * Clear loaded list, unset "loaded" flag, and nullable this instance.
      */
-    public void reset() {
-        LOGGER.debug("Reset current [FilePropertiesStore] singleton instance.");
-        // Clear loaded properties:
+    @Override
+    public void close() {
+        LOGGER.debug("Close this [FilePropertiesStore] store:");
         this.loadedProperties.clear();
-
-        // Unset loaded flag:
         this.isLoaded = false;
+        FilePropertiesStore.INSTANCE = null;
+        LOGGER.debug("Close this [FilePropertiesStore] store: SUCCESS;");
     }
 }

@@ -37,7 +37,16 @@ public class StatusLineModel {
         this.statusLineView.stylize();
 
         // Set default text:
-        this.mainLabel.setText("");
+        this.updateText();
+    }
+
+    /**
+     * Reset counters and repository object fields and update label text.
+     */
+    public void reset() {
+        this.updatesCount = 0;
+        this.repositoryObj = null;
+        this.updateText();
     }
 
     /**

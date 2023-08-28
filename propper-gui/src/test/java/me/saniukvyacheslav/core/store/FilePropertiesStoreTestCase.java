@@ -17,7 +17,7 @@ public class FilePropertiesStoreTestCase {
     @AfterEach
     void afterEach() {
         LOGGER.debug("Reset [FilePropertiesStore] singleton instance;");
-        FilePropertiesStore.getInstance().reset();
+        FilePropertiesStore.getInstance().close();
     }
 
     @Test

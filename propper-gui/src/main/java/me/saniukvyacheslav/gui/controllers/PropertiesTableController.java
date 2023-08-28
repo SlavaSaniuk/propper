@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
+import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -71,10 +72,17 @@ public class PropertiesTableController implements Observer {
                 LOGGER.debug("Event code: [550] - REPOSITORY_OPENED event.");
                 this.onRepositoryOpenedEvent();
                 break;
-            case 551: // REPOSITORY_CHANGES_SAVED:
+            case 551: // REPOSITORY_CHANGES_SAVED event:
                 LOGGER.debug("Event code: [551] - REPOSITORY_CHANGES_SAVED event.");
                 this.onRepositoryChangesSavedEvent();
                 break;
+            case 552: // REPOSITORY_CLOSED event:
+                LOGGER.debug(String.format("[%d: %s] event. Clear this properties table:",
+                        RepositoryEvents.REPOSITORY_CLOSED.getCode(), RepositoryEvents.REPOSITORY_CLOSED.name()));
+                this.onRepositoryClosedEvent();
+                break;
+            default:
+                LOGGER.warn(String.format("Event [eventCode: %d] is not supported;", event.getCode()));
         }
 
     }
@@ -134,6 +142,15 @@ public class PropertiesTableController implements Observer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Action on [552] REPOSITORY_CLOSE event.
+     * Reset inner properties table model.
+     */
+    private void onRepositoryClosedEvent() {
+        LOGGER.debug("Reset properties table model and draw default layout:");
+        this.tableModel.resetTable();
     }
 
     /**

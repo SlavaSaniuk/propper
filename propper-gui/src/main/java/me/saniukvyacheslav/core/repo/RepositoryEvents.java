@@ -1,7 +1,13 @@
 package me.saniukvyacheslav.core.repo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 
+/**
+ * Different repository events.
+ */
+@AllArgsConstructor
 public enum RepositoryEvents implements PropperApplicationEvent {
 
     /**
@@ -12,24 +18,13 @@ public enum RepositoryEvents implements PropperApplicationEvent {
     /**
      * This event calling when changes saved in repository.
      */
-    REPOSITORY_CHANGES_SAVED(551);
-
-    private final int eventCode; // Event code;
-
+    REPOSITORY_CHANGES_SAVED(551),
     /**
-     * Construct new event.
-     * @param aCode - event code.
+     * Repository was closed event.
      */
-    RepositoryEvents(int aCode) {
-        this.eventCode = aCode;
-    }
+    REPOSITORY_CLOSED(552);
 
-    /**
-     * Get application event code.
-     * @return - event code.
-     */
-    @Override
-    public int getCode() {
-        return this.eventCode;
-    }
+    @Getter private final int code; // Event code;
+
+
 }

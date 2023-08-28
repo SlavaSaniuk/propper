@@ -6,7 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import lombok.Getter;
-import me.saniukvyacheslav.Main;
+
 import me.saniukvyacheslav.core.PropperGui;
 import me.saniukvyacheslav.core.error.global.InitializationApplicationError;
 import me.saniukvyacheslav.core.exception.InitializationException;
@@ -20,7 +20,6 @@ import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
 public class TopMenuController implements Observer {
 
     @Getter private FileMenuController fileMenuController; // FileMenu controller;
-    private static TopMenuController INSTANCE; // Singleton instance of this controller;
     @FXML Node topMenuBar; // TopMenu Bar node;
 
     @FXML

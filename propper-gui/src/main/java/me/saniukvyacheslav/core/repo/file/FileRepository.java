@@ -10,7 +10,6 @@ import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.store.FilePropertiesStore;
-import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.definition.Initializable;
 import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ import java.util.*;
  */
 @Singleton
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FileRepository implements Initializable, Closeable, PropertiesRepository {
+public class FileRepository implements Initializable, PropertiesRepository {
 
     // Class variables:
     private static FileRepository INSTANCE; // Singleton instance;
@@ -120,11 +119,17 @@ public class FileRepository implements Initializable, Closeable, PropertiesRepos
     }
 
     /**
-     * Close reader/writer for properties file.
-     * @throws Exception - IF IOException occur.
+     * Close this PropertiesRepository repository implementation.
+     * Close FilePropertiesStore instance, unset "initialized" flag, and nullable this singleton instance.
      */
     @Override
-    public void close() throws Exception {
+    public void close() {
+        LOGGER.debug("Close this [FileRepository] repository:");
+        this.filePropertiesStore.close();
+        this.repositoryObject = null;
+        this.isInitialized = false;
+        FileRepository.INSTANCE = null;
+        LOGGER.debug("Close this [FileRepository] repository: SUCCESS;");
     }
 
     /**

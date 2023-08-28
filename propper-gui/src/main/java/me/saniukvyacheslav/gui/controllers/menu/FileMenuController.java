@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.exception.InitializationException;
+import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.definition.Initializable;
 import me.saniukvyacheslav.gui.GuiConfiguration;
@@ -169,6 +170,14 @@ public class FileMenuController implements Observable, Observer, Initializable {
     }
 
     /**
+     * Disable "Save", "Close" menu items.
+     */
+    public void onRepositoryClosedEvent() {
+        LOGGER.debug("Disable [SAVE, CLOSE] menu items:");
+        this.fileMenuModel.setDisableSaveCloseMenuItems(true);
+    }
+
+    /**
      * Subscribe observer to this observable instance.
      * @param anObserver - observer.
      * @param anApplicationEvents - observer supported events.
@@ -221,8 +230,10 @@ public class FileMenuController implements Observable, Observer, Initializable {
                 this.onRepositoryOpenedEvent();
                 break;
             }
-            case 551: { // REPOSITORY_CHANGES_SAVED
-                // NOTHING TO DO;
+            case 552: { // REPOSITORY_CLOSED event:
+                LOGGER.debug(String.format("[%d: %s] event. Update [MenuItems] states:",
+                        RepositoryEvents.REPOSITORY_CLOSED.getCode(), RepositoryEvents.REPOSITORY_CLOSED.name()));
+                this.onRepositoryClosedEvent();
                 break;
             }
             default: {

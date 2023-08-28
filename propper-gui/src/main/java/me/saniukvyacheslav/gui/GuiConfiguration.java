@@ -32,7 +32,7 @@ public class GuiConfiguration {
     public static GuiConfiguration INSTANCE; // Singleton instance;
     @Getter private boolean isInitialized; // "Init" flag;
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiConfiguration.class); // Logger;
-    private TopMenuController topMenuController; // TopMenuController controller;
+
     private FileMenuController fileMenuController; // FileMenuController controller;
     private PropertiesTableController propertiesTableController; // PropertiesTableController controller;
     private StatusLineController statusLineController; // StatusLineController controller;
@@ -49,9 +49,9 @@ public class GuiConfiguration {
         // Get controllers:
         LOGGER.debug("Create and map GUI controllers:");
         LOGGER.debug(String.format("PrimaryNodeController controller: [%s];", aPrimaryNodeController));
-        this.topMenuController = aPrimaryNodeController.getTopMenuController();
-        LOGGER.debug(String.format("TopMenuController controller: [%s];", this.topMenuController));
-        this.fileMenuController = this.topMenuController.getFileMenuController();
+        TopMenuController topMenuController = aPrimaryNodeController.getTopMenuController();
+        LOGGER.debug(String.format("TopMenuController controller: [%s];", topMenuController));
+        this.fileMenuController = topMenuController.getFileMenuController();
         LOGGER.debug(String.format("FileMenuController controller: [%s];", this.fileMenuController));
         this.propertiesTableController = aPrimaryNodeController.getPropertiesTableController();
         LOGGER.debug(String.format("PropertiesTableController controller: [%s];", this.propertiesTableController));
@@ -70,10 +70,17 @@ public class GuiConfiguration {
     public void subscribeOnRootEvents() {
         LOGGER.debug("Subscribe GUI components on ROOT application events:");
         // Subscribe on repository events:
-        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getFileMenuController(), RepositoryEvents.REPOSITORY_OPENED);
-        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getTopMenuController(), RepositoryEvents.REPOSITORY_OPENED);
-        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getPropertiesTableController(), RepositoryEvents.REPOSITORY_OPENED, RepositoryEvents.REPOSITORY_CHANGES_SAVED);
-        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getStatusLineController(), RepositoryEvents.REPOSITORY_OPENED, RepositoryEvents.REPOSITORY_CHANGES_SAVED);
+        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getFileMenuController(),
+                RepositoryEvents.REPOSITORY_OPENED,
+                RepositoryEvents.REPOSITORY_CLOSED);
+        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getPropertiesTableController(),
+                RepositoryEvents.REPOSITORY_OPENED,
+                RepositoryEvents.REPOSITORY_CHANGES_SAVED,
+                RepositoryEvents.REPOSITORY_CLOSED);
+        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getStatusLineController(),
+                RepositoryEvents.REPOSITORY_OPENED,
+                RepositoryEvents.REPOSITORY_CHANGES_SAVED,
+                RepositoryEvents.REPOSITORY_CLOSED);
         this.propertyChangesController.subscribe(this.statusLineController, PropertyEvents.PROPERTY_UPDATE_EVENT);
     }
 
@@ -110,15 +117,6 @@ public class GuiConfiguration {
     public static GuiConfiguration getInstance() {
         if (GuiConfiguration.INSTANCE == null) GuiConfiguration.INSTANCE = new GuiConfiguration();
         return GuiConfiguration.INSTANCE;
-    }
-
-    /**
-     * Get singleton TopMenuController controller instance.
-     * @return - TopMenuController controller instance.
-     */
-    public TopMenuController getTopMenuController() {
-        if (!this.isInitialized) throw new IllegalStateException("Configuration [GuiConfiguration] is not initialized. See GuiConfiguration#init method.");
-        else return this.topMenuController;
     }
 
     /**

@@ -2,7 +2,6 @@ package me.saniukvyacheslav.core.repo.file;
 
 import me.saniukvyacheslav.core.property.ExtendedBaseProperty;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
-import me.saniukvyacheslav.definition.Closeable;
 import me.saniukvyacheslav.prop.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import java.util.Objects;
  * Decorator for {@link FileRepository} file repository. Used to read\write all file content (not only properties,
  * also comments, empty lines and etc).
  */
-public class FileRepositoryContentDecorator implements PropertiesRepository, Closeable {
+public class FileRepositoryContentDecorator implements PropertiesRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileRepositoryContentDecorator.class); // Logger;
     private final FileRepository fileRepository; // FileRepository;
@@ -94,9 +93,15 @@ public class FileRepositoryContentDecorator implements PropertiesRepository, Clo
         this.fileRepository.updateValues(anValueChanges);
     }
 
+    /**
+     * Close this PropertiesRepository repository implementation.
+     */
     @Override
-    public void close() throws Exception {
-
+    public void close() {
+        LOGGER.debug("Close this [FileRepositoryContentDecorator] repository: ");
+        // Close inner FileRepository repository:
+        this.fileRepository.close();
+        LOGGER.debug("Close this [FileRepositoryContentDecorator] repository: SUCCESS;");
     }
 
     /**

@@ -70,8 +70,12 @@ public class StatusLineController implements Observer {
                         RepositoryEvents.REPOSITORY_CHANGES_SAVED.getCode(), RepositoryEvents.REPOSITORY_CHANGES_SAVED.name()));
                 this.onChangesSavedEvent();
                 break;
+            case 552: // REPOSITORY_CLOSED event:
             default:
-
+                LOGGER.debug(String.format("[%d: %s] event. Update status line text:",
+                        RepositoryEvents.REPOSITORY_CLOSED.getCode(), RepositoryEvents.REPOSITORY_CLOSED.name()));
+                this.onRepositoryClosedEvent();
+                break;
         }
     }
 
@@ -93,7 +97,6 @@ public class StatusLineController implements Observer {
         this.lineModel.updateText();
     }
 
-
     /**
      * Update status line label text, when user open properties file.
      * Clear path, reset counters in model, set new path in it, and set new embedded label text.
@@ -106,9 +109,13 @@ public class StatusLineController implements Observer {
         this.lineModel.updateText();
     }
 
-
-
-
-
+    /**
+     * Reset [StatusLine] model.
+     */
+    public void onRepositoryClosedEvent() {
+        LOGGER.debug("Reset [StatusLine] model:");
+        // Reset status line model:
+        this.lineModel.reset();
+    }
 
 }

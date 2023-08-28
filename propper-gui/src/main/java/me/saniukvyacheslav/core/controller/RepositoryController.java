@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.error.ApplicationError;
 import me.saniukvyacheslav.core.property.PropertiesChanges;
+import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
+import me.saniukvyacheslav.core.repo.file.FileRepositoryContentDecorator;
 import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observable;
@@ -164,7 +166,9 @@ public class RepositoryController implements Observer, Observable {
         LOGGER.debug("Close repository: ");
 
         // Close repository:
-        //this.closeRepository();
+        this.closeRepository();
+
+        // Empty Properties Table:
     }
 
     public ButtonType showSaveFileDialog(File aFile) {
@@ -179,18 +183,22 @@ public class RepositoryController implements Observer, Observable {
 
 
     private void closeRepository() {
-        if (RootConfiguration.getInstance().getPropertiesRepository() == null) return;
 
-        // Try to close repository:
-        try {
-            // Switch repository type:
-            if (this.currentRepositoryType.getType() == 1) { // FileRepository:
-                ((FileRepository) RootConfiguration.getInstance().getPropertiesRepository()).close();
-            } else LOGGER.warn("Repository type not supported.");
-        }catch (Exception e) {
-            LOGGER.error("Error when closing repository.");
+        LOGGER.debug("Close [PropertiesRepository] repository:");
+        // Check if properties repository was initialized:
+        if (!RootConfiguration.getInstance().isPropertiesRepositoryInitialized()) {
+            LOGGER.warn("[PropertiesRepository] repository is not initialized.");
+            return;
         }
 
+        // Close repository:
+        PropertiesRepository propertiesRepository = RootConfiguration.getInstance().getPropertiesRepository();
+        if (propertiesRepository instanceof FileRepositoryContentDecorator)
+            ((FileRepositoryContentDecorator) propertiesRepository).close();
+        LOGGER.debug("Close [PropertiesRepository] repository: SUCCESS;");
+
+        // Notify observers about REPOSITORY_CLOSED (552):
+        this.notify(RepositoryEvents.REPOSITORY_CLOSED);
     }
 
 
@@ -250,12 +258,18 @@ public class RepositoryController implements Observer, Observable {
      */
     @Override
     public void notify(PropperApplicationEvent anApplicationEvent, Object... anArguments) {
+        LOGGER.debug(String.format("Notify observers about [%d: %s] event:",  anApplicationEvent.getCode(), ((RepositoryEvents) anApplicationEvent).name()));
+
         // Iterate through subscribers:
         this.subscribers.forEach((subscriber, actionEvents) -> {
 
             // Iterate through supported event array of current subscriber:
             for (PropperApplicationEvent event: actionEvents) {
-                if (event == anApplicationEvent) subscriber.update(anApplicationEvent, anArguments);
+                if (event == anApplicationEvent) {
+                    LOGGER.debug(String.format("Notify [%s] observer about [%d: %s] event:",
+                            subscriber.getClass().getName(), event.getCode(), ((RepositoryEvents) event).name()));
+                    subscriber.update(anApplicationEvent, anArguments);
+                }
             }
         });
     }

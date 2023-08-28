@@ -6,11 +6,15 @@ import me.saniukvyacheslav.core.controller.RepositoryController;
 import me.saniukvyacheslav.core.property.ExtendedBaseProperty;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
+import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.exception.RepositoryNotInitializedException;
 import me.saniukvyacheslav.core.repo.file.FileRepository;
 import me.saniukvyacheslav.core.repo.file.FileRepositoryContentDecorator;
 import me.saniukvyacheslav.core.store.PropertiesStore;
 import me.saniukvyacheslav.gui.GuiConfiguration;
+import me.saniukvyacheslav.gui.events.Observable;
+import me.saniukvyacheslav.gui.events.Observer;
+import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +26,7 @@ import java.util.Objects;
  * Configuration class has all beans definitions (Services, repositories, ...).
  */
 @Singleton
-public class RootConfiguration {
+public class RootConfiguration implements Observer {
 
     private static RootConfiguration INSTANCE; // Singleton instance;
     private static final Logger LOGGER = LoggerFactory.getLogger(RootConfiguration.class); // Logger;
@@ -58,7 +62,6 @@ public class RootConfiguration {
         GuiConfiguration.getInstance().getFileMenuController().subscribe(this.getRepositoryController(), FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
 
         this.getRepositoryController().subscribe(this.getErrorsController(), RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
-
     }
 
     /**
@@ -76,7 +79,6 @@ public class RootConfiguration {
     public RepositoryController getRepositoryController() {
         return RepositoryController.getInstance();
     }
-
 
     /**
      * Get current PropertiesStore implementation.
@@ -120,7 +122,7 @@ public class RootConfiguration {
      * @throws RepositoryNotInitializedException - if initialization error occurs.
      */
     public void initFilePropertiesRepository(File aFile) throws RepositoryNotInitializedException {
-        LOGGER.debug("Try to init [FileRepository] instance:");
+        LOGGER.debug("Try to init [PropertiesRepository] repository:");
         FileRepository.getInstance().init(aFile);
 
         LOGGER.debug("Construct new [FileRepositoryContentDecorator] instance and map it:");
@@ -128,5 +130,51 @@ public class RootConfiguration {
 
         // Set "init" state:
         this.propertiesRepositoryInitState = true;
+
+        // Subscribe this configuration on repository events:
+        LOGGER.debug("Subscribe this [RootConfiguration] configuration on [REPOSITORY_CLOSED] event:");
+        this.getRepositoryController().subscribe(this, RepositoryEvents.REPOSITORY_CLOSED);
+
+        LOGGER.debug("Try to init [PropertiesRepository] repository: SUCCESS;");
+    }
+
+    /**
+     * Check for initialization of {@link PropertiesRepository} repository.
+     * @return - true, if properties repository is initialized.
+     */
+    public boolean isPropertiesRepositoryInitialized() {
+        return this.propertiesRepositoryInitState;
+    }
+
+    /**
+     * Do something on event.
+     * @param event - {@link Observable} instance event.
+     * @param arguments - event arguments.
+     */
+    @Override
+    public void update(PropperApplicationEvent event, Object... arguments) {
+        LOGGER.debug(String.format("Event [%d] for this [RootConfiguration] configuration:", event.getCode()));
+
+        // Select event:
+        if (event.getCode() == RepositoryEvents.REPOSITORY_CLOSED.getCode()) {
+            LOGGER.debug(String.format("[%d: %s] event. Clear [PropertiesRepository] initialization:",
+                    RepositoryEvents.REPOSITORY_CLOSED.getCode(), RepositoryEvents.REPOSITORY_CLOSED.name()));
+            this.onClosePropertiesRepositoryEvent();
+        }
+    }
+
+    /**
+     * Reset these [PropertiesRepository], [PropertiesStore] 'init' states, and nullable these implementations.
+     */
+    private void onClosePropertiesRepositoryEvent() {
+        LOGGER.debug("Reset these [PropertiesRepository] and [PropertiesStore] 'init' states:");
+
+        this.propertiesRepositoryInitState = false;
+        if (this.currentPropertiesRepositoryImpl != null) this.currentPropertiesRepositoryImpl = null;
+
+        this.propertiesStoreInitState = false;
+        if (this.currentPropertiesStoreImpl != null) this.currentPropertiesStoreImpl = null;
+
+        LOGGER.debug("Reset these [PropertiesRepository] and [PropertiesStore] 'init' states: SUCCESS;");
     }
 }

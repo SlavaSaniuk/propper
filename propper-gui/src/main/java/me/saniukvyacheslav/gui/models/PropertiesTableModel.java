@@ -85,6 +85,20 @@ public class PropertiesTableModel {
     }
 
     /**
+     * Reset this properties table. Clear loaded lists and draw default layout.
+     */
+    public void resetTable() {
+
+        // Clear lists:
+        this.originPropertiesList.clear();
+        this.propertiesModels.clear();
+
+        // Draw default layout:
+        this.drawDefaultLayout();
+
+    }
+
+    /**
      * Set default label to embedded GridPane.
      * When properties file isn't opened, label is being showed.
      */
@@ -126,6 +140,7 @@ public class PropertiesTableModel {
         // Stylize it:
         this.tableView.stylizeTitleRow(keyLabel, valueLabel);
 
+        this.lastTableRow = 0;
 
         // GridPane has children:
         this.isClear = false;
