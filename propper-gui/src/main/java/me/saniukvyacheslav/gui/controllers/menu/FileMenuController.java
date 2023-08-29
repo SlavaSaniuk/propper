@@ -10,7 +10,7 @@ import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.core.repo.RepositoryTypes;
 import me.saniukvyacheslav.definition.Initializable;
 import me.saniukvyacheslav.gui.GuiConfiguration;
-import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
+import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
@@ -64,7 +64,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
             Objects.requireNonNull(objects[0], "FileMenuModel [objects[0] must be not null.]");
             this.fileMenuModel = (FileMenuModel) objects[0];
         }catch (ClassCastException | NullPointerException e) {
-            throw new InitializationException(e);
+            throw new InitializationException(e, FileMenuController.class);
         }
 
         LOGGER.debug(String.format("Model [FileMenuModel]: [%s];", this.fileMenuModel));
@@ -74,7 +74,7 @@ public class FileMenuController implements Observable, Observer, Initializable {
     /**
      * Show 'Create file' fileChooser and then create or rewrite selected file.
      * If file already exist, fileChooser will ask user about rewrite file.
-     * Notify all subscribed observers about {@link FileMenuEvents#OPEN_FILE_EVENT} event.
+     * Notify all subscribed observers about {@link TopMenuEvents#OPEN_FILE_EVENT} event.
      */
     public void onNewFileEvent() {
         LOGGER.debug("Show 'Create file' fileChooser dialog:");
@@ -117,12 +117,12 @@ public class FileMenuController implements Observable, Observer, Initializable {
 
         // Notify observers about NEW_FILE_EVENT fileMenu event:
         LOGGER.debug("Notify observers about OPEN_FILE_EVENT[102] event:");
-        this.notify(FileMenuEvents.OPEN_FILE_EVENT, RepositoryTypes.FileRepository, file);
+        this.notify(TopMenuEvents.OPEN_FILE_EVENT, RepositoryTypes.FileRepository, file);
     }
 
     /**
      * Run "Open file" file chooser and notify observers
-     * about {@link FileMenuEvents#OPEN_FILE_EVENT}.
+     * about {@link TopMenuEvents#OPEN_FILE_EVENT}.
      */
     public void onOpenFileEvent() {
         LOGGER.debug("Show 'Open file' fileChooser dialog:");
@@ -136,28 +136,28 @@ public class FileMenuController implements Observable, Observer, Initializable {
 
         // Notify observers about OPEN_FILE_EVENT:
         LOGGER.debug("Notify observers about OPEN_FILE_EVENT[102] event:");
-        this.notify(FileMenuEvents.OPEN_FILE_EVENT, RepositoryTypes.FileRepository, propertiesFile);
+        this.notify(TopMenuEvents.OPEN_FILE_EVENT, RepositoryTypes.FileRepository, propertiesFile);
     }
 
     /**
      * Save properties in repository.
-     * Method notify observers about {@link FileMenuEvents#SAVE_FILE_EVENT} event.
+     * Method notify observers about {@link TopMenuEvents#SAVE_FILE_EVENT} event.
      */
     public void onSaveFileEvent() {
         LOGGER.debug("SAVE_FILE_EVENT FileMenu event:");
 
         // Notify observers:
-        this.notify(FileMenuEvents.SAVE_FILE_EVENT);
+        this.notify(TopMenuEvents.SAVE_FILE_EVENT);
     }
 
     /**
      * Close properties file.
-     * Notify all subscribed observers about {@link FileMenuEvents#CLOSE_FILE_EVENT} event.
+     * Notify all subscribed observers about {@link TopMenuEvents#CLOSE_FILE_EVENT} event.
      */
     public void onCloseFileEvent() {
-        LOGGER.debug(String.format("Notify observers about [%d: %s] event:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
+        LOGGER.debug(String.format("Notify observers about [%d: %s] event:", TopMenuEvents.CLOSE_FILE_EVENT.getCode(), TopMenuEvents.CLOSE_FILE_EVENT.name()));
         // Notify observers:
-        this.notify(FileMenuEvents.CLOSE_FILE_EVENT);
+        this.notify(TopMenuEvents.CLOSE_FILE_EVENT);
     }
 
     /**

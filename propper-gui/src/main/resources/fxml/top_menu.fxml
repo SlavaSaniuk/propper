@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
 <MenuBar xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
@@ -16,6 +12,10 @@
         <MenuItem fx:id="file_menu_item_save" text="Save" onAction="#onSaveFileEvent" />
         <MenuItem fx:id="file_menu_item_close" text="Close" onAction="#onCloseFileEvent"/>
         <MenuItem text="Exit" onAction="#onExitMenuAction" />
+    </Menu>
+    <Menu text="Properties" fx:id="menu_properties_menu">
+        <MenuItem fx:id="properties_menu_item_insert" text="Insert" />
+        <MenuItem fx:id="properties_menu_item_delete" text="Delete" />
     </Menu>
     <Menu text="About">
         <MenuItem text="About program"> </MenuItem>

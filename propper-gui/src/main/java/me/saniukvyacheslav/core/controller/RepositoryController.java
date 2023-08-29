@@ -19,7 +19,7 @@ import me.saniukvyacheslav.gui.dialogs.ApplicationDialogs;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
+import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,7 +150,7 @@ public class RepositoryController implements Observer, Observable {
      * Try to close [PropertiesRepository] repository.
      */
     public void onCloseEvent() {
-        LOGGER.debug(String.format("[%d: %s] event. Close repository:", FileMenuEvents.CLOSE_FILE_EVENT.getCode(), FileMenuEvents.CLOSE_FILE_EVENT.name()));
+        LOGGER.debug(String.format("[%d: %s] event. Close repository:", TopMenuEvents.CLOSE_FILE_EVENT.getCode(), TopMenuEvents.CLOSE_FILE_EVENT.name()));
         this.close();
     }
 

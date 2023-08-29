@@ -1,21 +1,31 @@
 package me.saniukvyacheslav.gui.events.menu;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 
+/**
+ * All "Top" menu application events.
+ */
+@AllArgsConstructor
 public enum TopMenuEvents implements PropperApplicationEvent {
 
 
-    OPEN_FILE (101),
-    CLOSE_APPLICATION (102);
+    /**
+     * Open file application event. Event calls when user open properties file.
+     */
+    OPEN_FILE_EVENT(102),
 
-    private final int eventCode;
+    /**
+     * SAVE FILE FileMenu application event.
+     */
+    SAVE_FILE_EVENT(103),
 
-    TopMenuEvents(int anEventCode) {
-        this.eventCode = anEventCode;
-    }
-    @Override
-    public int getCode() {
-        return this.eventCode;
-    }
+    /**
+     * Close file application event. Event will be triggered, when user click on "Close" FileMenu item.
+     */
+    CLOSE_FILE_EVENT(105);
+
+    @Getter private final int code; // Event code;
 
 }

@@ -15,7 +15,7 @@ import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
-import me.saniukvyacheslav.gui.events.menu.FileMenuEvents;
+import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ public class RootConfiguration implements Observer {
         LOGGER.debug("Subscribe these ROOT components on GUI application events:");
 
         // Subscribe this RepositoryController controller on FileMenu menu events:
-        GuiConfiguration.getInstance().getFileMenuController().subscribe(this.getRepositoryController(), FileMenuEvents.OPEN_FILE_EVENT, FileMenuEvents.SAVE_FILE_EVENT, FileMenuEvents.CLOSE_FILE_EVENT);
+        GuiConfiguration.getInstance().getFileMenuController().subscribe(this.getRepositoryController(), TopMenuEvents.OPEN_FILE_EVENT, TopMenuEvents.SAVE_FILE_EVENT, TopMenuEvents.CLOSE_FILE_EVENT);
 
         this.getRepositoryController().subscribe(this.getErrorsController(), RepositoryErrors.REPOSITORY_TYPE_NOT_SUPPORTED, RepositoryErrors.REPOSITORY_OPENING_ERROR);
     }

@@ -12,6 +12,7 @@ import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
 import me.saniukvyacheslav.gui.controllers.PropertiesTableController;
 import me.saniukvyacheslav.gui.controllers.menu.FileMenuController;
+import me.saniukvyacheslav.gui.controllers.menu.PropertiesMenuController;
 import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
@@ -34,6 +35,7 @@ public class GuiConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiConfiguration.class); // Logger;
 
     private FileMenuController fileMenuController; // FileMenuController controller;
+    private PropertiesMenuController propertiesMenuController; // PropertiesMenuController controller;
     private PropertiesTableController propertiesTableController; // PropertiesTableController controller;
     private StatusLineController statusLineController; // StatusLineController controller;
     private PropertyChangesController propertyChangesController; // PropertyChangesController controller;
@@ -53,6 +55,8 @@ public class GuiConfiguration {
         LOGGER.debug(String.format("TopMenuController controller: [%s];", topMenuController));
         this.fileMenuController = topMenuController.getFileMenuController();
         LOGGER.debug(String.format("FileMenuController controller: [%s];", this.fileMenuController));
+        this.propertiesMenuController = topMenuController.getPropertiesMenuController();
+        LOGGER.debug(String.format("PropertiesMenuController controller: [%s];", this.propertiesMenuController));
         this.propertiesTableController = aPrimaryNodeController.getPropertiesTableController();
         LOGGER.debug(String.format("PropertiesTableController controller: [%s];", this.propertiesTableController));
         this.statusLineController = aPrimaryNodeController.getStatusLineController();
@@ -71,6 +75,9 @@ public class GuiConfiguration {
         LOGGER.debug("Subscribe GUI components on ROOT application events:");
         // Subscribe on repository events:
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getFileMenuController(),
+                RepositoryEvents.REPOSITORY_OPENED,
+                RepositoryEvents.REPOSITORY_CLOSED);
+        RootConfiguration.getInstance().getRepositoryController().subscribe(this.getPropertiesMenuController(),
                 RepositoryEvents.REPOSITORY_OPENED,
                 RepositoryEvents.REPOSITORY_CLOSED);
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getPropertiesTableController(),
@@ -126,6 +133,15 @@ public class GuiConfiguration {
     public FileMenuController getFileMenuController() {
         if (!this.isInitialized) throw new IllegalStateException("Configuration [GuiConfiguration] is not initialized. See GuiConfiguration#init method.");
         else return this.fileMenuController;
+    }
+
+    /**
+     * Get singleton PropertiesMenuController controller instance.
+     * @return - PropertiesMenuController controller instance.
+     */
+    public PropertiesMenuController getPropertiesMenuController() {
+        if (!this.isInitialized) throw new IllegalStateException("Configuration [GuiConfiguration] is not initialized. See GuiConfiguration#init method.");
+        else return this.propertiesMenuController;
     }
 
     /**
