@@ -8,7 +8,6 @@ import java.util.*;
 
 /**
  * PropertiesChanges instance store properties changes by categories: inserts, updates, deletions.
- * Use {@link PropertiesChangesHandler#handle(Set, List)} to get instance of this object.
  */
 @NoArgsConstructor
 public class PropertiesChanges {

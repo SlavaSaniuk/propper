@@ -1,8 +1,7 @@
 package me.saniukvyacheslav.core.property;
 
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
 import me.saniukvyacheslav.prop.Property;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class PropertiesChangesHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesChangesHandler.class); // Logger;
+    private static final me.saniukvyacheslav.Logger LOGGER = PropperLoggingConfiguration.getLogger(PropertiesChangesHandler.class);
 
     /**
      * Handle properties changes by relation to origin properties list.

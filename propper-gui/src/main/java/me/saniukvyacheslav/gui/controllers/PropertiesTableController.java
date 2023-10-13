@@ -4,19 +4,25 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.Logger;
 import me.saniukvyacheslav.core.RootConfiguration;
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
+import me.saniukvyacheslav.core.property.PropertiesChanges;
+import me.saniukvyacheslav.core.property.PropertiesChangesHandler;
+import me.saniukvyacheslav.core.property.PropertyChanges;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.gui.GuiConfiguration;
+import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.models.PropertiesTableModel;
 import me.saniukvyacheslav.prop.Property;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +34,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PropertiesTableController implements Observer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesTableController.class); // Logger;
+    private static final Logger LOGGER = PropperLoggingConfiguration.getLogger(PropertiesTableController.class); // Logger;
     private PropertiesTableModel tableModel; // Properties table model;
     @FXML private GridPane propertiesTable; // Embedded GridPane layout (JavaFx inject it in initialize());
 
@@ -162,7 +168,16 @@ public class PropertiesTableController implements Observer {
         return this.tableModel.isUnsavedChanged();
     }
 
+    public List<PropertyChanges> getListOfPropertiesChanges() {
+        LOGGER.trace("Get list of changed properties:");
+        List<PropertyChanges> changesList = new ArrayList<>();
+        PropertyChangesController.getInstance().getUpdates(this.tableModel.getOriginPropertiesList()).forEach((String originKey, Property changedProp) -> changesList.add(new PropertyChanges(originKey, changedProp)));
+        return changesList;
+    }
 
+    public PropertiesChanges getPropertiesChanges() {
+        return PropertiesChangesHandler.handle(this.tableModel.getOriginPropertiesList(), this.getListOfPropertiesChanges());
+    }
 
 
 

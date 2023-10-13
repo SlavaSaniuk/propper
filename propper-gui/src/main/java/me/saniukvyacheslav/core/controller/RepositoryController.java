@@ -4,8 +4,10 @@ package me.saniukvyacheslav.core.controller;
 import javafx.scene.control.ButtonType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.Logger;
 import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.error.ApplicationError;
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
 import me.saniukvyacheslav.core.property.PropertiesChanges;
 import me.saniukvyacheslav.core.repo.PropertiesRepository;
 import me.saniukvyacheslav.core.repo.RepositoryErrors;
@@ -20,8 +22,7 @@ import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class RepositoryController implements Observer, Observable {
 
     // Class variables:
     private static RepositoryController INSTANCE; // Singleton instance;
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryController.class); // Logger;
+    private static final Logger LOGGER = PropperLoggingConfiguration.getLogger(RepositoryController.class); // Logger;
     public boolean isOpened = false; // Repository opening state;
     private RepositoryTypes currentRepositoryType; // Current opening repository type;
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // Map of subscribers;
@@ -121,8 +122,10 @@ public class RepositoryController implements Observer, Observable {
         LOGGER.debug("Try to save all changes in repository: ");
 
         // Handle properties changes:
-        PropertiesChanges changes = GuiConfiguration.getInstance().getPropertiesTableController().tableModel().getPropertiesChanges();
+        PropertiesChanges changes = GuiConfiguration.getInstance().getPropertiesTableController().getPropertiesChanges();
         LOGGER.debug(String.format("Save property changes: [%s];", changes));
+
+
 
         try {
             // Save in repository:

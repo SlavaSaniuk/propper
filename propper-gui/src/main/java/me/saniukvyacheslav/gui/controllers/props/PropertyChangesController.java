@@ -5,7 +5,10 @@ import javafx.scene.input.KeyEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.Logger;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
+import me.saniukvyacheslav.core.util.PropertiesList;
 import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -14,6 +17,7 @@ import me.saniukvyacheslav.gui.nodes.PropertyField;
 import me.saniukvyacheslav.prop.Property;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +29,7 @@ import java.util.Map;
 public class PropertyChangesController implements Observable {
 
     // Class variables:
+    private static final Logger LOGGER = PropperLoggingConfiguration.getLogger(PropertyChangesController.class); // Logger;
     private static PropertyChangesController INSTANCE; // Singleton instance;
     private final Map<Observer, PropperApplicationEvent[]> subscribers = new HashMap<>(); // List of controller subscribers;
     private final Map<String, String> keyUpdatedProperties = new HashMap<>(); // Map of propertyKey=updatedPropertyKey;
@@ -40,7 +45,6 @@ public class PropertyChangesController implements Observable {
         return PropertyChangesController.INSTANCE;
     }
 
-
     /**
      * Get updates map (origin_property_key = new_property_key_value).
      * @return - updates map.
@@ -48,9 +52,10 @@ public class PropertyChangesController implements Observable {
     public Map<String, Property> getUpdatesMap() {
         Map<String, Property> updatesMap = new HashMap<>(); // Updates map;
 
-        // Add properties, where key was updating:
+        // Add properties, where key was updated:
         this.keyUpdatedProperties.forEach((originPropertyKey, newPropertyKey) ->
             updatesMap.put(originPropertyKey, new Property(newPropertyKey, ""))
+
         );
 
         // Add properties, where value was updating:
@@ -60,6 +65,37 @@ public class PropertyChangesController implements Observable {
         });
 
         return updatesMap;
+    }
+
+    /**
+     *  Get map of updated properties (origin_property_key = updated_property)
+     * @return - map of updated properties.
+     */
+    public Map<String, Property> getUpdates(List<Property> originPropertiesList) {
+        LOGGER.trace("Get updates map:");
+
+        // Result map:
+        Map< String, Property> resultMap = new HashMap<>();
+
+        // Create PropertiesList:
+        PropertiesList propertiesList = PropertiesList.ofList(originPropertiesList);
+
+        // Add properties where the key has been updated:
+        this.keyUpdatedProperties.forEach((originKey, updatedKey) -> {
+            if (propertiesList.getByKey(originKey) != null)
+                resultMap.put(originKey, new Property(updatedKey, propertiesList.getByKey(originKey).getPropertyValue()));
+        });
+
+        // Add properties where the value has been updated:
+        this.valueUpdatedProperties.forEach((originKey, updatedValue) -> {
+            if(propertiesList.getByKey(originKey) != null) {
+                if (resultMap.containsKey(originKey))
+                    resultMap.get(originKey).setPropertyValue(updatedValue);
+                else resultMap.put(originKey, new Property(originKey, updatedValue));
+            }
+        });
+
+        return resultMap;
     }
 
     /**
