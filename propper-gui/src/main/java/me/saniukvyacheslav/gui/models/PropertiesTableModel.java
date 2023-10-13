@@ -4,9 +4,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
-import me.saniukvyacheslav.core.property.PropertiesChanges;
-import me.saniukvyacheslav.core.property.PropertiesChangesHandler;
-import me.saniukvyacheslav.core.property.PropertyChanges;
 import me.saniukvyacheslav.core.util.UniqueElementsList;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
@@ -18,7 +15,6 @@ import java.util.*;
  * Properties table model.
  */
 public class PropertiesTableModel {
-
 
     // Class variables:
     private final PropertiesTableView tableView; // Properties table view;
@@ -146,7 +142,6 @@ public class PropertiesTableModel {
         this.isClear = false;
     }
 
-
     /**
      *  Clear GridPane. Delete all children in GridPane (include title row), remove all constraints and set grid lines
      * visibility to false.
@@ -162,18 +157,6 @@ public class PropertiesTableModel {
         PropertyChangesController.getInstance().clear();
 
         this.isClear = true;
-    }
-
-
-    private List<PropertyChanges> getListOfChanges() {
-        List<PropertyChanges> changesList = new ArrayList<>();
-        PropertyChangesController.getInstance().getUpdatesMap().forEach((String originKey, Property changedProp) -> changesList.add(new PropertyChanges(originKey, changedProp)));
-
-        return changesList;
-    }
-
-    public PropertiesChanges getPropertiesChanges() {
-        return PropertiesChangesHandler.handle(this.originPropertiesList, this.getListOfChanges());
     }
 
     /**
