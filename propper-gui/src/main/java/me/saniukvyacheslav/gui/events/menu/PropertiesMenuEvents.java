@@ -9,6 +9,6 @@ public enum PropertiesMenuEvents implements PropperApplicationEvent {
 
     PROPERTY_INSERT_EVENT(701);
 
-    @Getter private int code;
+    @Getter private final int code;
 
  }

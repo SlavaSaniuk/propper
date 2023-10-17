@@ -4,10 +4,12 @@ import javafx.stage.Stage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.saniukvyacheslav.Logger;
 import me.saniukvyacheslav.annotation.pattern.Singleton;
 import me.saniukvyacheslav.core.PropperGui;
 import me.saniukvyacheslav.core.RootConfiguration;
 import me.saniukvyacheslav.core.error.ErrorsController;
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
 import me.saniukvyacheslav.core.repo.RepositoryEvents;
 import me.saniukvyacheslav.gui.controllers.PrimaryNodeController;
 import me.saniukvyacheslav.gui.controllers.PropertiesTableController;
@@ -17,8 +19,8 @@ import me.saniukvyacheslav.gui.controllers.menu.TopMenuController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.controllers.props.PropertyEvents;
 import me.saniukvyacheslav.gui.controllers.StatusLineController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import me.saniukvyacheslav.gui.events.menu.PropertiesMenuEvents;
+
 
 import java.util.Objects;
 
@@ -32,7 +34,7 @@ public class GuiConfiguration {
 
     public static GuiConfiguration INSTANCE; // Singleton instance;
     @Getter private boolean isInitialized; // "Init" flag;
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuiConfiguration.class); // Logger;
+    private static final Logger LOGGER = PropperLoggingConfiguration.getLogger(GuiConfiguration.class); // Logger;
 
     private FileMenuController fileMenuController; // FileMenuController controller;
     private PropertiesMenuController propertiesMenuController; // PropertiesMenuController controller;
@@ -69,9 +71,21 @@ public class GuiConfiguration {
     }
 
     /**
+     * Subscribe GUI components on application events.
+     */
+    public void subscribeOnEvents() {
+        LOGGER.trace("Subscribe GUI components on events:");
+        this.propertiesMenuController.subscribe(this.getPropertiesTableController(), PropertiesMenuEvents.PROPERTY_INSERT_EVENT);
+
+        this.propertyChangesController.subscribe(this.statusLineController, PropertyEvents.PROPERTY_UPDATE_EVENT);
+
+        this.subscribeOnRootEvents();
+    }
+
+    /**
      * Subscribe these GUI components on ROOT application events.
      */
-    public void subscribeOnRootEvents() {
+    private void subscribeOnRootEvents() {
         LOGGER.debug("Subscribe GUI components on ROOT application events:");
         // Subscribe on repository events:
         RootConfiguration.getInstance().getRepositoryController().subscribe(this.getFileMenuController(),
@@ -88,7 +102,7 @@ public class GuiConfiguration {
                 RepositoryEvents.REPOSITORY_OPENED,
                 RepositoryEvents.REPOSITORY_CHANGES_SAVED,
                 RepositoryEvents.REPOSITORY_CLOSED);
-        this.propertyChangesController.subscribe(this.statusLineController, PropertyEvents.PROPERTY_UPDATE_EVENT);
+
     }
 
     /**

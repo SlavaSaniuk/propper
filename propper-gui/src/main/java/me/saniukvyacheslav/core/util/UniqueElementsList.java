@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class UniqueElementsList<T> extends ArrayList<T> {
 
-
     @Override
     public boolean add(T anElem) {
 

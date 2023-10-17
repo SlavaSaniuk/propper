@@ -17,6 +17,7 @@ import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.events.Observable;
 import me.saniukvyacheslav.gui.events.Observer;
 import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
+import me.saniukvyacheslav.gui.events.menu.PropertiesMenuEvents;
 import me.saniukvyacheslav.gui.models.PropertiesTableModel;
 import me.saniukvyacheslav.prop.Property;
 
@@ -86,6 +87,11 @@ public class PropertiesTableController implements Observer {
                 LOGGER.debug(String.format("[%d: %s] event. Clear this properties table:",
                         RepositoryEvents.REPOSITORY_CLOSED.getCode(), RepositoryEvents.REPOSITORY_CLOSED.name()));
                 this.onRepositoryClosedEvent();
+                break;
+            case 701: // PROPERTY_INSERT event:
+                LOGGER.tracef("[%d: %s] event. Insert new property into table:",
+                        PropertiesMenuEvents.PROPERTY_INSERT_EVENT.getCode(), PropertiesMenuEvents.PROPERTY_INSERT_EVENT.name());
+                this.onPropertyInsertEvent();
                 break;
             default:
                 LOGGER.warn(String.format("Event [eventCode: %d] is not supported;", event.getCode()));
@@ -179,6 +185,9 @@ public class PropertiesTableController implements Observer {
         return PropertiesChangesHandler.handle(this.tableModel.getOriginPropertiesList(), this.getListOfPropertiesChanges());
     }
 
-
+    private void onPropertyInsertEvent() {
+        LOGGER.trace("#onPropertyInsertEvent: Insert new property into table model:");
+        this.tableModel().insertNewPropertyIntoTable();
+    }
 
 }

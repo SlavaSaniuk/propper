@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import me.saniukvyacheslav.core.util.AdvancedPropertiesList;
 import me.saniukvyacheslav.core.util.UniqueElementsList;
 import me.saniukvyacheslav.gui.controllers.props.PropertyChangesController;
 import me.saniukvyacheslav.gui.views.table.PropertiesTableView;
@@ -21,6 +22,8 @@ public class PropertiesTableModel {
     // States:
     @Getter private boolean isClear = true; // Is GridPane has children flag;
     @Getter private final List<Property> originPropertiesList = new UniqueElementsList<>();
+
+    private final AdvancedPropertiesList propertiesInsertsList = new AdvancedPropertiesList();
     private final List<PropertyModel> propertiesModels = new UniqueElementsList<>();
     private int lastTableRow = 0; // Last used table row;
     private final GridPane embeddedGridPane; // Embedded GridPane layout (JavaFx GridPane node);
@@ -59,6 +62,21 @@ public class PropertiesTableModel {
             this.insertIntoTable(property);
         }));
 
+    }
+
+    public void insertNewPropertyIntoTable() {
+        boolean isIncrement = true; int ending=1;
+        String propertyKey = "property.key.";
+        AdvancedPropertiesList allProperties = this.getAllPropertiesInTable();
+        while (isIncrement) {
+            if (allProperties.contains(propertyKey+ending)) ending++;
+            else isIncrement = false;
+        }
+        propertyKey += ending;
+
+        Property newProperty = new Property(propertyKey, "property.value");
+        this.propertiesInsertsList.add(newProperty);
+        this.insertIntoTable(newProperty);
     }
 
     /**
@@ -182,4 +200,10 @@ public class PropertiesTableModel {
         return this.isUnsaved;
     }
 
+    public AdvancedPropertiesList getAllPropertiesInTable() {
+        AdvancedPropertiesList allProperties = AdvancedPropertiesList.ofList(this.originPropertiesList);
+        allProperties.addAll(this.propertiesInsertsList.getProperties());
+
+        return allProperties;
+    }
 }

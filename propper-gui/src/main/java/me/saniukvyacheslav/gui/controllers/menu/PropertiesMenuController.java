@@ -88,7 +88,7 @@ public class PropertiesMenuController implements Observer, Observable {
 
     @Override
     public void subscribe(Observer anObserver, PropperApplicationEvent... anApplicationEvents) {
-        LOGGER.trace(String.format("Subscribe [%s] observer on [%s] FileMenu events.", anObserver, Arrays.toString(anApplicationEvents)));
+        LOGGER.trace(String.format("Subscribe [%s] observer on [%s] PropertiesMenu events.", anObserver, Arrays.toString(anApplicationEvents)));
         this.subscribers.put(anObserver, anApplicationEvents);
     }
 

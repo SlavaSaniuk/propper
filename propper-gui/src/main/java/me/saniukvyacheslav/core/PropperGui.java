@@ -78,7 +78,7 @@ public class PropperGui {
         // Initialize GUI Configuration:
         GuiConfiguration.getInstance().init(primaryNodeController);
         // Subscribe controllers on events:
-        GuiConfiguration.getInstance().subscribeOnRootEvents();
+        GuiConfiguration.getInstance().subscribeOnEvents();
         RootConfiguration.getInstance().subscribeOnGuiEvents();
 
         // Set onClose request:

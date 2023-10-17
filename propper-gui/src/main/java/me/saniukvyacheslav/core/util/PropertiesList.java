@@ -3,6 +3,7 @@ package me.saniukvyacheslav.core.util;
 import lombok.Getter;
 import me.saniukvyacheslav.prop.Property;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +38,15 @@ public class PropertiesList {
         return propertiesList;
     }
 
+    public void addToList(@Nullable List<Property> aList) {
+        if (aList == null) return;
+        if (aList.isEmpty()) return;
+
+        aList.forEach(property -> {
+            if (property != null) this.properties.add(property);
+        });
+    }
+
     /**
      * Get property by it key.
      * @param aPropertyKey - property key.
@@ -45,6 +55,11 @@ public class PropertiesList {
     public Property getByKey(String aPropertyKey) {
         Objects.requireNonNull(aPropertyKey, "Property key [aPropertyKey] must be not null.");
         return this.properties.stream().filter(prop -> prop.getPropertyKey().equals(aPropertyKey)).findFirst().orElse(null);
+    }
+
+    public boolean isInList(String aPropertyKey) {
+        Objects.requireNonNull(aPropertyKey, "Property key [aPropertyKey] must be not null.");
+        return this.getByKey(aPropertyKey) != null;
     }
 
 
