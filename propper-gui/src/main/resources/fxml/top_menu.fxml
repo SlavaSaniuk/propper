@@ -14,7 +14,7 @@
         <MenuItem text="Exit" onAction="#onExitMenuAction" />
     </Menu>
     <Menu text="Properties" fx:id="menu_properties_menu">
-        <MenuItem fx:id="properties_menu_item_insert" text="Insert" />
+        <MenuItem fx:id="properties_menu_item_insert" text="Insert" onAction="#onPropertiesMenuInsertPropertyEvent" />
         <MenuItem fx:id="properties_menu_item_delete" text="Delete" />
     </Menu>
     <Menu text="About">

@@ -7,9 +7,11 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import lombok.Getter;
 
+import me.saniukvyacheslav.Logger;
 import me.saniukvyacheslav.core.PropperGui;
 import me.saniukvyacheslav.core.error.global.InitializationApplicationError;
 import me.saniukvyacheslav.core.exception.InitializationException;
+import me.saniukvyacheslav.core.logging.PropperLoggingConfiguration;
 import me.saniukvyacheslav.gui.GuiConfiguration;
 import me.saniukvyacheslav.gui.controllers.PropertiesTableController;
 import me.saniukvyacheslav.gui.events.Observer;
@@ -17,15 +19,14 @@ import me.saniukvyacheslav.gui.events.PropperApplicationEvent;
 import me.saniukvyacheslav.gui.events.menu.TopMenuEvents;
 import me.saniukvyacheslav.gui.models.topmenu.FileMenuModel;
 import me.saniukvyacheslav.gui.models.topmenu.PropertiesMenuModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * TopMenu main controller class.
  */
 public class TopMenuController implements Observer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopMenuController.class); // Logger;
+    private static final Logger LOGGER = PropperLoggingConfiguration.getLogger(TopMenuController.class); // Logger;
     @Getter private FileMenuController fileMenuController; // FileMenu controller;
     @Getter private PropertiesMenuController propertiesMenuController; // PropertiesMenu controller;
     @FXML Node topMenuBar; // TopMenu Bar node;
@@ -117,6 +118,21 @@ public class TopMenuController implements Observer {
         // Exit from application:
         PropperGui.getInstance().normallyCloseApplication();
     }
+
+
+    /* ==========================================================================================
+     * =============== "Properties" menu events =================================================
+     * ==========================================================================================
+     */
+
+    /**
+     * Call on "Properties" menu "Insert" item click.
+     */
+    @FXML public void onPropertiesMenuInsertPropertyEvent() {
+        LOGGER.trace("#onPropertiesMenuInsertPropertyEvent:");
+        this.propertiesMenuController.onPropertyInsertEvent();
+    }
+
 
 
     @Override
